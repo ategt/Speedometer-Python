@@ -22,7 +22,7 @@ class Speedometer(object):
     """
     def __init__(self, port, baudrate):
         super(Speedometer, self).__init__()
-        self.DATA_REGEX = re.compile(r"(?P<currentSpeedKmh>[0-9\.]+)\,(?P<currentAccelMss>[0-9\.]+)\,(?P<currentRevsPerMin>[0-9\.]+)\,(?P<totalDistanceMetres>[0-9\.]+)\,(?P<totalTimeSeconds>[0-9\.]+)\,(?P<tripDistanceMetres>[0-9\.]+)\,(?P<tripTimeSeconds>[0-9\.]+)\,(?P<tripMaxSpeedKmh>[0-9\.]+)")
+        self.DATA_REGEX = re.compile(r"(?P<currentSpeedKmh>[0-9\.]+)\,(?P<currentAccelMss>[0-9\.\-]+)\,(?P<currentRevsPerMin>[0-9\.]+)\,(?P<totalDistanceMetres>[0-9\.]+)\,(?P<totalTimeSeconds>[0-9\.]+)\,(?P<tripDistanceMetres>[0-9\.]+)\,(?P<tripTimeSeconds>[0-9\.]+)\,(?P<tripMaxSpeedKmh>[0-9\.]+)")
         self.CONFIG_REGEX = re.compile(r"(?P<wheelDiameterMm>[0-9\.]+)\,(?P<speedLimitKmh>[0-9\.]+)")
 
         self.port = port
@@ -37,8 +37,8 @@ class Speedometer(object):
     def getData(self):
         _ = self._serial.write(b"readdata\n\r")
         
-        line = self._serial.readline()
-        response = line.decode("utf-8").strip()
+        self.line = self._serial.readline()
+        response = self.line.decode("utf-8").strip()
         
         return self.DATA_REGEX.search(response).groupdict()
 
@@ -65,6 +65,9 @@ class Speedometer(object):
         response = line.decode("utf-8").strip()
        
         return response == 'ok'
+
+    def getLastLine(self):
+        return self.line
 
     def close(self):
         return self._serial.close()
