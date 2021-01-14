@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>D3 Sample</title>
+	<script type="text/javascript" src="./send/d3.v6.js"></script>
+	<script type="text/javascript" src="./send/axios.min.js"></script>
+		<style type="text/css">
+		/* tell the SVG path to be a thin blue line without an area fill */
+		path {
+			/*stroke: steelblue;*/
+			/*stroke-width: 1.5;*/
+			/*fill: none;*/
+			stroke-linejoin: round;
+      		stroke-linecap: round;
+		}
+
+		.axis {
+			shape-rendering: crispEdges;
+		}
+
+		.x.axis line {
+			stroke: lightgrey;
+		}
+
+		.x.axis .minor {
+			stroke-opacity: 0.5;
+		}
+
+		.x.axis path {
+			display: none;
+		}
+
+		.y.axis line, .y.axis path {
+			fill: none;
+			stroke: orange;
+		}
+	</style>
+</head>
+<body>
+
+<div id="graph" class="aGraph" style="position: absolute;top: 0px;left:0;float:left;"></div>
+
+<script type="text/javascript">
+	window.addEventListener("load", function (event) {
+		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
+			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
+			const speeds = response.data.result.map(item => item[0]);
+
+			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
+			/* look into 3883195 and 3808218 */
+
+			// define dimensions of graph
+			var margin = ({top: 20, right: 30, bottom: 30, left: 40});
+			var height = 400;
+			var width = 1000;
+
+			// X scale will fit all values from data[] within pixes 0-w
+			var x = d3.scaleLinear().domain([0, speeds.length]).range([margin.left, width - margin.right]);
+
+			// Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
+			var y = d3.scaleLinear().domain([0, 10]).range([height - margin.bottom, margin.top]);
+
+				// automatically determining max range can work something like this
+				// var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
+
+			// create a line function that can convert data[] into x and y points
+			var line = d3.line()
+					// assign the X function to plot our line as we wish
+					.x(function(d,i){
+						// return the X coordinate where we want to plot this datapoint
+						return x(i+1);
+					})
+					.y(function (d) {
+						// return the Y coordinate where we want to plot this datapoint
+						return y(d);
+					});
+
+			var area = d3.area()
+						.x(function(d) { return x(d.x);})
+						.y0(height-margin.bottom)
+						.y1(function(d) { return y(d.y); });
+
+
+			var dataCallBack = function (d) {
+				d.x = +d[0];
+				d.y = +d[1];
+			};
+
+			data.forEach(dataCallBack);
+
+			x.domain(d3.extent(data, function(d) { return d.x; }));
+			y.domain([0, d3.max(data, function(d) { return d.y; })]);
+
+
+			const xAxis = function (g) {
+				return g
+		    	.attr("transform", `translate(0,${height - margin.bottom})`)
+		    	.call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
+		    };
+
+			const yAxis = function (g) {
+				return g
+			    .attr("transform", `translate(${margin.left},0)`)
+			    .call(d3.axisLeft(y))
+			    .call(g => g.select(".domain").remove())
+			    .call(g => g.select(".tick:last-of-type text").clone()
+			        .attr("x", 3)
+			        .attr("text-anchor", "start")
+			        .attr("font-weight", "bold")
+			        .text("Some Text"));
+			};
+
+			// Add an SVG element with the desired dimensions and margin.
+			var graph = d3.select("#graph").append("svg")
+				.attr("class", "chart")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom);
+
+			// Add the x-axis
+			graph.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0, 0)")
+				.call(xAxis);
+
+			// Add the y-axis to the left
+			graph.append("g")
+				.attr("class", "y axis")
+				.attr("transform", "translate(0, 0)")
+				.call(yAxis)
+				.append("text")
+					.attr("transform", "rotate(-90)")
+					.attr("y", 6)
+					.attr("dy", "0.71em")
+					.style("text-anchor", "end")
+					.text("Number Of Messages")
+
+			graph.append("path")
+				.data([data])
+				.attr("fill", "pink")
+				.attr("stroke", "red")
+				.attr("stroke-width", "0")
+				.attr("stroke-opacity", "0.6")
+				.attr("fill-opacity", "0.4")
+				.attr("class", "area")
+				.attr("d", area(data));
+
+			graph.append("path")
+				.attr("fill", "none")
+				.attr("stroke", "red")
+				.attr("stroke-width", "3")
+				.attr("stroke-opacity", "0.6")
+				.attr("d", line(data.map(z => z[1])));
+
+			// // Add the line by appending an svg:path element with the data line we created above
+			// // do this AFTER the axes above so that the line is above the tick-lines
+			graph.append("svg:path")
+					.attr("fill", "none")
+					.attr("stroke", "steelblue")
+					.attr("stroke-width", "1.5")
+					.attr("stroke-opacity", "1")
+					.attr("d", line(odata));
+
+
+			// // x.domain([0, data.length]).range([margin.left, width - margin.right]);
+			// // y.domain([0, 10]).range([height - margin.bottom, margin.top]);
+
+			// // x.domain(d3.extent(data, function(d) { return d; }));
+			// // y.domain([0, d3.max(data, function(d) { return d; })]);
+
+			// // graph.selectAll("path").attr("d", line(data));
+
+			// // // change the data somehow
+			// // data.push(0);
+			// // data.splice(0,1);
+			// [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 141, 133, 128, 122, 117, 102, 99, 96, 89, 120, 227, 257, 243, 220, 205, 180, 168, 154, 151, 145, 127, 118, 112, 103, 101, 100, 84, 137, 177, 512, 681, 740, 789, 869, 869, 882, 857, 857, 845, 674, 517, 425, 357, 252, 106, 106, 106, 0, 0, 0, 0, 48, 143, 166, 173, 168, 174, 168, 168, 171, 158, 159, 145, 136, 128, 120, 112, 110, 101, 101, 31, 81, 150, 348, 322, 535, 731, 821, 895, 882, 923, 810, 666, 571, 400, 212, 184, 184, 184, 37, 105, 115, 108, 105, 110, 108, 120, 120, 113, 124, 121, 129, 127, 126, 136, 130, 131, 130, 122, 135, 124, 124, 122, 133, 149, 164, 169, 196, 192, 183, 227, 231, 192, 188, 206, 186, 185, 220, 202, 198, 251, 208, 213, 243, 263, 285, 410, 402, 368, 352, 331, 405, 416, 480, 512, 550, 526, 517, 540, 545, 476, 382, 322, 277, 238, 214, 187, 175, 153, 142, 121, 69, 69, 25, 25, 25, 24, 24, 24].forEach(item => data.push(item))
+
+			// // update axis domains
+			// x.domain([0, data.length]).range([margin.left, width - margin.right]);
+			// y.domain([0, d3.max(data, function(d) { return d; })]);
+
+			// // update axis labels
+			// graph.selectAll("g.y.axis").call(yAxis);
+			// graph.selectAll("g.x.axis").call(xAxis);
+
+			// // re-draw data
+			// graph.selectAll("path").attr("d", line(data));
+
+	  	}).catch(function(problem) {
+        	console.warn(problem);
+      	});
+	});
+</script>
+
+</body>
+</html>

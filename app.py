@@ -14,6 +14,10 @@ socketio = SocketIO(app)
 def index():
     return send_from_directory(".","index.html", as_attachment=False)
 
+@app.route('/d3')
+def graph():
+    return send_from_directory(".","d3.html", as_attachment=False)
+
 @app.route('/send/<path:filename>')
 def send_file(filename):
     return send_from_directory(".", filename, as_attachment=False)  
