@@ -58,7 +58,7 @@
 			var x = d3.scaleLinear().domain([0, speeds.length]).range([margin.left, width - margin.right]);
 
 			// Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-			var y = d3.scaleLinear().domain([0, 10]).range([height - margin.bottom, margin.top]);
+			var y = d3.scaleLinear().domain([0, d3.max(speeds, function(d){ return d;})]).range([height - margin.bottom, margin.top]);
 
 				// automatically determining max range can work something like this
 				// var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
@@ -75,22 +75,8 @@
 						return y(d);
 					});
 
-			var area = d3.area()
-						.x(function(d) { return x(d.x);})
-						.y0(height-margin.bottom)
-						.y1(function(d) { return y(d.y); });
-
-
-			var dataCallBack = function (d) {
-				d.x = +d[0];
-				d.y = +d[1];
-			};
-
-			data.forEach(dataCallBack);
-
-			x.domain(d3.extent(data, function(d) { return d.x; }));
-			y.domain([0, d3.max(data, function(d) { return d.y; })]);
-
+			//x.domain(d3.extent(data, function(d) { return d.x; }));
+			//y.domain([0, d3.max(data, function(d) { return d.y; })]);
 
 			const xAxis = function (g) {
 				return g
@@ -107,7 +93,7 @@
 			        .attr("x", 3)
 			        .attr("text-anchor", "start")
 			        .attr("font-weight", "bold")
-			        .text("Some Text"));
+			        .text("RPMs"));
 			};
 
 			// Add an SVG element with the desired dimensions and margin.
@@ -134,23 +120,6 @@
 					.style("text-anchor", "end")
 					.text("Number Of Messages")
 
-			graph.append("path")
-				.data([data])
-				.attr("fill", "pink")
-				.attr("stroke", "red")
-				.attr("stroke-width", "0")
-				.attr("stroke-opacity", "0.6")
-				.attr("fill-opacity", "0.4")
-				.attr("class", "area")
-				.attr("d", area(data));
-
-			graph.append("path")
-				.attr("fill", "none")
-				.attr("stroke", "red")
-				.attr("stroke-width", "3")
-				.attr("stroke-opacity", "0.6")
-				.attr("d", line(data.map(z => z[1])));
-
 			// // Add the line by appending an svg:path element with the data line we created above
 			// // do this AFTER the axes above so that the line is above the tick-lines
 			graph.append("svg:path")
@@ -158,7 +127,7 @@
 					.attr("stroke", "steelblue")
 					.attr("stroke-width", "1.5")
 					.attr("stroke-opacity", "1")
-					.attr("d", line(odata));
+					.attr("d", line(speeds));
 
 
 			// // x.domain([0, data.length]).range([margin.left, width - margin.right]);
