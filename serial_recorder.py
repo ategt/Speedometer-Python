@@ -19,23 +19,23 @@ def main():
     with open("speed-log.txt", 'ab') as handle:
       for _ in range(90000):
         result = speedometer.getData()
-        
+
         if result['currentRevsPerMin'] is not '0' or previous_revs is not '0':
           handle.write(str(time.time()).encode())
           handle.write(comma)
           handle.write(speedometer.getLastLine())
 
           previous_revs = result['currentRevsPerMin']
-              
+
         try:
-          sio.emit("speedometer update", {"data":str(result)})
+          sio.emit("speedometer update", {"data":result})
         except socketio.exceptions.BadNamespaceError as ex:
-          pass                
+          pass
 
         print("\r", result['currentRevsPerMin'], " - ", randint(0, 250), " " * 25, end='')
         sleep(0.9)
 
-  finally:            
+  finally:
     speedometer.close()
     sio.disconnect()
 

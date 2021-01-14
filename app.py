@@ -27,6 +27,10 @@ def reading_update():
 def speedometer_update(message):
     emit('speedometer update broadcast', {'data': message['data']}, broadcast=True)
 
+@socketio.on('tabata timer update')
+def tabata_timer_update(message):
+    emit('tabata timer update broadcast', {'data': message['data']}, broadcast=True)
+
 @socketio.on('connect')
 def connect():
     emit('information', {'data': 'Connected'})
