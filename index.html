@@ -2,12 +2,22 @@
 <html>
 <head>
 	<title>HIIT MON</title>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/xcanvas.js"></script>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/tbe.js"></script>
+
+    <script type="text/javascript" src="./send/canvas-speedometer-master/digitaldisplay.js"></script>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/speedometer.js"></script>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/themes/default.js"></script>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/themes/kitsch.js"></script>
+    <script type="text/javascript" src="./send/canvas-speedometer-master/themes/gym.js"></script>
+
 	<script type="text/javascript" src="./send/socket.io.js"></script>
 	<script type="text/javascript" src="./send/d3.v6.js"></script>
 	<script type="text/javascript" src="./send/axios.min.js"></script>
 	<script type="text/javascript">
     	const NUMBER_REGEX = new RegExp("b\\'([\\d]+)");
 		const socket = io();
+        let rpms;
 
 		window.addEventListener("load", function (event) {
 			const format_time = function (count) {
@@ -25,7 +35,7 @@
 	        	const divElement = document.createElement("div");
 
 	        	divElement.innerText = JSON.stringify(msg.data);
-	        	el.appendChild(divElement);
+	        	el.appendChild(divElement);	        	
 	        });
 
 			socket.on('speedometer update broadcast', function(msg) {
@@ -35,6 +45,13 @@
 	        	headingElement.innerText = `${msg.data.currentRevsPerMin} RPMs`;
 	        	el.replaceChildren(headingElement);
 	    	});
+			socket.on('speedometer update broadcast', function(msg) {
+				try {
+					rpms.animatedUpdate(msg.data.currentRevsPerMin, 500);
+				} catch (ex) {
+					rpms.update(msg.data.currentRevsPerMin);
+				}
+			});
 
 			socket.on('tabata timer update broadcast', function(msg) {
 	        	const el = document.getElementById("timer-banner");
@@ -61,6 +78,16 @@
 	        });
 		});
 	</script>
+	<script type="text/javascript">
+
+        document.addEventListener ("DOMContentLoaded", function() {
+            document.removeEventListener ("DOMContentLoaded", arguments.callee, false);
+            rpms = new Speedometer ('rpms', {theme: 'gym'});
+            rpms.draw ();
+
+            rpms.rescale(1000);
+        }, false);
+    </script>
 	<style type="text/css">
 		textarea {
 		    height: 10em;
@@ -128,12 +155,31 @@
 			stroke: orange;
 		}
 	</style>
+	<style type="text/css">
+		.speedometer {
+		    width: 500px;
+		    height: 500px;
+		    border: 1px dotted red;
+		    /*margin: 10px;*/
+		    display: contents;
+		}
+		.speedometer-inner {
+			width: 500px;
+		    height: 500px;
+		}
+		.speedometer-panel {
+  			display: inline-block;
+		}
+	</style>
 </head>
 <body>
 	<div class="title-banner">
 		<h1>HIIT MON</h1>
 	</div>
 	<div class="info-banner-panel">
+		<div class="speedometer-panel">
+			<div id="rpms" class="speedometer"></div>
+		</div>
 		<div class="label speed">
 			Speed
 		</div>
