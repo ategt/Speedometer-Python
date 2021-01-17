@@ -40,4 +40,4 @@ def main():
         sio.disconnect()
 
 if __name__ == '__main__':
-    main()        
+    main()

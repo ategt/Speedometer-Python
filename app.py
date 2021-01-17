@@ -42,6 +42,7 @@ def connect():
 @socketio.on('disconnect')
 def disconnect():
     print('Client disconnected')
+    emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
 
 @app.after_request
 def add_header(response):

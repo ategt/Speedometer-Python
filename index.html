@@ -11,6 +11,7 @@
 
 		window.addEventListener("load", function (event) {
 			const format_time = function (count) {
+				if (count === " - ") { return count; }
 			    const seconds = count % 60;
 			    const minutes = Math.floor(count / 60);
 			    
@@ -36,8 +37,6 @@
 
 	        	headingElement.innerText = `${msg.data.currentRevsPerMin} RPMs`;
 	        	el.replaceChildren(headingElement);
-
-
 	    	});
 
 			socket.on('tabata timer update broadcast', function(msg) {
@@ -103,6 +102,10 @@
 		.label {
 			font-size: large;
 		}
+		.graph-link-panel {
+		    width: -webkit-fill-available;
+    		text-align: right;
+		}
 	</style>
 	<style type="text/css">
 		/* tell the SVG path to be a thin blue line without an area fill */
@@ -134,11 +137,33 @@
 			fill: none;
 			stroke: orange;
 		}
+		.title-banner {
+			display: flex;
+    		width: 95%;
+		}
+		.title-panel, .graph-link-panel {
+			width: 50%;
+		}
+		.graph-link-panel, no-decoration {
+		    text-decoration: none;
+    		color: unset;
+		}
+		.graph-link-panel a {
+		    text-decoration: none;
+    		color: unset;
+		}
 	</style>
 </head>
 <body>
 	<div class="title-banner">
-		<h1>HIIT MON</h1>
+		<div class="title-panel">
+			<h1>HIIT MON</h1>
+		</div>
+		<div class="graph-link-panel">
+			<h1>
+				<a href="./d3" class="no-decoration">GRAPH</a>
+			</h1>
+		</div>
 	</div>
 	<div class="info-banner-panel">
 		<div class="label speed">
