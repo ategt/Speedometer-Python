@@ -27,6 +27,11 @@ def reading_update():
     pairs = speedLogFile.getLastTwoHours()
     return flask.jsonify(result=pairs)
 
+@app.route('/clusters')
+def clusters():
+    clusters = speedLogFile.getClusters()
+    return flask.jsonify(result=clusters)
+
 @socketio.on('speedometer update')
 def speedometer_update(message):
     emit('speedometer update broadcast', {'data': message['data']}, broadcast=True)
