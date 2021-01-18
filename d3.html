@@ -39,9 +39,9 @@
 
 <script type="text/javascript">
 	window.addEventListener("load", function (event) {
-		axios.get("http://127.0.0.1:5000/clusters").then(function (response) {
+		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
-			const speeds = response.data.result[12].readings.map(item => +item.currentRevsPerMin);
+			const speeds = response.data.result.map(item => item[0]);
 
 			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 			/* look into 3883195 and 3808218 */
