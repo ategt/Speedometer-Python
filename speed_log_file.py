@@ -46,14 +46,14 @@ class SpeedLogFile(object):
 		reading_clusters = defaultdict(lambda: list())
 		starting_timestamp = 0
 		previous_timestamp = 0
-		
+
 		for reading in dxs:
 			if float(reading['timestamp']) < previous_timestamp + 10:
 				reading_clusters[starting_timestamp].append(reading)
 			else:
 				starting_timestamp = float(reading['timestamp'])
 				reading_clusters[starting_timestamp].append(reading)
-		
+
 			previous_timestamp = float(reading['timestamp'])
 
 		return [{"starting_timestamp":k, "readings":v} for k, v in reading_clusters.items()]
