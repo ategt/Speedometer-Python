@@ -55,4 +55,4 @@ class SpeedLogFile(object):
 				reading_clusters[starting_timestamp].append(reading)
 		
 			previous_timestamp = float(reading['timestamp'])
-		return [(k, len(v)) for k, v in reading_clusters.items()]
+		return [{"starting_timestamp":k, "readings":v} for k, v in reading_clusters.items()]
