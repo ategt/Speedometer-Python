@@ -1,1 +1,18 @@
 __pycache__/
+
+socket.io.js
+socket.io.js.map
+socket.io.min.js
+socket.io.min.js.map
+socket.io.msgpack.min.js
+socket.io.msgpack.min.js.map
+
+axios.min.js
+d3.v6.js
+
+canvas-speedometer-master/
+workout pics/
+
+speed-log.txt
+temp.txt
+temp2.txt
