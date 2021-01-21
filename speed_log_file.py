@@ -40,15 +40,19 @@ class SpeedLogFile(object):
 
 		return pairs
 
-	def getClusters(self):
-		" Returns readings clustered by timecode. "
+	def getClusters(self, gapping_seconds = 10):
+		"""
+			Returns readings clustered by timecode.
+
+			- gapping_seconds - Seconds of inactivity needed to delimit a cluster.
+		"""
 		dxs = self._parseLogFile()
 		reading_clusters = defaultdict(lambda: list())
 		starting_timestamp = 0
 		previous_timestamp = 0
 
 		for reading in dxs:
-			if float(reading['timestamp']) < previous_timestamp + 10:
+			if float(reading['timestamp']) < previous_timestamp + gapping_seconds:
 				reading_clusters[starting_timestamp].append(reading)
 			else:
 				starting_timestamp = float(reading['timestamp'])
