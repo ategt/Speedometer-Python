@@ -117,6 +117,7 @@
 				// If timer runs out, exit fullscreen.
 	        	if (msg.data.timeRemaining === " - ") {
 	        		close_fullscreen();
+	        		document.getElementById("graph-link").click();
 	        	}
 	    	});
 		});
@@ -163,14 +164,18 @@
 		.fullscreen {
 			background-color: white;
 		}
-		.fullscreen > .label, .fullscreen > .info-banner {
-
-		}
 		.fullscreen > .label {
 			display: none;
 		}
 		.fullscreen > .info-banner {
 			font-size: 9rem;
+		}
+		.sub-banner {
+			display: flex;
+		}
+		.right-pane {
+			text-align: right;
+    		padding-right: 4rem;
 		}
 	</style>
 	<style type="text/css">
@@ -207,10 +212,10 @@
 			display: flex;
     		width: 95%;
 		}
-		.title-panel, .graph-link-panel {
+		.title-panel, .graph-link-panel, .half-pane {
 			width: 50%;
 		}
-		.graph-link-panel, no-decoration {
+		.graph-link-panel, .no-decoration {
 		    text-decoration: none;
     		color: unset;
 		}
@@ -227,7 +232,7 @@
 		</div>
 		<div class="graph-link-panel">
 			<h1>
-				<a href="./d3" class="no-decoration">GRAPH</a>
+				<a href="./d3" id="graph-link" class="no-decoration">GRAPH</a>
 			</h1>
 		</div>
 	</div>
@@ -253,10 +258,10 @@
 	</div>
 	<div class="recieve-area">
 		<div class="sub-banner receive-sub-banner">
-			<div class="left-pane">
-				<h2>Receive:</h2>
+			<div class="half-pane left-pane">
+				<h2>Received:</h2>
 			</div>
-			<div class="right-pane">
+			<div class="half-pane right-pane">
 				<h2>
 					<a id="fullscreen-button" class="no-decoration">FULL SCREEN</a>
 				</h2>
