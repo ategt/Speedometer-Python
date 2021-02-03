@@ -8,6 +8,7 @@
 	<script type="text/javascript">
     	const NUMBER_REGEX = new RegExp("b\\'([\\d]+)");
 		const socket = io();
+		let clock_started = false;
 
 		window.addEventListener("load", function (event) {
 			const make_fullscreen = function (element) {
@@ -53,8 +54,33 @@
 			    }
 			});
 
+			const start_timer = function() {
+				socket.emit('tabata timer action', {data:"START"});
+			};
+
+			const stop_timer = function() {
+				socket.emit('tabata timer action', {data:"STOP"});
+			};
+
+			const reset_timer = function() {
+				socket.emit('tabata timer action', {data:"STOP"});
+				clock_started = false;
+			};
+
 			document.getElementById("fullscreen-button").addEventListener("click", function (event) {
 				make_fullscreen(element);
+			});
+
+			document.getElementById("start-timer-button").addEventListener("click", function (event) {
+				start_timer();
+			});
+
+			document.getElementById("stop-timer-button").addEventListener("click", function (event) {
+				stop_timer();
+			});
+
+			document.getElementById("reset-timer-button").addEventListener("click", function (event) {
+				reset_timer();
 			});
 
 			const format_time = function (count) {
@@ -86,6 +112,15 @@
 	        	el.replaceChildren(headingElement);
 	    	});
 
+			socket.on('speedometer update broadcast', function(msg) {
+				// If the clock is not running, and the bike is,
+				// start the clock.
+				if (!clock_started && +msg.data.currentRevsPerMin > 0) {
+					clock_started = true;
+					socket.emit('tabata timer action', {data:"START"});
+				}
+	    	});
+
 			socket.on('tabata timer update broadcast', function(msg) {
 				// Update Time Remaining field.
 	        	const el = document.getElementById("timer-banner");
@@ -115,10 +150,17 @@
 
 	        socket.on('tabata timer update broadcast', function(msg) {
 				// If timer runs out, exit fullscreen.
-	        	if (msg.data.timeRemaining === " - ") {
+	        	if (msg.data.timeRemaining === " - " && is_fullscreen()) {
 	        		close_fullscreen();
 	        		//document.getElementById("graph-link").click();
 	        	}
+	    	});
+
+	        socket.on('tabata timer update broadcast', function(msg) {
+				// If timer is running, mark variable as running.
+				if (!clock_started && msg.data.timeRemaining !== " - ") {
+	    			clock_started = true;
+	    		}
 	    	});
 		});
 	</script>
@@ -176,6 +218,18 @@
 		.right-pane {
 			text-align: right;
     		padding-right: 4rem;
+    		display: inline-flex;
+		}
+		.timer-button {
+			background-color: lightgrey;
+			font-size: 1.5em;
+    		font-weight: bold;
+    		text-align: center;
+    		margin: 0.5rem;
+    		padding: 0px;
+		}
+		.fullscreen-button-span {
+			width: inherit;
 		}
 	</style>
 	<style type="text/css">
@@ -262,8 +316,19 @@
 				<h2>Received:</h2>
 			</div>
 			<div class="half-pane right-pane">
+				<div id="start-timer-button" class="timer-button">
+					START TIMER
+				</div>
+				<div id="stop-timer-button" class="timer-button">
+					STOP TIMER
+				</div>
+				<div id="reset-timer-button" class="timer-button">
+					RESET TIMER
+				</div>
 				<h2>
-					<a id="fullscreen-button" class="no-decoration">FULL SCREEN</a>
+					<span class="fullscreen-button-span">
+						<a id="fullscreen-button" class="no-decoration">FULL&nbsp;SCREEN</a>
+					</span>
 				</h2>
 			</div>			
 		</div>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory, Request
 from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
+from tabata_timer import TabataTimer
 import flask
 
 app = Flask(__name__)
@@ -8,6 +9,7 @@ app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
 speedLogFile = SpeedLogFile("speed-log.txt")
+timer = TabataTimer()
 socketio = SocketIO(app)
 
 @app.route('/')
@@ -39,6 +41,15 @@ def speedometer_update(message):
 @socketio.on('tabata timer update')
 def tabata_timer_update(message):
     emit('tabata timer update broadcast', {'data': message['data']}, broadcast=True)
+
+@socketio.on('tabata timer action')
+def tabata_timer_action(message):
+    if message['data'] == "START":
+        timer.start()
+    elif message['data'] == "STOP":
+        timer.stop()
+    elif message['data'] == "CODE":
+        emit('tabata timer action broadcast', {'data': timer.getReturnCode()}, broadcast=True)
 
 @socketio.on('connect')
 def connect():
