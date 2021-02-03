@@ -118,6 +118,10 @@
 				if (!clock_started && +msg.data.currentRevsPerMin > 0) {
 					clock_started = true;
 					socket.emit('tabata timer action', {data:"START"});
+				} else {
+					// Timer process seems to suspend at about 2:30 and
+					// this code keeps it alive. Not sure why that is.
+					//socket.emit('tabata timer action', {data:"CODE"});
 				}
 	    	});
 
@@ -152,7 +156,6 @@
 				// If timer runs out, exit fullscreen.
 	        	if (msg.data.timeRemaining === " - " && is_fullscreen()) {
 	        		close_fullscreen();
-	        		//document.getElementById("graph-link").click();
 	        	}
 	    	});
 
