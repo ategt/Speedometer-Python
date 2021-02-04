@@ -1,3 +1,4 @@
+from timer_already_started_error import TimerAlreadyStartedError
 import subprocess
 
 class TabataTimer(object):
@@ -12,12 +13,18 @@ class TabataTimer(object):
 
 	def start(self):
 		if '_proc' in dir(self) and self.getReturnCode() != 1:
-			raise Exception("Timer Already Running")
+			raise TimerAlreadyStartedError()
 		else:
-			self._start()			
+			self._start()
 
 	def stop(self):
 		self._proc.terminate()
+		self._proc.wait()
+		_ = self.getReturnCode()
+
+	def getPid(self):
+		if '_proc' in dir(self):
+			return self._proc.pid
 
 	def getReturnCode(self):
 		_outs, _ = self._proc.communicate(timeout=0.2)

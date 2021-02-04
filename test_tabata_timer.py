@@ -24,5 +24,12 @@ class TestSpeedometer(unittest.TestCase):
         with self.assertRaises(Exception):
             self.timer.start()
 
+    def test_getPid(self):
+        self.timer = TabataTimer()
+
+        self.timer.getPid()
+        self.timer.start()
+        self.timer.getPid()
+
 if __name__ == '__main__':
     unittest.main()

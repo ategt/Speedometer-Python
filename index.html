@@ -121,7 +121,7 @@
 				} else {
 					// Timer process seems to suspend at about 2:30 and
 					// this code keeps it alive. Not sure why that is.
-					//socket.emit('tabata timer action', {data:"CODE"});
+					socket.emit('tabata timer action', {data:"PID"});
 				}
 	    	});
 
@@ -165,6 +165,15 @@
 	    			clock_started = true;
 	    		}
 	    	});
+
+	    	socket.on('tabata timer action broadcast', function(msg) {
+				// Log broadcast to recieving field.
+	        	const el = document.getElementById("recieved");
+	        	const divElement = document.createElement("div");
+
+	        	divElement.innerText = JSON.stringify(msg.data);
+	        	el.appendChild(divElement);	        	
+	        });
 		});
 	</script>
 	<style type="text/css">
