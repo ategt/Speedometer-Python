@@ -52,6 +52,8 @@ def tabata_timer_action(message):
         emit('tabata timer action broadcast', {'data': timer.getReturnCode()}, broadcast=True)
     elif message['data'] == "PID":
         emit('tabata timer action broadcast', {'data': timer.getPid()}, broadcast=True)
+    elif message['data'] == "PULSE":
+        emit('tabata timer action broadcast', {'data': timer.pulse()}, broadcast=True)
 
 @socketio.on('connect')
 def connect():

@@ -6,6 +6,9 @@ class TabataTimer(object):
 	def __init__(self):
 		super(TabataTimer, self).__init__()
 
+	def __del___(self):
+		self.stop()		
+
 	def _start(self):
 		self._proc = subprocess.Popen(['python3', 'base_timer.py'],
                             stdout=subprocess.PIPE,
@@ -25,6 +28,9 @@ class TabataTimer(object):
 	def getPid(self):
 		if '_proc' in dir(self):
 			return self._proc.pid
+
+	def pulse(self):
+		self._proc.send_signal(0)
 
 	def getReturnCode(self):
 		_outs, _ = self._proc.communicate(timeout=0.2)
