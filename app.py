@@ -73,7 +73,7 @@ def add_header(response):
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-    timer.stop()
+    pass
 
 if __name__ == '__main__':
     socketio.run(app)

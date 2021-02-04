@@ -33,7 +33,7 @@ class TabataTimer(object):
 		except subprocess.TimeoutExpired:
 			pass
 		finally:
-			return 1			
+			return "1"
 
 	def getReturnCode(self):
 		_outs, _ = self._proc.communicate(timeout=0.2)
