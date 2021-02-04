@@ -165,15 +165,6 @@
 	    			clock_started = true;
 	    		}
 	    	});
-
-	    	socket.on('tabata timer action broadcast', function(msg) {
-				// Log broadcast to recieving field.
-	        	const el = document.getElementById("recieved");
-	        	const divElement = document.createElement("div");
-
-	        	divElement.innerText = JSON.stringify(msg.data);
-	        	el.appendChild(divElement);	        	
-	        });
 		});
 	</script>
 	<style type="text/css">
