@@ -31,5 +31,10 @@ class TestSpeedometer(unittest.TestCase):
         self.timer.start()
         self.timer.getPid()
 
+    def test_stop_without_start(self):
+        self.timer = TabataTimer()
+
+        self.timer.stop()
+
 if __name__ == '__main__':
     unittest.main()
