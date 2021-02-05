@@ -13,6 +13,7 @@ class TabataTimer(object):
 
 	def start(self):
 		if '_proc' in dir(self) and self.getReturnCode() != 1:
+			print(self.getReturnCode())
 			raise TimerAlreadyStartedError()
 		else:
 			self._start()
