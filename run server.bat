@@ -1,5 +1,5 @@
 CD /D %~dp0
 
-python app.py
+python ./server/app.py
 
 PAUSE

@@ -1,0 +1,114 @@
+textarea {
+    height: 10em;
+	width: 18em;
+}
+.input-wrapper {
+    display: grid;
+	margin: 9px;
+	grid-gap: 8px;
+}
+.input-fields {
+	display: flex;
+	flex-flow: wrap;
+}
+.recieved-field {
+    height: 14em;
+    /*width: 36em;*/
+    /*border: 1px solid black;*/
+    padding: 5px;
+    overflow-y: overlay;
+}
+.info-banner-panel {
+	width: 100%;
+    font-size: +4em;
+    text-align: center;
+}
+.info-banner-panel h2 {
+    padding: 0px;
+    margin-block: 0px;
+    margin: 0px;
+    margin-inline: 0px;
+}
+.label {
+	font-size: large;
+}
+.graph-link-panel {
+    width: -webkit-fill-available;
+	text-align: right;
+}
+.fullscreen {
+	background-color: white;
+}
+.fullscreen-dark {
+    background-color: black;
+	color: yellow;
+}
+.fullscreen > .label {
+	display: none;
+}
+.fullscreen > .info-banner {
+	font-size: 9rem;
+}
+.sub-banner {
+	display: flex;
+}
+.right-pane {
+	text-align: right;
+	padding-right: 4rem;
+	display: inline-flex;
+}
+.timer-button {
+	background-color: lightgrey;
+	font-size: 1.5em;
+	font-weight: bold;
+	text-align: center;
+	margin: 0.5rem;
+	padding: 0px;
+}
+.fullscreen-button-span {
+	width: inherit;
+}
+/* tell the SVG path to be a thin blue line without an area fill */
+path {
+	/*stroke: steelblue;*/
+	/*stroke-width: 1.5;*/
+	/*fill: none;*/
+	stroke-linejoin: round;
+		stroke-linecap: round;
+}
+
+.axis {
+	shape-rendering: crispEdges;
+}
+
+.x.axis line {
+	stroke: lightgrey;
+}
+
+.x.axis .minor {
+	stroke-opacity: 0.5;
+}
+
+.x.axis path {
+	display: none;
+}
+
+.y.axis line, .y.axis path {
+	fill: none;
+	stroke: orange;
+}
+.title-banner {
+	display: flex;
+	width: 95%;
+}
+.title-panel, .graph-link-panel, .half-pane {
+	width: 50%;
+}
+.graph-link-panel, .no-decoration {
+    text-decoration: none;
+	color: unset;
+}
+.graph-link-panel a {
+    text-decoration: none;
+	color: unset;
+}
