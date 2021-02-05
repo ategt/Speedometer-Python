@@ -7,7 +7,7 @@ class TabataTimer(object):
 		super(TabataTimer, self).__init__()
 
 	def _start(self):
-		self._proc = subprocess.Popen(['python3', 'base_timer.py'],
+		self._proc = subprocess.Popen(['python3', '.\\server\\base_timer.py'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
 

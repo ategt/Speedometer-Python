@@ -8,17 +8,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
-speedLogFile = SpeedLogFile("..\\data\\speed-log.txt")
+speedLogFile = SpeedLogFile(".\\data\\speed-log.txt")
 timer = TabataTimer()
 socketio = SocketIO(app)
 
 @app.route('/')
 def index():
-    return send_from_directory(".","index.html", as_attachment=False)
+    return send_from_directory("..\\client","index.html", as_attachment=False)
 
 @app.route('/d3')
 def graph():
-    return send_from_directory(".","d3.html", as_attachment=False)
+    return send_from_directory("..\\client","d3.html", as_attachment=False)
 
 @app.route('/send/<path:filename>')
 def send_file(filename):

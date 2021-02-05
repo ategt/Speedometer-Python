@@ -15,7 +15,7 @@ def read(path):
             return ""
 
 def main():        
-    data = read("speed-log.txt")
+    data = read("./data/speed-log.txt")
     lines = data.split("\r\n")
 
     sio = socketio.Client()
