@@ -49,8 +49,10 @@
 			element.addEventListener("fullscreenchange", function (event) {
 			    if (is_fullscreen())   {
 			        element.classList.add("fullscreen");
+			        element.classList.add("fullscreen-dark");
 			    } else {
 			        element.classList.remove("fullscreen");
+			        element.classList.remove("fullscreen-dark");
 			    }
 			});
 
@@ -208,6 +210,10 @@
 		}
 		.fullscreen {
 			background-color: white;
+		}
+		.fullscreen-dark {
+		    background-color: black;
+    		color: yellow;
 		}
 		.fullscreen > .label {
 			display: none;
