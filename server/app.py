@@ -2,6 +2,7 @@ from flask import Flask, render_template, send_from_directory, Request
 from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
+from report_dao import ReportDao
 import flask
 import os
 
@@ -10,6 +11,7 @@ app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
+reports = ReportDao(os.getenv("REPORT_FILE_PATH"))
 timer = TabataTimer()
 socketio = SocketIO(app)
 
@@ -37,6 +39,16 @@ def reading_update():
 def clusters():
     clusters = speedLogFile.getClusters()
     return flask.jsonify(result=clusters)
+
+@app.route('/report', methods={"HEAD", "OPTIONS", "POST"})
+def endpointReportPost():
+    reports.create(flask.request.get_json())
+
+    return flask.make_response()
+
+@app.route('/report')
+def endpointReportRead():
+    return flask.jsonify(reports=reports.getAll())
 
 @socketio.on('speedometer update')
 def speedometer_update(message):

@@ -38,15 +38,17 @@
 <div id="graph" class="aGraph" style="position: absolute;top: 0px;left:0;float:left;"></div>
 
 <script type="text/javascript">
-	function count_sprints(spx) {
+	const top_speed = 2000;
+
+	function count_sprints(speeds) {
 		// I know that the reporter is using a different threshold for
 		// determining sprint boundry. Tests suggested this had be the 
 		// case, and I hope to come up with a better determinate someday.
 	    let sprint_count = 0;
 	    const gap = 1;
 
-	    for (let i = 0; i < spx.length - gap; i+=gap ) {
-	        if (spx[i] > 400 && spx[i+gap] < 400) {
+	    for (let i = 0; i < speeds.length - gap; i+=gap ) {
+	        if (speeds[i] > 400 && speeds[i+gap] < 400) {
 	            sprint_count += 1;
 	        }
 	    }
@@ -83,7 +85,6 @@
 		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
-			const top_speed = 2000;
 
 			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 			/* look into 3883195 and 3808218 */
@@ -161,7 +162,7 @@
 					.attr("stroke-opacity", "1")
 					.attr("d", line(speeds));
 
-
+			axios.post("http://127.0.0.1:5000/report", generate_report(speeds))
 	  	}).catch(function(problem) {
         	console.warn(problem);
       	});
