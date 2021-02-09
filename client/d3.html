@@ -120,6 +120,30 @@
 					.attr("stroke-opacity", "1")
 					.attr("d", line(speeds));
 
+			const sprint_differential = 200;
+
+			speeds.length / 60 // Length of workout (In Minutes).
+			sprintings = speeds.filter(d => d > sprint_differential).filter(d => d < top_speed); // Just the sprints.
+			sprintings.reduce((acc, itm) => acc + itm, 0)/sprintings.length // average speed during sprint.
+
+			last_sprint_timecount = spx.reduce((acc, itm) => { return [itm > 200 ? acc[1] : acc[0], acc[1] + 1];}, [0, 0])[0];
+			(spx.length - last_sprint_timecount) / 60 // length of cool down (in minutes)
+
+			speeds.filter(d => d >= top_speed).length // erronious readings
+
+			function count_sprints(spx) {
+			    let sprint_count = 0;
+			    const gap = 1;
+
+			    for (let i = 0; i < spx.length - gap; i+=gap ) {
+			        if (spx[i] > 400 && spx[i+gap] < 400) {
+			            sprint_count += 1;
+			        }
+			    }
+
+			    return sprint_count;
+			}
+
 	  	}).catch(function(problem) {
         	console.warn(problem);
       	});
