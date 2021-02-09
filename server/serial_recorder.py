@@ -4,6 +4,7 @@ from time import sleep
 import socketio
 import time
 import re
+import os
 
 def main():
   comma = ",".encode()
@@ -16,7 +17,7 @@ def main():
     if sio:
         sio.connect("ws://127.0.0.1:5000/")
 
-    with open("speed-log.txt", 'ab') as handle:
+    with open(os.getenv("LOG_FILE_PATH"), 'ab') as handle:
       for _ in range(90000):
         result = speedometer.getData()
 

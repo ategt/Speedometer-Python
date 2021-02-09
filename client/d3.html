@@ -42,6 +42,7 @@
 		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
+			const top_speed = 2000;
 
 			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 			/* look into 3883195 and 3808218 */
@@ -53,10 +54,11 @@
 
 			// X scale will fit all values from data[] within pixes 0-w
 			const x = d3.scaleLinear().domain([0, speeds.length]).range([margin.left, width - margin.right]);
-			const y = d3.scaleLinear().domain([0, d3.max(speeds)]).range([height - margin.bottom, margin.top]);
+			const y = d3.scaleLinear().domain([0, d3.max(speeds.filter(d => d < top_speed))]).range([height - margin.bottom, margin.top]);
 
 			// create a line function that can convert data[] into x and y points
 			const line = d3.line()
+					.defined(d => d < top_speed)
 					// assign the X function to plot our line as we wish
 					.x(function(d,i){
 						// return the X coordinate where we want to plot this datapoint

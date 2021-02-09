@@ -3,12 +3,13 @@ from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
 import flask
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
-speedLogFile = SpeedLogFile(".\\data\\speed-log.txt")
+speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
 timer = TabataTimer()
 socketio = SocketIO(app)
 
