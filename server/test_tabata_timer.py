@@ -3,7 +3,7 @@ import unittest
 from tabata_timer import TabataTimer
 from time import sleep
 
-class TestSpeedometer(unittest.TestCase):
+class TestTabataTimer(unittest.TestCase):
     def setUp(self):
         pass
 
