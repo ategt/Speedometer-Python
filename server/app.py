@@ -40,7 +40,7 @@ def clusters():
     clusters = speedLogFile.getClusters()
     return flask.jsonify(result=clusters)
 
-@app.route('/report', methods={"HEAD", "OPTIONS", "POST"})
+@app.route('/report', methods={"POST"})
 def endpointReportPost():
     reports.create(flask.request.get_json())
 
