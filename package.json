@@ -1,0 +1,18 @@
+{
+  "name": "Speedometer-Python",
+  "version": "1.0.0",
+  "description": "A combination Tabata Timer and Stationary Bicycle Monitor.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tape": "^5.1.1"
+  },
+  "dependencies": {
+    "d3": "^6.5.0"
+  }
+}
