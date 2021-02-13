@@ -63,6 +63,7 @@
 
 		const sprintings = speeds.filter(d => d > sprint_differential).filter(d => d < top_speed);
 		const average_speed_during_sprint = sprintings.reduce((acc, itm) => acc + itm, 0) / sprintings.length;
+		const highest_speed = Math.max(...speeds.filter(d => d < top_speed));
 
 		const last_sprint_timecount = speeds.reduce((acc, itm) => { return [itm > sprint_differential ? acc[1] : acc[0], acc[1] + 1];}, [0, 0])[0];
 		const cooldown_time = (speeds.length - last_sprint_timecount);
@@ -79,7 +80,8 @@
 				cooldownTime: cooldown_time, // in readings
 				faultyReadingCount: bad_readings, // in readings above the plausability threshold
 				sprintCount: sprint_count, // self explanitory
-				avgSprintLength: avg_sprint_length}; // in readings
+				avgSprintLength: avg_sprint_length,  // in readings
+				topSpeed: highest_speed}; // in RPMs
 	};
 
 	window.addEventListener("load", function (event) {
@@ -168,7 +170,7 @@
 				const last_report = response.data.reports[response.data.reports.length-1];
 				const report = generate_report(speeds);
 
-				const different_reports = Object.keys(report).filter(k => k !== "date").map(k => last_report[k] !== report[k]).reduce((acc, itm) => acc && itm, true);
+				const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
 
 				if ( different_reports ) {
 					axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {

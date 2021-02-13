@@ -28,21 +28,23 @@ The client webpage uses the following javascript libraries:
 		- Axios.js
 		- SocketIO.js
 
-These javascript libraries should be place in the root folder. (Until I seperate out the concerns better.)
+These javascript libraries should be place in the cdn folder.
 
 ### Usage
 
 Once the requirements are met, the web server can be launched with app.py, which is also launchable with `run server.bat` on Windows.  The Arduino serial interface is powered by `serial_recorder.py`, and `run recorder.bat` on Windows.  My Tabata timer is started by `base_timer.py`, which is `run timer.bat` in the Bill Gates operating system.
 
-While each aspect of this project can be used as a standalone option, most with command line support, it is meant to be accessed collectively by a web client.  Using the default settings, the web client is availible at [http://localhost:5000](http://localhost:5000).
+While each aspect of this project can be used as a standalone option, most with command line support, it is meant to be accessed collectively by a web client.  Using the default settings, the web client is availible at [http://localhost:5000](http://localhost:5000).  Tabata timing can also be started from the client page, and is activated automatically upon the first non-zero reading recieved by the web client.
 
 My default settings are "speed-log.txt" as the text file where speed recordings are stored, and port COM4 to access the Arduino serial line at 9600 baud.
 
-Finally, when wishing to display mock exercise data, `run demonstration.bat` which is just running the demo.py python script will broadcast readings that have already been logged in the default log file, "speed-log.txt".
+Finally, when wishing to display mock exercise data, `run simulator.bat` which is just running the demo.py python script will broadcast readings that have already been logged in the default log file, "speed-log.txt".
 
 ### Future Plans
 
-Still planned are client side starting and stopping of the recorder and timer scripts, viewing previous exercises, and building custom Tabata intervals/workouts from the web client.
+Still planned are client side starting and stopping of the recorder script, viewing previous exercises, and building custom Tabata intervals/workouts from the web client.
+
+Using packages with Node Package Manager is likely to happen soon, but for the moment, all javascript libraries are local or provided through a Content Delivery Network.
 
 ### Final Thoughts
 
