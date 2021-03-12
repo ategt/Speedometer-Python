@@ -14,7 +14,8 @@ import logging
 import sys
 import os
 
-os.makedirs("log")
+if not os.path.exists("log"):
+    os.mkdir("log")
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s: %(funcName)s:%(lineno)d %(message)s')
 
@@ -24,16 +25,17 @@ logger = logging.getLogger(__name__)
 # Log errors to a file
 file_handler = logging.FileHandler("log/main.log")
 file_handler.setLevel(logging.DEBUG)
+#file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 
 # Just so the console can see what is going on in stdout/stderr
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
-stream_handler.setFormatter(formatter)
+stream_handler.setLevel(logging.WARN)
+#stream_handler.setFormatter(formatter)
 
 # Add the handlers to the logger
-logger.addHander(file_handler)
-logger.addHander(stream_handler)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 logger.debug("Debug log message")
 logger.info("Info log message")
@@ -53,8 +55,8 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 
 sys.excepthook = handle_exception
 
-if __name__ == "__main__":
-    raise RuntimeError("Test handler")
+# if __name__ == "__main__":
+#     raise RuntimeError("Test handler")
 
 # logger = logging.getLogger("myLogger")
 # # Configure logger to write to a file...
@@ -83,10 +85,12 @@ sio.connect(uri)
 with open("file.txt", "a") as handle:
     handle.write("sio client connected\n")
 
-sio.emit("speedometer update", {"data":})
+sio.emit("speedometer update", {"data":"Some Data Here"})
 
 with open("file.txt", "a") as handle:
     handle.write("sio emition sent\n")
 
 with open("file.txt", "a") as handle:
     handle.write("thingy completed\n")
+
+quit()
