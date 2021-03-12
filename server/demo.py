@@ -15,6 +15,9 @@ def read(path):
             return ""
 
 def main():        
+    with open("file.txt", "a") as handle:
+        handle.write("demo file running\n")
+
     data = read("./data/speed-log.txt")
     lines = data.split("\r\n")
 
@@ -38,6 +41,22 @@ def main():
             
     finally:
         sio.disconnect()
+            with open("file.txt", "a") as handle:
+                handle.write("finally exit triggered\n")
+
+@sio.on('recorder broadcast')
+def direction_handler(data):
+    #sio.emit("recorder directive", {"data":"Received"})
+    if data['directive'] == 'close':
+        quit()
+
+with open("file.txt", "a") as handle:
+    handle.write("In demo file:")
+    handle.write(__name__)
+    handle.write(", ")
+    handle.write(__name__ == '__main__')
+    handle.write(" newest ")
+    handle.write("\n")
 
 if __name__ == '__main__':
     main()

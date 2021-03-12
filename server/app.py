@@ -46,6 +46,12 @@ def endpointReportPost():
 
     return flask.make_response()
 
+@app.route('/start-recorder', methods={"POST"})
+def endpointStartRecorder():
+    reports.create(flask.request.get_json())
+
+    return flask.make_response()
+
 @app.route('/report')
 def endpointReportRead():
     return flask.jsonify(reports=reports.getAll())
@@ -70,6 +76,10 @@ def tabata_timer_action(message):
         emit('tabata timer action broadcast', {'data': timer.getPid()}, broadcast=True)
     elif message['data'] == "PULSE":
         emit('tabata timer action broadcast', {'data': timer.pulse()}, broadcast=True)
+
+@socketio.on('recorder directive')
+def recoder_directive(directive):
+    emit('recorder broadcast', {'data': {'directive': directive['data']}}, broadcast=True)
 
 @socketio.on('connect')
 def connect():
