@@ -3,7 +3,7 @@ CD /D %~dp0
 ECHO %time% >> runlog.txt
 ECHO %cd% >> runlog.txt
 
-python3 -c "f=open('file.txt','a');f.write('text here\n');f.close()"
+python3 -c "f=open('file.txt','a');f.write('\n\n--Starting--\n\n');f.close()"
 
 python3 "./server/thing.py"
 
