@@ -67,21 +67,13 @@ class TestRecorder(unittest.TestCase):
     def test_run(self):
         with test_timeout(10):
             with Recorder() as recorder:
-                #recorder = Recorder()
-                print(recorder)
-                print("Entered")
                 self.assertFalse(recorder.isRunning())
-                print("1")
                 recorder.start()
-                print("2")
                 sleep(1)
                 self.assertTrue(recorder.isRunning())
-                print("3")                
                 recorder.stop()
-                print("4")
                 sleep(1)
                 self.assertFalse(recorder.isRunning())
-                print("5")
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,13 +6,13 @@ class Recorder(object):
     """Recorder"""
     def __init__(self, uri = "ws://127.0.0.1:5000/"):
         super(Recorder, self).__init__()
-        print("Recorder init-ing")
+
         self.uri = uri
         self.sio = socketio.Client()
 
-        @self.sio.on("recorder action broadcast")
-        def recorder_action(directive):
-            print(directive)
+        # @self.sio.on("recorder action broadcast")
+        # def recorder_action(directive):
+        #     print(directive)
 
     def __enter__(self):
         self.sio.connect(self.uri)

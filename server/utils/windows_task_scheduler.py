@@ -80,6 +80,11 @@ def run_task(args=None, task_name=None):
     err = prc.stderr.read()
     stdout = prc.stdout.read()
 
+    prc.terminate()
+
+    prc.stdout.close()
+    prc.stderr.close()
+
     if len(err) > 0:
         raise Exception(err.decode())
 
@@ -88,6 +93,8 @@ def run_task(args=None, task_name=None):
 
     logger.info(f"Info: {stdout.decode()}")
     logger.info(f"Run task: {task_name}")
+
+    prc.wait(timeout=1)
 
 def end_task(args=None, task_name=None):
     "End an existing Windows Task Scheduler task."
@@ -160,7 +167,7 @@ def list_tasks():
     return dxr
 
 def main(args=None):
-    logger. info("\n" + "=" * 72 + "\n{0} begun ...".format(__name__))
+    logger.info("\n" + "=" * 72 + "\n{0} begun ...".format(__name__))
 
     # Handle arguments
     if args is None:
