@@ -19,6 +19,8 @@ import subprocess
 
 import re
 
+from time import sleep
+
 logger = logging.getLogger(__name__)
 
 EMPTY_INFO = "INFO: There are no scheduled tasks presently available at your access level."
@@ -158,6 +160,8 @@ def list_tasks():
         raise Exception(err.decode())
 
     tasks = stdout.decode().split("\r\n\r\n")
+
+    # sleep(2)
 
     TASK_LIST_REGEX = re.compile(r"HostName:(?:\W+)(?P<host_name>[^\r^\n]+)\r\nTaskName:(?:\W+)(?P<taskname>[^\r^\n]+)\r\nNext Run Time:(?:\W+)(?P<next_run_time>[^\r^\n]+)\r\nStatus:(?:\W+)(?P<status>[^\r^\n]+)\r\nLogon Mode:(?:\W+)(?P<logon_mode>[^\r^\n]+)")
     dxr = [TASK_LIST_REGEX.search(t).groupdict() for t in tasks if EMPTY_INFO not in t]
