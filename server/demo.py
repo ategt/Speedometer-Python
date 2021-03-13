@@ -2,6 +2,7 @@ import utils.log_decorator
 
 from random import randint
 from time import sleep
+import threading
 import socketio
 import time
 import re
@@ -16,19 +17,23 @@ def read(path):
         except UnicodeDecodeError:
             return ""
 
-def directive_handler(data):
-    if data['directive'] == 'shutdown':
-        sio.emit("recorder action", {"data":"Shutdown Order Received"})
-        quit(0)
-    else:
-        sio.emit("recorder action", {"message":"Unknown Request Received", "data":data})
-
 def main():        
     data = read("./data/speed-log.txt")
     lines = data.split("\r\n")
 
     sio = socketio.Client()
-    sio.on("recorder directive broadcast", directive_handler)
+    event = threading.Event()
+    
+    @sio.on("recorder directive broadcast")
+    def directive_handler(data):
+        if data['directive'] == 'shutdown':
+            sio.emit("recorder action", {"data":"Shutdown Order Received"})
+            event.set()
+            import sys
+            sys.exit(0)
+            quit(0)
+        else:
+            sio.emit("recorder action", {"message":"Unknown Request Received", "data":data})
 
     uri = "ws://127.0.0.1:5000/"
     backward_readings = reversed([LINE_REGEX.search(line).groupdict() for line in lines if LINE_REGEX.search(line)])
@@ -40,6 +45,9 @@ def main():
         for result in backward_readings:
             try:
                 sio.emit("speedometer update", {"data":result})
+                if event.is_set():
+                    quit(0)
+
             except socketio.exceptions.BadNamespaceError as ex:
                 pass
             
