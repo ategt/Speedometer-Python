@@ -17,4 +17,5 @@ data/
 
 speed-log.txt
 temp.txt
-temp2.txt
+temp2.txt 
+chromedriver.exe 
