@@ -109,41 +109,54 @@ def end_task(args=None, task_name=None):
     logger.info(f"Info: {stdout.decode()}")
     logger.info(f"End task: {task_name}")
 
-def list_task(args=None, task_name=None):
-    "List existing Windows Task Scheduler tasks."
-    if args is not None:
-        print(args)
-        task_name = args.task_name
-
-    p = subprocess.Popen(['schtasks.exe', '/Query', '/FO', 'LIST'], #, '/TN', task_name], 
+def query_task(args=None, task_name=None):
+    "Query existing Windows Task Scheduler task."
+    p = subprocess.Popen(['schtasks.exe', '/Query', '/FO', 'LIST', '/TN', f'{task_name}'], 
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                                
+
     stdout = p.stdout.read()
     err = p.stderr.read()
+
+    p.terminate()
+
+    p.stderr.close()
+    p.stdout.close()
 
     if len(err) > 0:
         raise Exception(err.decode())
 
-    p.terminate()
     tasks = stdout.decode().split("\r\n\r\n")
 
     TASK_LIST_REGEX = re.compile(r"HostName:(?:\W+)(?P<host_name>[^\r^\n]+)\r\nTaskName:(?:\W+)(?P<taskname>[^\r^\n]+)\r\nNext Run Time:(?:\W+)(?P<next_run_time>[^\r^\n]+)\r\nStatus:(?:\W+)(?P<status>[^\r^\n]+)\r\nLogon Mode:(?:\W+)(?P<logon_mode>[^\r^\n]+)")
     dxr = [TASK_LIST_REGEX.search(t).groupdict() for t in tasks if EMPTY_INFO not in t]
 
-    #schtasks.exe /Query /FO LIST /TN "Cycle Logger"
-    # p = subprocess.Popen(['schtasks.exe', '/Query', '/FO', 'LIST'], #, '/TN', task_name], 
-    #                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #                         # stderr=subprocess.STDOUT
-
-
-    # print("OUT", p.stdout.read())
-    # print("ERR", p.stderr.read())
-
-    #p.kill
     p.wait(timeout=1)
     
-    # logger.info(f"Run task: {task_name}")
+    return dxr
 
+def list_tasks():
+    "List existing Windows Task Scheduler tasks."
+    p = subprocess.Popen(['schtasks.exe', '/Query', '/FO', 'LIST'],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    stdout = p.stdout.read()
+    err = p.stderr.read()
+
+    p.terminate()
+
+    p.stderr.close()
+    p.stdout.close()
+
+    if len(err) > 0:
+        raise Exception(err.decode())
+
+    tasks = stdout.decode().split("\r\n\r\n")
+
+    TASK_LIST_REGEX = re.compile(r"HostName:(?:\W+)(?P<host_name>[^\r^\n]+)\r\nTaskName:(?:\W+)(?P<taskname>[^\r^\n]+)\r\nNext Run Time:(?:\W+)(?P<next_run_time>[^\r^\n]+)\r\nStatus:(?:\W+)(?P<status>[^\r^\n]+)\r\nLogon Mode:(?:\W+)(?P<logon_mode>[^\r^\n]+)")
+    dxr = [TASK_LIST_REGEX.search(t).groupdict() for t in tasks if EMPTY_INFO not in t]
+
+    p.wait(timeout=1)
+    
     return dxr
 
 def main(args=None):

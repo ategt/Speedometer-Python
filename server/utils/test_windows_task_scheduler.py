@@ -5,7 +5,6 @@ import threading
 import random
 import os
 
-#import utils.windows_task_scheduler as wts
 import windows_task_scheduler as wts
 
 class TestWindowsTaskScheduler(unittest.TestCase):
@@ -19,14 +18,16 @@ class TestWindowsTaskScheduler(unittest.TestCase):
         pass
 
     def test_run(self):
-        wts.list_task()
-        # wts.run_task(task_name="Cycle Logger")
+        tags_to_check = ['taskname', 'status', 'logon_mode', 'next_run_time']
+        tasks = wts.list_tasks()
 
-        # signatures = base.loadSignatures()
-        # self.assertTrue(len(signatures) >= 0)
-        # self.assertTrue(len(signatures[(65, 65)]) >= 5)
+        self.assertTrue(len(tasks) > 20)
 
-        # self.assertNotEqual(pages[0], pages[1])
+        for task in tasks[:18]:
+            task_infos = wts.query_task(task_name = task['taskname'])
+
+            for tag in tags_to_check:
+                self.assertIn(task[tag], [t[tag] for t in task_infos], f"{task['taskname']} - {tag}")
 
 if __name__ == '__main__':
     unittest.main()

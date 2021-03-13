@@ -29,9 +29,6 @@ def main():
         if data['directive'] == 'shutdown':
             sio.emit("recorder action", {"data":"Shutdown Order Received"})
             event.set()
-            import sys
-            sys.exit(0)
-            quit(0)
         else:
             sio.emit("recorder action", {"message":"Unknown Request Received", "data":data})
 
