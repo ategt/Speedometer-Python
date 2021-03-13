@@ -64,6 +64,22 @@ class TestRecorder(unittest.TestCase):
         # with test_timeout(1):
         #     sleep(2)
 
+    def test_actionsInIsolation(self):
+        with Recorder() as recorder:
+            recorder.isRunning()
+
+        with Recorder() as recorder:
+            recorder.start()
+
+        with Recorder() as recorder:
+            recorder.isRunning()
+
+        with Recorder() as recorder:
+            recorder.stop()
+
+        with Recorder() as recorder:
+            recorder.isRunning()
+
     def test_run(self):
         with test_timeout(10):
             with Recorder() as recorder:

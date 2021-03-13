@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
 from report_dao import ReportDao
+from recorder import Recorder
 import flask
 import os
 
