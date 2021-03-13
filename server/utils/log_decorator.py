@@ -38,3 +38,12 @@ def handle_exception(exc_type, exc_value, exc_traceback):
     logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
 
 sys.excepthook = handle_exception
+
+# basic_formatter = logging.Formatter('%(asctime)s - %(message)s')
+
+# class SocketIOHandler(logging.Handler):
+#   def emit(self, record):
+#       socketio.send(record.getMessage())
+
+# sio_handler = SocketIOHandler()
+# logger.addHandler(sio_handler)
