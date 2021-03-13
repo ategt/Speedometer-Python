@@ -1,14 +1,21 @@
 CD /D %~dp0
 
-ECHO %time% >> runlog.txt
-ECHO %cd% >> runlog.txt
+IF DEFINED 1 (
+	@ECHO Running as Remote
+	@SET CONTEXT=%1
+) ELSE (
+	@ECHO Running as Main
+	@SET CONTEXT=main
+)
 
-python3 -c "f=open('file.txt','a');f.write('\n\n--Starting--\n\n');f.close()"
-
-python3 ./server/thing.py
-
-python3 -c "f=open('file.txt','a');f.write('Made it past thingys.\n');f.close()"
+ECHO Logging context set to %CONTEXT% >> runlog.txt
+ECHO %TIME% >> runlog.txt
 
 python3 ./server/demo.py
 
-PAUSE
+IF '%CONTEXT%'=='main' (
+	IF %ERRORLEVEL% NEQ 0 (
+		@ECHO ErrorLevel: %ERRORLEVEL%
+		PAUSE
+	)
+)
