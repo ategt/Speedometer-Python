@@ -21,7 +21,7 @@ class TimerClass(threading.Thread):
 
         if not self.event.is_set():
             if self.pid:
-                print("Timeout exceeded - Forcing shutdown")
+                print("\nTimeout exceeded - Forcing shutdown")
                 thisSystem = psutil.Process(self.pid)
                 thisSystem.terminate()
             raise TestTimeout(self.error_message)
@@ -61,23 +61,26 @@ class TestRecorder(unittest.TestCase):
         with test_timeout(10):
             sleep(1)
 
-        with test_timeout(10):
-            sleep(15)
+        with test_timeout(1):
+            sleep(2)
 
     def test_run(self):
-        #print((self))
-
         with test_timeout(10):
-            recorder = Recorder()
-
-            self.assertFalse(recorder.isRunning())
-
-            recorder.start()
-            sleep(1)
-            self.assertTrue(recorder.isRunning())
-            recorder.stop()
-            sleep(1)
-            self.assertFalse(recorder.isRunning())
+            with Recorder() as recorder:
+                #recorder = Recorder()
+                print("Entered")
+                self.assertFalse(recorder.isRunning())
+                print("1")
+                recorder.start()
+                print("2")
+                sleep(1)
+                self.assertTrue(recorder.isRunning())
+                print("3")                
+                recorder.stop()
+                print("4")
+                sleep(1)
+                self.assertFalse(recorder.isRunning())
+                print("5")                
 
 if __name__ == '__main__':
     unittest.main()

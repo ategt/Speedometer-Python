@@ -6,13 +6,18 @@ class Recorder(object):
     """Recorder"""
     def __init__(self, uri = "ws://127.0.0.1:5000/"):
         super(Recorder, self).__init__()
-        self.sio = socketio.Client()
         self.uri = uri
-        self.sio.connect(uri)
+        self.sio = socketio.Client()
 
         @self.sio.on("recorder action broadcast")
         def recorder_action(directive):
             print(directive)
+
+    def __enter__(self):
+        self.sio.connect(self.uri)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.sio.disconnect()
 
     def start(self):
         wts.run_task(task_name='Fake Cycle Logger')
