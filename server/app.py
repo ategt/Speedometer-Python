@@ -78,8 +78,8 @@ def tabata_timer_action(message):
         emit('tabata timer action broadcast', {'data': timer.pulse()}, broadcast=True)
 
 @socketio.on('recorder directive')
-def recoder_directive(directive):
-    emit('recorder broadcast', {'data': {'directive': directive['data']}}, broadcast=True)
+def recoder_directive(data):
+    emit('recorder action broadcast', {'data': data['data']}, broadcast=True)
 
 @socketio.on('connect')
 def connect():

@@ -1,18 +1,8 @@
-with open("file.txt", "a") as handle:
-    handle.write("In thingy file:")
-    handle.write(__name__)
-    handle.write("\n")
-
-def main():        
-    with open("file.txt", "a") as handle:
-        handle.write("thingy method running\n")
-
-if __name__ == '__main__':
-    main()
-
 import logging
 import sys
 import os
+
+from time import sleep
 
 if not os.path.exists("log"):
     os.mkdir("log")
@@ -20,77 +10,61 @@ if not os.path.exists("log"):
 formatter = logging.Formatter('%(asctime)s %(levelname)s: %(funcName)s:%(lineno)d %(message)s')
 
 logger = logging.getLogger(__name__)
-#handler = logging.StreamHandler(stream = sys.stdout)
 
 # Log errors to a file
 file_handler = logging.FileHandler("log/main.log")
 file_handler.setLevel(logging.DEBUG)
-#file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 
 # Just so the console can see what is going on in stdout/stderr
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.WARN)
-#stream_handler.setFormatter(formatter)
 
 # Add the handlers to the logger
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
+logger.setLevel(logging.DEBUG)
+
 logger.debug("Debug log message")
 logger.info("Info log message")
 logger.warn("Warn log message")
-
-# with open("log/main.log", "r") as f:
-#     print(r.read())
-
-#logger.addHander(handler)
 
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
-    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))       
+    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
 
 sys.excepthook = handle_exception
 
-# if __name__ == "__main__":
-#     raise RuntimeError("Test handler")
-
-# logger = logging.getLogger("myLogger")
-# # Configure logger to write to a file...
-
-# def my_handler(type, value, tb):
-#   logger.exception("Uncaught exception: {0}".format(str(value)))
-
-# # Install exception handler
-# sys.excepthook = my_handler
-
-# # Run your main script
-
 import socketio
 
-with open("file.txt", "a") as handle:
-    handle.write("socketio loaded\n")
+def connect():
+    print("Connected to server")
 
-sio = socketio.Client()
+def disconnect():
+    print("Disconnected from server")
 
-with open("file.txt", "a") as handle:
-    handle.write("sio client created\n")
+def main():
+    print("Starting thingy")
+    sio = socketio.Client()
 
-uri = "ws://127.0.0.1:5000/"
-sio.connect(uri)
+    sio.on("connect", connect)
+    sio.on("disconnect", disconnect)
 
-with open("file.txt", "a") as handle:
-    handle.write("sio client connected\n")
+    uri = "ws://127.0.0.1:5000/"
 
-sio.emit("speedometer update", {"data":"Some Data Here"})
+    try:
+        sio.connect(uri)
 
-with open("file.txt", "a") as handle:
-    handle.write("sio emition sent\n")
+        #sio.emit("speedometer update", {"data":"Some Data Here"})
+        sleep(5)
+        
+        sio.emit("recorder directive", {"data":"Some data"})
+    finally:
+        sio.disconnect()
 
-with open("file.txt", "a") as handle:
-    handle.write("thingy completed\n")
-
-quit()
+if __name__ == '__main__':
+    main()
