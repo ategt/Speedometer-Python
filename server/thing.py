@@ -2,7 +2,7 @@ import logging
 import sys
 import os
 
-from time import sleep
+#from time import sleep
 
 if not os.path.exists("log"):
     os.mkdir("log")
@@ -60,8 +60,9 @@ def main():
         sio.connect(uri)
 
         #sio.emit("speedometer update", {"data":"Some Data Here"})
-        sleep(5)
-        
+        sio.sleep(5)
+        #sio.wait()
+
         sio.emit("recorder directive", {"data":"Some data"})
     finally:
         sio.disconnect()
