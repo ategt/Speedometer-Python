@@ -29,6 +29,8 @@ def main():
 
     driver = webdriver.Chrome(executable_path=chrome_driver)
 
+    sleep(5)
+
     driver.get("http://127.0.0.1:5000/")
 
     driver.maximize_window()
