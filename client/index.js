@@ -61,6 +61,10 @@ window.addEventListener("load", function (event) {
 		clock_started = false;
 	};
 
+	const stop_recorder = function() {
+		socket.emit("recorder directive", {directive:"shutdown"});
+	};
+
 	document.getElementById("fullscreen-button").addEventListener("click", function (event) {
 		make_fullscreen(element);
 	});
@@ -159,4 +163,20 @@ window.addEventListener("load", function (event) {
 			clock_started = true;
 		}
 	});
+
+	socket.on('recorder action broadcast', function(msg) {
+		// Log broadcast to recieving field.
+    	const el = document.getElementById("recieved");
+    	const divElement = document.createElement("div");
+
+    	divElement.innerText = JSON.stringify(msg.data);
+    	el.appendChild(divElement);
+    });
+
+	socket.on('recorder action broadcast', function(msg) {
+		// Recorder may have recieved an unrecognized command.
+		if (msg.message === "Unknown Request Received") {
+			console.warn(`RECORDER - ${msg.message}`, msg.data);
+		}
+    });
 });
