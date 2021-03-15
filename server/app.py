@@ -1,3 +1,5 @@
+import utils.log_decorator
+
 from flask import Flask, render_template, send_from_directory, Request
 from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile

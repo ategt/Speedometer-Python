@@ -29,7 +29,7 @@ def main():
       for i in range(segment['interval'], 0, -1):
         print(f"\r {segment['activity']} - \t{i}    ", end="")
         broadcast_update(sio, {"activity":segment['activity'], "timeRemaining":i})
-        sleep(0.1)
+        sleep(1)
 
     print("\rDone!                                      ")
     broadcast_update(sio, {"activity":"Done!", "timeRemaining":0})
