@@ -38,19 +38,8 @@ def reading_update():
     pairs = speedLogFile.getLastTwoHours()
     return flask.jsonify(result=pairs)
 
-@app.route('/clusters')
-def clusters():
-    clusters = speedLogFile.getClusters()
-    return flask.jsonify(result=clusters)
-
 @app.route('/report', methods={"POST"})
 def endpointReportPost():
-    reports.create(flask.request.get_json())
-
-    return flask.make_response()
-
-@app.route('/start-recorder', methods={"POST"})
-def endpointStartRecorder():
     reports.create(flask.request.get_json())
 
     return flask.make_response()
