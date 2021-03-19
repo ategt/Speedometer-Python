@@ -235,6 +235,9 @@
 	            console.log("Base Report", old_base_report);
 	            console.log("Base ID", old_base_report.report.id);
 
+	            report.id = old_base_report.report.id;
+	            report.remarks = "Not sure why the crazy readings started happening.  Made a filter for it.";
+
 	            axios.patch("http://127.0.0.1:5000/report", report).catch(function(problem) {
 	                console.warn(problem);
 				});
