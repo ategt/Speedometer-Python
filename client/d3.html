@@ -87,7 +87,7 @@
 	};
 
 	window.addEventListener("load", function (event) {
-		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
+		axios.get("http://127.0.0.1:5000/readings", {params:{ start: 1612843003 - (72*60*60), stop: 1612843003 }}).then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
 

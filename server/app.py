@@ -103,6 +103,18 @@ def disconnect():
     print('Client disconnected')
     emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
 
+@app.route('/', defaults={'path1':'', 'path2':''})
+@app.route('/<path:path1>', defaults={'path2':''})
+@app.route('/<path:path1>/<path:path2>')
+def catch_all(path1, path2):
+    return flask.redirect("/")
+    #return flask.make_response()
+
+@app.errorhandler(404)
+def handle_404(e):
+    return flask.redirect("/")
+    #return flask.make_response()
+
 @app.after_request
 def add_header(response):
   response.headers['Access-Control-Allow-Origin'] = "*"
