@@ -10,7 +10,7 @@ class TestSpeedLogFile(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_lastcodes(self):
+    def test_lastCodes(self):
         """ 
             Get last timecode and get range of timecodes
             should be able to return the results of get
@@ -26,14 +26,18 @@ class TestSpeedLogFile(unittest.TestCase):
 
         readingRange = speedLogFile.getReadingRange(start, stop)
 
-        revs_lastTwoHours, adjustedTimecodes = zip(lastTwoHours)
-        revs_readingRange, rawTimecodes      = zip(readingRange)
+        revs_lastTwoHours, adjustedTimecodes = zip(*lastTwoHours)
+        revs_readingRange, rawTimecodes      = zip(*readingRange)
 
         self.assertEqual(len(lastTwoHours), len(readingRange))
 
-        for reading1, reading2 in zip(*revs_readingRange, *revs_lastTwoHours):
+        for reading1, reading2 in zip(revs_readingRange, revs_lastTwoHours):
             self.assertEqual(reading1, reading2)
 
-        
+        self.assertEqual(max(rawTimecodes), mostRecentTimecode)
+        self.assertTrue(min(rawTimecodes) >= start)
+        self.assertTrue(max(rawTimecodes) - min(rawTimecodes) <= (2 * 60 * 60))
+        self.assertTrue(max(adjustedTimecodes) - min(adjustedTimecodes) <= (2 * 60 * 60))
+
 if __name__ == '__main__':
     unittest.main()

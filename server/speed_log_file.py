@@ -40,6 +40,17 @@ class SpeedLogFile(object):
 
 		return pairs
 
+	def getLastTimecode(self):
+		" Returns most recently recorded timecode. "
+		dxs = self._parseLogFile()
+		pairs = [(int(dx['currentRevsPerMin']), int(float(dx['timestamp']))) for dx in dxs]
+		lowest_ts = min(list(zip(*pairs))[1])
+		highest_ts = max(list(zip(*pairs))[1])
+		last_two_hours_timecode = highest_ts - (60 * 60 * 2)
+		pairs = [(int(dx['currentRevsPerMin']), int(float(dx['timestamp']))-lowest_ts) for dx in dxs if float(dx['timestamp']) > last_two_hours_timecode]
+
+		return highest_ts
+
 	def getReadingRange(self, startTimestamp, stopTimestamp):
 		" Returns a list of tuples, revolution reading, then timecode. "
 		dxs = self._parseLogFile()
