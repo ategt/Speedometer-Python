@@ -10,12 +10,40 @@ class ReportDao(object):
 	def __init__(self, path):
 		super(ReportDao, self).__init__()
 		self._path = path
-		
+		self._nextId = self._determineNextId()
+
+	def _determineNextId(self):
+		if os.path.exists(self._path):
+			with open(self._path, 'r+') as handle:
+				return len(handle.read().strip().split("\n"))
+		else:
+			return 0
+
+	def _getNextId(self):
+		self._nextId += 1
+		return self._nextId
+
+	def _determineReportKey(self, report):
+		key_priority = ['id', 'startTime', 'date']
+		key_set = report.keys()
+
+		for key in key_priority:
+			if key in key_set:
+				return report[key]
+
 	def create(self, data):
+		with open(self._path, 'a') as handle:
+			json.dump({"id": self._getNextId(), **data}, handle)
+			handle.write("\n")
+
+	def update(self, data):
 		with open(self._path, 'a') as handle:
 			json.dump(data, handle)
 			handle.write("\n")
 
 	def getAll(self):
 		with open(self._path, 'r+') as handle:
-			return [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
+			items = [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
+			report_set = dict((self._determineReportKey(item), item) for item in items).values()
+
+			return sorted(report_set, key=lambda report:self._determineReportKey(report))
