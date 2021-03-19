@@ -40,6 +40,13 @@ class SpeedLogFile(object):
 
 		return pairs
 
+	def getReadingRange(self, startTimestamp, stopTimestamp):
+		" Returns a list of tuples, revolution reading, then timecode. "
+		dxs = self._parseLogFile()
+		pairs = [(int(dx['currentRevsPerMin']), int(float(dx['timestamp']))) for dx in dxs if int(float(dx['timestamp'])) >= startTimestamp and int(float(dx['timestamp'])) <= stopTimestamp]
+
+		return pairs
+
 	def getClusters(self, gapping_seconds = 10):
 		"""
 			Returns readings clustered by timecode.
