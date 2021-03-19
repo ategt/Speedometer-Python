@@ -56,7 +56,7 @@
 	    return sprint_count;
 	}
 
-	const generate_report = speeds => {		
+	const generate_report = (speeds, start_time, stop_time) => {		
 		const sprint_differential = 200;
 
 		const length_of_workout = speeds.length;
@@ -75,6 +75,8 @@
 
 		// Sensor readings are taken about once a second, so readings and seconds are used interchangably.
 		return {date: +new Date(), // The now of when the report was generated, allowing for data re-retrieval
+				startTime: start_time,
+				stopTime: stop_time,
 				lengthOfWorkout: length_of_workout, // in readings 
 				averageSpeedDuringSprint: average_speed_during_sprint,  // in RPMs
 				cooldownTime: cooldown_time, // in readings
@@ -88,6 +90,10 @@
 		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
+			const timecodes = response.data.result.map(item => item[1]);
+
+			const start_time = Math.min(...timecodes);
+			const stop_time  = Math.max(...timecodes);
 
 			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 			/* look into 3883195 and 3808218 */
@@ -168,7 +174,7 @@
 			// Think about filing a metadata report.
 			axios.get("http://127.0.0.1:5000/report").then(function (response) {
 				const last_report = response.data.reports[response.data.reports.length-1];
-				const report = generate_report(speeds);
+				const report = generate_report(speeds, start_time, stop_time);
 
 				const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
 
