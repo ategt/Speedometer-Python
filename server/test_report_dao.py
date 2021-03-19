@@ -12,10 +12,17 @@ class TestReportDao(unittest.TestCase):
         pass
 
     def tearDown(self):
-        os.remove("FakeReportPath")
+        if os.path.exists("FakeReportPath"):
+            os.remove("FakeReportPath")
+
+    def test_read_report_live_data(self):
+        "Confirm that the current live reports can be loaded."
+        reports = ReportDao("data\\reports.json")
+
+        _ = reports.getAll()
 
     def test_write_and_read_report(self):
-        "For now, report handling is only two things."
+        "Verify basic report handling."
         reports = ReportDao("FakeReportPath")
 
         try:
