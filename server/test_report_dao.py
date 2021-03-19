@@ -113,7 +113,7 @@ class TestReportDao(unittest.TestCase):
         self.assertDictEqual(updated_report, reports.get(report_id))
         self.assertNotEqual(json.dumps(retrieved_report), json.dumps(updated_report))
 
-        reports.patch({**random_report, "item3": uuid.uuid4().hex, "date":starting_date})
+        reports.patch({"id":report_id, "item3": uuid.uuid4().hex, "date":starting_date})
         starting_date+=1
 
         after_patch = reports.getAll()
@@ -128,6 +128,15 @@ class TestReportDao(unittest.TestCase):
 
         self.assertDictEqual(patched_report, reports.get(report_id))
         self.assertNotEqual(json.dumps(patched_report), json.dumps(updated_report))
+
+        self.assertEqual(retrieved_report['item2'], updated_report['item2'])
+        self.assertEqual(patched_report['item2'], updated_report['item2'])
+
+        self.assertNotEqual(patched_report['item3'], updated_report['item3'])
+        self.assertNotEqual(patched_report['item3'], retrieved_report['item3'])
+
+        self.assertEqual(patched_report['item1'], updated_report['item1'])
+        self.assertNotEqual(patched_report['item1'], retrieved_report['item1'])
 
 if __name__ == '__main__':
     unittest.main()
