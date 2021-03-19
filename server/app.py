@@ -44,6 +44,12 @@ def endpointReportPost():
 
     return flask.make_response()
 
+@app.route('/report', methods={"PATCH"})
+def endpointReportPatch():
+    reports.patch(flask.request.get_json())
+
+    return flask.make_response()
+
 @app.route('/report')
 def endpointReportRead():
     return flask.jsonify(reports=reports.getAll())

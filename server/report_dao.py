@@ -41,6 +41,10 @@ class ReportDao(object):
 			json.dump(data, handle)
 			handle.write("\n")
 
+	def patch(self, data):
+		report = self.get(data['id'])
+		self.update({**report, **data})
+
 	def getAll(self):
 		with open(self._path, 'r+') as handle:
 			items = [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
