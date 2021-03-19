@@ -90,10 +90,6 @@
 		axios.get("http://127.0.0.1:5000/readings").then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
-			const timecodes = response.data.result.map(item => item[1]);
-
-			const start_time = Math.min(...timecodes);
-			const stop_time  = Math.max(...timecodes);
 
 			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 			/* look into 3883195 and 3808218 */
@@ -173,18 +169,37 @@
 
 			// Think about filing a metadata report.
 			axios.get("http://127.0.0.1:5000/report").then(function (response) {
-				const last_report = response.data.reports[response.data.reports.length-1];
-				const report = generate_report(speeds, start_time, stop_time);
+				axios.get("http://127.0.0.1:5000/last-timecode").then(function (timecodeResponse) {
+					const timecode = timecodeResponse.data.result;
 
-				const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
+					axios.get("http://127.0.0.1:5000/readings", {params:{start: timecode - (2 * 60 * 60), stop: timecode}}).then(function (readingsResponse) {
+						const timecodes = readingsResponse.data.result.map(item => item[1]);
 
-				if ( different_reports ) {
-					axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {
-			        	console.warn(problem);
-			      	});
-				} else {
-					console.log("Chart Created Using Archived Data.")
-				}
+						const start_time = Math.min(...timecodes);
+						const stop_time  = Math.max(...timecodes);
+						const last_report = response.data.reports[response.data.reports.length-1];
+						const report = generate_report(speeds, start_time, stop_time);
+
+						if (last_report['startTime'] !== start_time) {
+							const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
+
+							if ( different_reports ) {
+								axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {
+						        	console.warn(problem);
+						      	});
+							} else {
+								console.log("Chart Created Using Archived Data.");
+							}
+						} else {
+							console.log("Chart Created Using Archived Data. - Overlapping Start Times.");
+						}
+
+					}).catch(function(problem) {
+        				console.warn(problem);
+      				});
+				}).catch(function(problem) {
+        			console.warn(problem);
+      			});
 			}).catch(function(problem) {
         		console.warn(problem);
       		});

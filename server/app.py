@@ -1,6 +1,6 @@
 import utils.log_decorator
 
-from flask import Flask, render_template, send_from_directory, Request
+from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
@@ -34,9 +34,20 @@ def send_file(filename):
         return send_from_directory("..\\client", filename, as_attachment=False)
 
 @app.route('/readings')
-def reading_update():
-    pairs = speedLogFile.getLastTwoHours()
-    return flask.jsonify(result=pairs)
+def reading_get():
+    args = flask.request.args
+
+    if 'start' in args.keys() and 'stop' in args.keys():
+        pairs = speedLogFile.getReadingRange(startTimestamp = int(args['start']), stopTimestamp = int(args['stop']))
+        return flask.jsonify(result=pairs)
+    else:
+        pairs = speedLogFile.getLastTwoHours()
+        return flask.jsonify(result=pairs)
+
+@app.route('/last-timecode')
+def get_last_timecode():
+    tc = speedLogFile.getLastTimecode()
+    return flask.jsonify(result=tc)
 
 @app.route('/report', methods={"POST"})
 def endpointReportPost():
