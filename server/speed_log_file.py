@@ -1,6 +1,7 @@
 from collections import defaultdict
 import json
 import re
+import os
 
 class SpeedLogFile(object):
 	"""docstring for SpeedLogFile"""
@@ -11,6 +12,19 @@ class SpeedLogFile(object):
 		
 	def _read(self):
 		with open(self._path, 'rb') as handle:
+			try:
+				return handle.read().decode("utf-8")
+			except UnicodeDecodeError:
+				return ""
+
+	def _readNearEof(self):
+		" Uses the knowledge that the average line of the log file is about 64 bytes to seek near the end. "
+		bytes_position_near_eof = os.path.getsize(self._path) - (65 * 3)
+
+		with open(self._path, 'rb') as handle:
+			handle.seek(bytes_position_near_eof)
+			_ = handle.readline()
+
 			try:
 				return handle.read().decode("utf-8")
 			except UnicodeDecodeError:
@@ -42,8 +56,12 @@ class SpeedLogFile(object):
 
 	def getLastTimecode(self):
 		" Returns most recently recorded timecode. "
-		dxs = self._parseLogFile()
-		return int(float(dxs[-1]['timestamp']))
+		data = self._readNearEof()
+
+		lines = data.split("\r\n")
+		nearEndingEntries = [self._LINE_REGEX.search(line).groupdict() for line in lines if self._LINE_REGEX.search(line)]
+
+		return int(float(nearEndingEntries[-1]['timestamp']))
 
 	def getReadingRange(self, startTimestamp, stopTimestamp):
 		" Returns a list of tuples, revolution reading, then timecode. "
