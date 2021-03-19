@@ -3,6 +3,7 @@ import unittest
 from report_dao import ReportDao
 from time import sleep
 import random
+import json
 import uuid
 import os
 
@@ -73,6 +74,7 @@ class TestReportDao(unittest.TestCase):
 
         reports.create({"item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
         starting_date+=1
+
         reports.create({"item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
         starting_date+=1
 
@@ -80,8 +82,28 @@ class TestReportDao(unittest.TestCase):
 
         self.assertEqual(len(before) + 3, len(after))
         self.assertEqual(after[-3]["item1"], some_number)
+        self.assertEqual(len(after), len({i['id'] for i in after}))
 
-        reports.update({"item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+        random_report = after[random.randint(0, len(after)-1)]
+        report_id = random_report['id']
+
+        retrieved_report = reports.get(report_id)
+
+        self.assertDictEqual(random_report, retrieved_report)
+
+        reports.update({**random_report, "item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+
+        after_update = reports.getAll()
+
+        self.assertEqual(len(after), len(after_update))
+
+        for report in after_update:
+            self.assertNotEqual(json.dumps(report), json.dumps(retrieved_report))
+
+        updated_report = [r for r in after_update if r['id'] == report_id][0]
+
+        self.assertDictEqual(updated_report, reports.get(report_id))
+        self.assertNotEqual(json.dumps(retrieved_report), json.dumps(updated_report))
 
 if __name__ == '__main__':
     unittest.main()

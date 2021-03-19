@@ -47,3 +47,7 @@ class ReportDao(object):
 			report_set = dict((self._determineReportKey(item), item) for item in items).values()
 
 			return sorted(report_set, key=lambda report:self._determineReportKey(report))
+
+	def get(self, id):
+		reports = self.getAll()
+		return [r for r in reports if r['id'] == id][0]
