@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reports</title>
+	<script type="text/javascript" src="./send/cdn-d3.v6.js"></script>
+	<script type="text/javascript" src="./send/cdn-axios.min.js"></script>
+	<style type="text/css">
+		/* tell the SVG path to be a thin blue line without an area fill */
+		path {
+			stroke-linejoin: round;
+      		stroke-linecap: round;
+		}
+
+		.axis {
+			shape-rendering: crispEdges;
+		}
+
+		.x.axis line {
+			stroke: lightgrey;
+		}
+
+		.x.axis .minor {
+			stroke-opacity: 0.5;
+		}
+
+		.x.axis path {
+			display: none;
+		}
+
+		.y.axis line, .y.axis path {
+			fill: none;
+			stroke: orange;
+		}
+
+		.report-item {
+			padding: 2px;
+    		font-size: large;
+		}
+
+		.report-item a {
+			text-decoration: none;
+    		color: currentcolor;
+		}
+
+		.remarks {
+			margin: 1rem;
+		}
+	</style>
+</head>
+<body>
+
+<div id="graph" class="aGraph" style="position: absolute;top: 0px;left:0;float:left;"></div>
+<div id="reports"></div>
+
+<script type="text/javascript">
+	const months = {0: "January",1:"February",2:"March",3:"April",4:"May",5:"June",6:"July",7:"August",8:"September",9:"October",10:"November",11:"December"};
+	const days = {0:"Sunday", 1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday"};
+	const days_abreviated = {0:"Sun",1:"Mon",2:"Tue",3:"Wed",4:"Thu",5:"Fri",6:"Sat"};
+
+	// `${days[dx.getDay()]} ${months[dx.getMonth()]} ${dx.getDate()}, ${dx.getFullYear()} ${dx.toLocaleTimeString()}`;
+	// `${days[dx.getDay()]} ${dx.toLocaleString()}`;
+	// `${dx.toDateString()} - ${dx.toLocaleTimeString()}`
+	// `${days_abreviated[dx.getDay()]} ${dx.toLocaleString()}`
+	// `${days[dx.getDay()} ${dx.toLocaleString()}`
+
+	async function printReports() {
+	  try {
+	    const response = await axios.get("http://127.0.0.1:5000/report");
+	    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
+
+	    const reportEl = document.getElementById("reports");	    
+
+	    for (let report of reports) {
+	        const d = new Date(report.date);
+	        const display_string = `<div class="report-item"><a href="/d3?base=${d.getTime()}">${report.id}: ${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${d.toLocaleTimeString()}</a><span class="remarks">${report.remarks}</span></div>`;
+	        //console.log(display_string);
+	        reportEl.innerHTML += display_string;
+	    }
+	  } catch (error) {
+	    console.error(error);
+	  }
+	};
+
+	async function updateRemarks(id, comment) {
+	  try {
+	  	axios.patch("http://127.0.0.1:5000/report", {id:id, remarks:comment});
+	  } catch (error) {
+	    console.error(error);
+	  }
+	};
+
+	async function updateTimes(id) {
+	  try {
+	    const response = await axios.get("http://127.0.0.1:5000/report");
+	    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
+
+		const report = reports.filter(r => r.id === id)[0];
+		const baseTimecode = report.date;
+
+		const params = {};
+
+		params.start = Math.round(baseTimecode/1000) - (24*60*60);
+		params.stop = Math.round(baseTimecode/1000) + (2*60*60);
+
+		const readings = (await axios.get("http://127.0.0.1:5000/readings", {params:params})).data.result;
+
+		const speeds = readings.map(item => item[0]);
+		const timecodes = readings.map(item => item[1]);
+		const start_time = Math.min(...timecodes);
+		const stop_time  = Math.max(...timecodes);
+
+	  	axios.patch("http://127.0.0.1:5000/report", {id:id, startTime: start_time, stopTime: stop_time});
+	  } catch (error) {
+	    console.error(error);
+	  }
+	};
+
+	async function runUpdateReports() {
+	  try {
+	    const response = await axios.get("http://127.0.0.1:5000/report");
+	    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
+
+	    for (let report of reports) {
+	    	if (!Object.keys(report).includes("startTime") || !Object.keys(report).includes("stopTime")) {
+	    		console.log("Updating", report.id);
+	    		updateTimes(report.id);
+	    		console.log("Done.");
+	    	}
+	    }
+	  } catch (error) {
+	    console.error(error);
+	  }
+	};
+
+	window.addEventListener("load", function (event) {
+		printReports();
+	});
+</script>
+</body>
+</html>

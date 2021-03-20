@@ -87,8 +87,20 @@
 	};
 
 	window.addEventListener("load", function (event) {
-		const baseTimecode = 1615834243854;
-		axios.get("http://127.0.0.1:5000/readings", {params:{ start: Math.round(baseTimecode/1000) - (24*60*60), stop: Math.round(baseTimecode/1000) }}).then(function (response) {
+		const queryParams = Object.fromEntries([... new URLSearchParams(window.location.search)]);
+
+		const params = {};
+
+		if (Object.keys(queryParams).includes("start") && Object.keys(queryParams).includes("stop")) {
+			params.start = queryParams.start;
+			params.stop = queryParams.stop;
+		} else if (Object.keys(queryParams).includes("base")) {
+			const baseTimecode = parseInt(queryParams.base);
+			params.start = Math.round(baseTimecode/1000) - (24*60*60);
+			params.stop = Math.round(baseTimecode/1000);
+		}
+
+		axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
 

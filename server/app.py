@@ -26,6 +26,10 @@ def index():
 def graph():
     return send_from_directory("..\\client","d3.html", as_attachment=False)
 
+@app.route('/info')
+def info():
+    return send_from_directory("..\\client","reports.html", as_attachment=False)
+
 @app.route('/send/<path:filename>')
 def send_file(filename):
     if 'cdn-' in filename:
