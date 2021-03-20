@@ -193,7 +193,7 @@
 						const last_report = response.data.reports[response.data.reports.length-1];
 						const report = generate_report(speeds, start_time, stop_time);
 
-						if (last_report['startTime'] !== start_time) {
+						if (reports.filter(r => r.startTime == start_time).length === 0) {
 							const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
 
 							if ( different_reports ) {
