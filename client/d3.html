@@ -87,7 +87,8 @@
 	};
 
 	window.addEventListener("load", function (event) {
-		axios.get("http://127.0.0.1:5000/readings", {params:{ start: 1612843003 - (72*60*60), stop: 1612843003 }}).then(function (response) {
+		const baseTimecode = 1615834243854;
+		axios.get("http://127.0.0.1:5000/readings", {params:{ start: Math.round(baseTimecode/1000) - (24*60*60), stop: Math.round(baseTimecode/1000) }}).then(function (response) {
 			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 			const speeds = response.data.result.map(item => item[0]);
 
@@ -210,43 +211,43 @@
 </script>
 
 <script type="text/javascript">
-	axios.get("http://127.0.0.1:5000/report").then(function (response) {
-	    const reports = response.data.reports;
+	// axios.get("http://127.0.0.1:5000/report").then(function (response) {
+	//     const reports = response.data.reports;
 
-	    axios.get("http://127.0.0.1:5000/readings", {params:{ start: 1612843003 - (72*60*60), stop: 1612843003 }}).then(function (response) {
-				const speeds = response.data.result.map(item => item[0]);
+	//     axios.get("http://127.0.0.1:5000/readings", {params:{ start: 1612843003 - (72*60*60), stop: 1612843003 }}).then(function (response) {
+	// 			// const speeds = response.data.result.map(item => item[0]);
 
-	            const timecodes = response.data.result.map(item => item[1]);
+	//    //          const timecodes = response.data.result.map(item => item[1]);
 
-				const start_time = Math.min(...timecodes);
-				const stop_time  = Math.max(...timecodes);
+	// 			// const start_time = Math.min(...timecodes);
+	// 			// const stop_time  = Math.max(...timecodes);
 
-	            const report = generate_report(speeds, start_time, stop_time);
-	            console.log("Report", report);
+	//    //          const report = generate_report(speeds, start_time, stop_time);
+	//    //          console.log("Report", report);
 
-	            const report_keys = Object.keys(report).filter(k => k !== "date");
-				const similarityCheck = r => report_keys.filter(k => r[k] === report[k]).length;
-	            const rsim = reports.map(r => ({report:r, similarity: similarityCheck(r)}));
+	//    //          const report_keys = Object.keys(report).filter(k => k !== "date");
+	// 			// const similarityCheck = r => report_keys.filter(k => r[k] === report[k]).length;
+	//    //          const rsim = reports.map(r => ({report:r, similarity: similarityCheck(r)}));
 
-	            console.log("Rsim", rsim);
+	//    //          console.log("Rsim", rsim);
 
-	            const old_base_report = rsim.reduce((itm, acc) => itm.similarity > acc.similarity ? itm : acc , {report:report, similarity:0});
+	//    //          const old_base_report = rsim.reduce((itm, acc) => itm.similarity > acc.similarity ? itm : acc , {report:report, similarity:0});
 
-	            console.log("Base Report", old_base_report);
-	            console.log("Base ID", old_base_report.report.id);
+	//    //          console.log("Base Report", old_base_report);
+	//    //          console.log("Base ID", old_base_report.report.id);
 
-	            report.id = old_base_report.report.id;
-	            report.remarks = "Not sure why the crazy readings started happening.  Made a filter for it.";
+	//    //          report.id = old_base_report.report.id;
+	//    //          report.remarks = "Not sure why the crazy readings started happening.  Made a filter for it.";
 
-	            axios.patch("http://127.0.0.1:5000/report", report).catch(function(problem) {
-	                console.warn(problem);
-				});
-	    }).catch(function(problem) {
-	        console.warn(problem);
-	    });
-	}).catch(function(problem) {
-	    console.warn(problem);
-	});
+	//    //          axios.patch("http://127.0.0.1:5000/report", report).catch(function(problem) {
+	//    //              console.warn(problem);
+	// 			// });
+	//     }).catch(function(problem) {
+	//         console.warn(problem);
+	//     });
+	// }).catch(function(problem) {
+	//     console.warn(problem);
+	// });
 </script>
 </body>
 </html>
