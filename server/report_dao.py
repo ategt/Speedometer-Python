@@ -50,8 +50,13 @@ class ReportDao(object):
 			items = [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
 			report_set = dict((self._determineReportKey(item), item) for item in items).values()
 
-			return sorted(report_set, key=lambda report:self._determineReportKey(report))
+			filtered_report_set = filter(lambda report: len(report.values()) > 1, report_set)
+
+			return sorted(filtered_report_set, key=lambda report:self._determineReportKey(report))
 
 	def get(self, id):
 		reports = self.getAll()
 		return [r for r in reports if r['id'] == id][0]
+
+	def retire(self, id):
+		self.update({"id": id})

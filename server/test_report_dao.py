@@ -138,5 +138,17 @@ class TestReportDao(unittest.TestCase):
         self.assertEqual(patched_report['item1'], updated_report['item1'])
         self.assertNotEqual(patched_report['item1'], retrieved_report['item1'])
 
+        reports.retire(report_id)
+
+        after_delete = reports.getAll()
+
+        self.assertEqual(len(after), len(after_delete) + 1)
+
+        for report in after_delete:
+            self.assertNotEqual(json.dumps(report), json.dumps(patched_report))
+
+        with self.assertRaises(Exception):
+            _deleted_report = reports.get(report_id)
+
 if __name__ == '__main__':
     unittest.main()
