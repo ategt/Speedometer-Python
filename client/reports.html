@@ -45,6 +45,13 @@
 		.remarks {
 			margin: 1rem;
 		}
+
+		.retire-report {
+			cursor: pointer;
+		    border: 1px solid black;
+		    padding: 1px;
+		    border-radius: 3px;
+		}
 	</style>
 </head>
 <body>
@@ -125,10 +132,15 @@
 	    for (let report of reports) {
 	        //const d = new Date(report.date);
 	        const d = new Date(parseInt(report.startTime)*1000);
-	        const display_string = `<div class="report-item"><a href="/d3?start=${report.startTime}&stop=${report.stopTime}">${report.id}: ${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${d.toLocaleTimeString()}</a><span class="remarks">${report.remarks}</span></div>`;
-	        //console.log(display_string);
+	        const display_string = `<div class="report-item"><a id="retire-report-${report.id}" class="retire-report" data-report="${report.id}">X</a>&nbsp;<a href="/d3?start=${report.startTime}&stop=${report.stopTime}&id=${report.id}">${report.id}: ${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${d.toLocaleTimeString()}</a><span class="remarks">${report.remarks}</span></div>`;
+
 	        reportEl.innerHTML += display_string;
 	    }
+
+	    Array.from(document.getElementsByClassName("retire-report")).forEach(element => element.addEventListener("click", function(event) {
+    		retireReport(event.target.dataset.report);
+		}));
+
 	  } catch (error) {
 	    console.error(error);
 	  }
@@ -137,6 +149,14 @@
 	async function updateRemarks(id, comment) {
 	  try {
 	  	axios.patch("http://127.0.0.1:5000/report", {id:id, remarks:comment});
+	  } catch (error) {
+	    console.error(error);
+	  }
+	};
+
+	async function retireReport(id) {
+	  try {
+	  	await axios.delete(`http://127.0.0.1:5000/report/${id}`);
 	  } catch (error) {
 	    console.error(error);
 	  }

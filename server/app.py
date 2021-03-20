@@ -65,6 +65,12 @@ def endpointReportPatch():
 
     return flask.make_response()
 
+@app.route('/report/<path:id>', methods={"DELETE"})
+def endpointReportDelete(id):
+    reports.retire(int(id))
+
+    return flask.make_response()
+
 @app.route('/report')
 def endpointReportRead():
     return flask.jsonify(reports=reports.getAll())
