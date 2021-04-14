@@ -19,9 +19,17 @@ def parse_args(system):
 
   return result
 
-def serialize_args(uri, schedule):
+def serialize_args(uri = None, schedule = None):
   " Build an argument string for use with parse_args. "
-  return base64.encodebytes(pickle.dumps({"uri":uri,"schedule":schedule})).decode().strip()
+  arguments = dict()
+
+  if uri:
+    arguments["uri"] = uri
+
+  if schedule:
+    arguments["schedule"] = schedule
+
+  return base64.encodebytes(pickle.dumps(arguments)).decode().strip()
 
 def main():
   """

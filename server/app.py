@@ -85,6 +85,9 @@ def tabata_timer_update(message):
 
 @socketio.on('tabata timer action')
 def tabata_timer_action(message):
+    if message.get("schedule"):
+        timer.setSchedule(message['schedule'])
+
     if message['data'] == "START":
         timer.start()
     elif message['data'] == "STOP":
