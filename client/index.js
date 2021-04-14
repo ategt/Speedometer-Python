@@ -2,17 +2,51 @@ const NUMBER_REGEX = new RegExp("b\\'([\\d]+)");
 const socket = io();
 let clock_started = false;
 
-const schedule = [{id:1, activity:"Actv1ss",    interval: 5},
-                  {id:2, activity:"Sactiv!2",   interval: 10},
-                  {id:3, activity:"Easy going", interval: 5}];
+const schedule = [{id: 1, activity:"Warmup",    interval: 2*60},
+      	          {id: 2, activity:"Sprint!",   interval: 30},
+        	      {id: 3, activity:"Recover",   interval: 3*60},
+            	  {id: 4, activity:"Sprint!",   interval: 30},
+	              {id: 5, activity:"Recover",   interval: 3*60},
+              	  {id: 6, activity:"Sprint!",   interval: 30},
+                  {id: 7, activity:"Recover",   interval: 3*60},
+              	  {id: 8, activity:"Sprint!",   interval: 30},
+              	  {id: 9, activity:"Recover",   interval: 3*60},
+              	  {id:10, activity:"Sprint!",   interval: 30},
+              	  {id:11, activity:"Cool Down", interval: 3*60}];
 
 window.addEventListener("load", function (event) {
 	const vm = new Vue({
-	  el: '#schedule',
+	  el: '#schedule-area',
 	  data: {
 	    schedule: schedule,
 	  },
-	  methods: {},
+	  methods: {
+	  	retire: function (event) {
+	  		const retire_id = event.currentTarget.dataset['id'];
+	  		vm.schedule = vm.schedule.filter(item => item.id != retire_id);
+	  	},
+	  	addScheduleItem: function (event) {
+	  		const new_id = vm.schedule.map(item => item.id).reduce((itm, acc) => itm > acc ? itm : acc, 0) + 1;
+	  		vm.schedule.push({id:new_id, activity:"Activity", interval: 5});
+	  	},
+	  	buildSchedule: function () {
+	  		const scheduleTable = document.getElementById("schedule");
+			const rows = scheduleTable.getElementsByTagName("tr");
+	  		const schedule = Array.from(rows).map(row => (
+	  									 {id:parseInt(  row.getElementsByClassName("schedule-id")[0].innerText),
+                             			  activity:     row.getElementsByClassName("activity-input")[0].value,
+                             			  interval:eval(row.getElementsByClassName("interval-input")[0].value)}
+                             			));
+	  		return schedule;
+	  	},
+	  	saveSchedule: function (event) {
+			alert("This Feature is not Implimented Yet.");
+	  	},
+	  	updateInterval: function (event) {
+	  		const evaluated_value = eval(event.currentTarget.value);
+	  		event.currentTarget.value = evaluated_value;
+	  	}
+	  },
 	  computed: {},
 	  mounted () {},
 	});
@@ -63,7 +97,7 @@ window.addEventListener("load", function (event) {
 	});
 
 	const start_timer = function() {
-		socket.emit('tabata timer action', {data:"START", schedule: schedule});
+		socket.emit('tabata timer action', {data:"START", schedule: vm.buildSchedule()});
 	};
 
 	const stop_timer = function() {

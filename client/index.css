@@ -121,3 +121,61 @@ path {
 	z-index: -1000;
 	opacity: 0%;
 }
+.schedule-id {
+	width: 2em;
+    text-align: right;
+    border-radius: 4px;
+    /* height: 3em; */
+    font-size: 2em;
+    /* padding: 0.1em;*/
+}
+.activity-input {
+    width: 8em;
+    text-align: left;
+    border-radius: 4px;
+    /* height: 3em; */
+    font-size: 2em;
+    padding: 0.1em 1em;
+}
+.interval-input {
+	width: 2em;
+    text-align: center;
+    border-radius: 4px;
+    /* height: 3em; */
+    font-size: 2em;
+    padding: 0.1em;
+}
+.retire-report {
+	cursor: pointer;
+    border: 1px solid black;
+    padding: 1px;
+    border-radius: 3px;
+}
+.delete-button {
+	text-align: center;
+    border-radius: 4px;
+    /* height: 3em; */
+    font-size: 2.4em;
+    padding: 0.01em 0.3em;
+}
+.nothing-yet {
+	text-align: center;
+    width: 60%;
+    padding: 2em;
+}
+.schedule-field {
+    margin: 0.5em 2em;
+}
+.schedule-button {
+/*	padding: 0.5em 3em;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 4px;
+*/
+    padding: 0.5em 0em;
+    cursor: pointer;
+    border: 1px solid black;
+    margin: 0.5em 6.5em;
+    width: 16.7em;
+    border-radius: 4px;
+}
