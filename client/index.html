@@ -89,10 +89,10 @@
 	        		<td class="retire-report delete-button" v-bind:data-id="item.id" v-on:click="retire">X</td>
 	        		<td class="schedule-id">{{item.id}}</td>
 	        		<td>
-	        			<input type="text" maxlength="10" name="activity" class="activity-input" v-bind:value="item.activity"></input>
+	        			<input type="text" maxlength="10" name="activity" v-model="item.activity" class="activity-input"></input>
 	        		</td>
 	        		<td>
-	        			<input type="text" name="interval" v-on:blur="updateInterval" class="interval-input" v-bind:value="item.interval"></input>
+	        			<input type="text" name="interval" v-bind:data-id="item.id" v-on:blur="updateInterval" class="interval-input" v-bind:value="item.interval"></input>
 	        		</td>
 	      		</tr>
 			</table>

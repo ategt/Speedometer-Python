@@ -30,21 +30,16 @@ window.addEventListener("load", function (event) {
 	  		vm.schedule.push({id:new_id, activity:"Activity", interval: 5});
 	  	},
 	  	buildSchedule: function () {
-	  		const scheduleTable = document.getElementById("schedule");
-			const rows = scheduleTable.getElementsByTagName("tr");
-	  		const schedule = Array.from(rows).map(row => (
-	  									 {id:parseInt(  row.getElementsByClassName("schedule-id")[0].innerText),
-                             			  activity:     row.getElementsByClassName("activity-input")[0].value,
-                             			  interval:eval(row.getElementsByClassName("interval-input")[0].value)}
-                             			));
-	  		return schedule;
+	  		return vm.schedule;
 	  	},
 	  	saveSchedule: function (event) {
 			alert("This Feature is not Implimented Yet.");
 	  	},
 	  	updateInterval: function (event) {
+	  		const updated_id = event.currentTarget.dataset['id'];
 	  		const evaluated_value = eval(event.currentTarget.value);
 	  		event.currentTarget.value = evaluated_value;
+	  		vm.schedule.filter(item => item.id == updated_id)[0].interval = evaluated_value;
 	  	}
 	  },
 	  computed: {},
