@@ -11,6 +11,11 @@ socket.io.msgpack.min.js.map
 axios.min.js
 d3.v6.js
 
+vue-template-compiler.js
+vue-test-utils.umd.js
+vue.js
+vue.min.js
+
 canvas-speedometer-master/
 workout pics/
 data/

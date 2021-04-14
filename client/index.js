@@ -2,7 +2,21 @@ const NUMBER_REGEX = new RegExp("b\\'([\\d]+)");
 const socket = io();
 let clock_started = false;
 
+const schedule = [{id:1, activity:"Actv1ss",    interval: 5},
+                  {id:2, activity:"Sactiv!2",   interval: 10},
+                  {id:3, activity:"Easy going", interval: 5}];
+
 window.addEventListener("load", function (event) {
+	const vm = new Vue({
+	  el: '#schedule',
+	  data: {
+	    schedule: schedule,
+	  },
+	  methods: {},
+	  computed: {},
+	  mounted () {},
+	});
+
 	const make_fullscreen = function (element) {
 	     if (element.requestFullscreen) {
 	      element.requestFullscreen();
@@ -49,7 +63,7 @@ window.addEventListener("load", function (event) {
 	});
 
 	const start_timer = function() {
-		socket.emit('tabata timer action', {data:"START"});
+		socket.emit('tabata timer action', {data:"START", schedule: schedule});
 	};
 
 	const stop_timer = function() {
@@ -115,7 +129,7 @@ window.addEventListener("load", function (event) {
 		// start the clock.
 		if (!clock_started && +msg.data.currentRevsPerMin > 0) {
 			clock_started = true;
-			socket.emit('tabata timer action', {data:"START"});
+			start_timer();
 		} else {
 			// Timer process seems to suspend at about 2:30 and
 			// this code keeps it alive. Not sure why that is.

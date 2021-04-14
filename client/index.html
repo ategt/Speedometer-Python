@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="./send/cdn-socket.io.js"></script>
 	<script type="text/javascript" src="./send/cdn-d3.v6.js"></script>
 	<script type="text/javascript" src="./send/cdn-axios.min.js"></script>
+	<script type="text/javascript" src="./send/cdn-vue.js"></script>
 	<script type="text/javascript" src="./send/index.js"></script>
 	<link rel="stylesheet" type="text/css" href="./send/index.css" />
 </head>
@@ -64,9 +65,29 @@
 						<a id="fullscreen-button" class="no-decoration">FULL&nbsp;SCREEN</a>
 					</span>
 				</h2>
-			</div>			
+			</div>
 		</div>
 		<div id="recieved" class="recieved-field"></div>
+	</div>
+	<div class="schedule-area">
+		<div class="sub-banner schedule-sub-banner">
+			<div class="half-pane left-pane">
+				<h2>Schedule:</h2>
+			</div>
+			<div class="half-pane right-pane">
+				<div id="add-schedule-button" class="timer-button schedule-button">
+					+ ADD SCHEDULE ITEM
+				</div>
+			</div>			
+		</div>
+		<div id="schedule" class="schedule-field">
+			<div v-for="(item, index) in schedule"
+                        v-bind:index="index"
+                        v-bind:key="item.id"
+                        class="schedule-row">
+        		{{item.id}}&nbsp;{{item.activity}}&nbsp;{{item.interval}}<br />
+      		</div>
+		</div>
 	</div>
 </body>
 </html>
