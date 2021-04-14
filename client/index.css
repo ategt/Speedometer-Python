@@ -64,6 +64,9 @@ textarea {
 	text-align: center;
 	margin: 0.5rem;
 	padding: 0px;
+	cursor: pointer;
+	border: 1px solid black;
+    border-radius: 4px;
 }
 .fullscreen-button-span {
 	width: inherit;

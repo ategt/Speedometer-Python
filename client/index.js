@@ -18,7 +18,7 @@ window.addEventListener("load", function (event) {
 	const vm = new Vue({
 	  el: '#schedule-area',
 	  data: {
-	    schedule: schedule,
+	    schedule: 'schedule' in sessionStorage ? JSON.parse(sessionStorage['schedule']) : schedule,
 	  },
 	  methods: {
 	  	retire: function (event) {
@@ -33,6 +33,7 @@ window.addEventListener("load", function (event) {
 	  		return vm.schedule;
 	  	},
 	  	saveSchedule: function (event) {
+			sessionStorage['schedule'] = JSON.stringify(vm.schedule);
 			alert("This Feature is not Implimented Yet.");
 	  	},
 	  	updateInterval: function (event) {
