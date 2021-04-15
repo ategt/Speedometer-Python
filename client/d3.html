@@ -181,6 +181,18 @@
 					.attr("stroke-opacity", "1")
 					.attr("d", line(speeds));
 
+			const peaksIndexes = detectPeaks(response.data.result, d => d[0],
+										{ 
+										  lookaround: 20,  // the number of neighbors to compare to on each side
+										  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
+										  coalesce: 5     // coalesce together peaks within this distance of each other
+										});
+
+			const peakSet = new Set(peaksIndexes);
+			const peaks = response.data.result.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
+
+			console.log(peaks);
+
 			// Think about filing a metadata report.
 			axios.get("http://127.0.0.1:5000/report").then(function (response) {
 				axios.get("http://127.0.0.1:5000/last-timecode").then(function (timecodeResponse) {
