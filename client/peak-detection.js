@@ -1,4 +1,4 @@
-detectPeaks = ƒ(data, accessor, options)
+//detectPeaks = ƒ(data, accessor, options)
 
 function detectPeaks(data, accessor, options) {
   let {lookaround, sensitivity, coalesce, full} = Object.assign({
@@ -17,7 +17,7 @@ function detectPeaks(data, accessor, options) {
   let scores = normalize(
     values.map(
       (value, index) => peakiness(
-        values.slice(max(0, index - lookaround), index),
+        values.slice(Math.max(0, index - lookaround), index),
         value,
         values.slice(index + 1, index + lookaround + 1)
       )
@@ -45,7 +45,7 @@ function detectPeaks(data, accessor, options) {
   return full ? { data, values, scores, candidates, groups, peaks } : peaks
 }
 
-peakiness = ƒ(left, value, right)
+//peakiness = ƒ(left, value, right)
 
 // Assigns a spikiness score to `value`, based on its left and right neighbors
 peakiness = (left, value, right) => {
@@ -53,7 +53,7 @@ peakiness = (left, value, right) => {
   return value - d3.max([d3.min(left) || 0, d3.min(right) || 0]) // this can be max or mean.
 }
 
-normalize = ƒ(xs)
+//normalize = ƒ(xs)
 
 normalize = xs => {
   let mean = d3.mean(xs)

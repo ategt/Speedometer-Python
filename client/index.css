@@ -182,3 +182,16 @@ path {
     width: 16.7em;
     border-radius: 4px;
 }
+.footer-item {
+	padding: 0em 3em;
+}
+.footer {
+	padding: 1em 6em;
+    text-align: center;
+}
+.footer-item a, .footer-item a:hover, .footer-item a:visited, .footer-item a:active {
+	color: black;
+    font-size: large;
+    text-decoration: none;
+    font-family: sans-serif;
+}
