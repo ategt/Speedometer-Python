@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>D3 Sample</title>
+	<link rel="stylesheet" type="text/css" href="./send/index.css" />
 	<script type="text/javascript" src="./send/cdn-d3.v6.js"></script>
 	<script type="text/javascript" src="./send/cdn-axios.min.js"></script>
 	<script type="text/javascript" src="./send/peak-detection.js"></script>
@@ -36,7 +37,24 @@
 </head>
 <body>
 
-<div id="graph" class="aGraph" style="position: absolute;top: 0px;left:0;float:left;"></div>
+<div id="graph" class="aGraph"></div>
+
+<footer>
+	<div class="footer">
+		<span class="footer-item">
+			<a href="./">Home</a>
+		</span>
+		<span class="footer-item">
+			<a href="./info">Info</a>
+		</span>
+		<span class="footer-item">
+			<a href="./d3">Graph</a>
+		</span>
+		<span class="footer-item">
+			<a href="./d3?start=0&stop=161125230800">Full Readout</a>
+		</span>
+	</div>
+</footer>
 
 <script type="text/javascript">
 	const top_speed = 2000;
