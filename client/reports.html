@@ -140,7 +140,7 @@
 
 	async function updateRemarks(id, comment) {
 	  try {
-	  	axios.patch("http://127.0.0.1:5000/report", {id:id, remarks:comment});
+	  	await axios.patch("http://127.0.0.1:5000/report", {id:id, remarks:comment});
 	  } catch (error) {
 	    console.error(error);
 	  }

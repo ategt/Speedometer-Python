@@ -3,41 +3,18 @@
 <head>
 	<title>D3 Sample</title>
 	<link rel="stylesheet" type="text/css" href="./send/index.css" />
+	<link rel="stylesheet" type="text/css" href="./send/graph.css" />
 	<script type="text/javascript" src="./send/cdn-d3.v6.js"></script>
 	<script type="text/javascript" src="./send/cdn-axios.min.js"></script>
 	<script type="text/javascript" src="./send/peak-detection.js"></script>
-	<style type="text/css">
-		/* tell the SVG path to be a thin blue line without an area fill */
-		path {
-			stroke-linejoin: round;
-      		stroke-linecap: round;
-		}
-
-		.axis {
-			shape-rendering: crispEdges;
-		}
-
-		.x.axis line {
-			stroke: lightgrey;
-		}
-
-		.x.axis .minor {
-			stroke-opacity: 0.5;
-		}
-
-		.x.axis path {
-			display: none;
-		}
-
-		.y.axis line, .y.axis path {
-			fill: none;
-			stroke: orange;
-		}
-	</style>
+	<script type="text/javascript" src="./send/graph.js"></script>
 </head>
 <body>
 
-<div id="graph" class="aGraph"></div>
+<div id="main" class="main">
+	<div id="graph" class="aGraph"></div>
+	<div id="summary" class="summary"></div>
+</div>
 
 <footer>
 	<div class="footer">
@@ -56,201 +33,5 @@
 	</div>
 </footer>
 
-<script type="text/javascript">
-	const top_speed = 2000;
-
-	function count_sprints(speeds) {
-		// I know that the reporter is using a different threshold for
-		// determining sprint boundry. Tests suggested this had be the 
-		// case, and I hope to come up with a better determinate someday.
-	    let sprint_count = 0;
-	    const gap = 1;
-
-	    for (let i = 0; i < speeds.length - gap; i+=gap ) {
-	        if (speeds[i] > 400 && speeds[i+gap] < 400) {
-	            sprint_count += 1;
-	        }
-	    }
-
-	    return sprint_count;
-	}
-
-	const generate_report = (speeds, start_time, stop_time) => {		
-		const sprint_differential = 200;
-
-		const length_of_workout = speeds.length;
-
-		const sprintings = speeds.filter(d => d > sprint_differential).filter(d => d < top_speed);
-		const average_speed_during_sprint = sprintings.reduce((acc, itm) => acc + itm, 0) / sprintings.length;
-		const highest_speed = Math.max(...speeds.filter(d => d < top_speed));
-
-		const last_sprint_timecount = speeds.reduce((acc, itm) => { return [itm > sprint_differential ? acc[1] : acc[0], acc[1] + 1];}, [0, 0])[0];
-		const cooldown_time = (speeds.length - last_sprint_timecount);
-
-		const bad_readings = speeds.filter(d => d >= top_speed).length;
-
-		const sprint_count = count_sprints(speeds);
-		const avg_sprint_length = sprintings.length / sprint_count;
-
-		// Sensor readings are taken about once a second, so readings and seconds are used interchangably.
-		return {date: +new Date(), // The now of when the report was generated, allowing for data re-retrieval
-				startTime: start_time,
-				stopTime: stop_time,
-				lengthOfWorkout: length_of_workout, // in readings 
-				averageSpeedDuringSprint: average_speed_during_sprint,  // in RPMs
-				cooldownTime: cooldown_time, // in readings
-				faultyReadingCount: bad_readings, // in readings above the plausability threshold
-				sprintCount: sprint_count, // self explanitory
-				avgSprintLength: avg_sprint_length,  // in readings
-				topSpeed: highest_speed}; // in RPMs
-	};
-
-	window.addEventListener("load", function (event) {
-		const queryParams = Object.fromEntries([... new URLSearchParams(window.location.search)]);
-
-		const params = {};
-
-		if (Object.keys(queryParams).includes("start") && Object.keys(queryParams).includes("stop")) {
-			params.start = queryParams.start;
-			params.stop = queryParams.stop;
-		} else if (Object.keys(queryParams).includes("base")) {
-			const baseTimecode = parseInt(queryParams.base);
-			params.start = Math.round(baseTimecode/1000) - (24*60*60);
-			params.stop = Math.round(baseTimecode/1000);
-		}
-
-		axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (response) {
-			// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
-			const speeds = response.data.result.map(item => item[0]);
-
-			/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
-			/* look into 3883195 and 3808218 */
-
-			// define dimensions of graph
-			const margin = ({top: 20, right: 30, bottom: 30, left: 40});
-			const height = 400;
-			const width = 1000;
-
-			// X scale will fit all values from data[] within pixes 0-w
-			const x = d3.scaleLinear().domain([0, speeds.length]).range([margin.left, width - margin.right]);
-			const y = d3.scaleLinear().domain([0, d3.max(speeds.filter(d => d < top_speed))]).range([height - margin.bottom, margin.top]);
-
-			// create a line function that can convert data[] into x and y points
-			const line = d3.line()
-					.defined(d => d < top_speed)
-					// assign the X function to plot our line as we wish
-					.x(function(d,i){
-						// return the X coordinate where we want to plot this datapoint
-						return x(i+1);
-					})
-					.y(function (d) {
-						// return the Y coordinate where we want to plot this datapoint
-						return y(d);
-					});
-
-			const xAxis = function (g) {
-				return g
-		    	.attr("transform", `translate(0,${height - margin.bottom})`)
-		    	.call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
-		    };
-
-			const yAxis = function (g) {
-				return g
-			    .attr("transform", `translate(${margin.left},0)`)
-			    .call(d3.axisLeft(y))
-			    .call(g => g.select(".domain").remove())
-			    .call(g => g.select(".tick:last-of-type text").clone()
-			        .attr("x", 3)
-			        .attr("text-anchor", "start")
-			        .attr("font-weight", "bold")
-			        .text("RPMs"));
-			};
-
-			// Add an SVG element with the desired dimensions and margin.
-			const graph = d3.select("#graph").append("svg")
-				.attr("class", "chart")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom);
-					
-			// Add the x-axis
-			graph.append("g")
-				.attr("class", "x axis")
-				.attr("transform", "translate(0, 0)")
-				.call(xAxis);
-
-			// Add the y-axis to the left
-			graph.append("g")
-				.attr("class", "y axis")
-				.attr("transform", "translate(0, 0)")
-				.call(yAxis)
-				.append("text")
-					.attr("transform", "rotate(-90)")
-					.attr("y", 6)
-					.attr("dy", "0.71em")
-					.style("text-anchor", "end")
-					.text("Number Of Messages");
-
-			// Add the line by appending an svg:path element with the data line we created above
-			// do this AFTER the axes above so that the line is above the tick-lines
-			graph.append("svg:path")
-					.attr("fill", "none")
-					.attr("stroke", "steelblue")
-					.attr("stroke-width", "1.5")
-					.attr("stroke-opacity", "1")
-					.attr("d", line(speeds));
-
-			const peaksIndexes = detectPeaks(response.data.result, d => d[0],
-										{ 
-										  lookaround: 20,  // the number of neighbors to compare to on each side
-										  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
-										  coalesce: 5     // coalesce together peaks within this distance of each other
-										});
-
-			const peakSet = new Set(peaksIndexes);
-			const peaks = response.data.result.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
-
-			console.log(peaks);
-
-			// Think about filing a metadata report.
-			axios.get("http://127.0.0.1:5000/report").then(function (response) {
-				axios.get("http://127.0.0.1:5000/last-timecode").then(function (timecodeResponse) {
-					const timecode = timecodeResponse.data.result;
-
-					axios.get("http://127.0.0.1:5000/readings", {params:{start: timecode - (2 * 60 * 60), stop: timecode}}).then(function (readingsResponse) {
-						const timecodes = readingsResponse.data.result.map(item => item[1]);
-
-						const start_time = Math.min(...timecodes);
-						const stop_time  = Math.max(...timecodes);
-						const last_report = response.data.reports[response.data.reports.length-1];
-						const report = generate_report(speeds, start_time, stop_time);
-
-						if (response.data.reports.filter(r => r.startTime == start_time).length === 0) {
-							const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
-
-							if ( different_reports ) {
-								axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {
-						        	console.warn(problem);
-						      	});
-							} else {
-								console.log("Chart Created Using Archived Data.");
-							}
-						} else {
-							console.log("Chart Created Using Archived Data. - Overlapping Start Times.");
-						}
-
-					}).catch(function(problem) {
-        				console.warn(problem);
-      				});
-				}).catch(function(problem) {
-        			console.warn(problem);
-      			});
-			}).catch(function(problem) {
-        		console.warn(problem);
-      		});
-	  	}).catch(function(problem) {
-        	console.warn(problem);
-      	});
-	});
-</script>
 </body>
 </html>
