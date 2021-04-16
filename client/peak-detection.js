@@ -1,48 +1,49 @@
 //detectPeaks = ƒ(data, accessor, options)
 
 function detectPeaks(data, accessor, options) {
-  let {lookaround, sensitivity, coalesce, full} = Object.assign({
+  const {lookaround, sensitivity, coalesce, full} = Object.assign({
     lookaround: 2,
     sensitivity: 1.4,
     coalesce: 0,
     full: false
   }, options || accessor)
   
-  let values = typeof accessor == "function" ? data.map(accessor) : data
+  const values = typeof accessor == "function" ? data.map(accessor) : data;
 
   // Compute a peakiness score for every sample value in `data`
   // We normalize the scale of the scores by mean-centering and dividing by the standard deviation
   // to get a dimensionless quantity such that can be used as a sensitivity parameter
   // across different scales of data (s. t. normalize(x) == normalize(k*x))
-  let scores = normalize(
-    values.map(
+  const scores = values.map(
       (value, index) => peakiness(
         values.slice(Math.max(0, index - lookaround), index),
         value,
         values.slice(index + 1, index + lookaround + 1)
       )
-    )
-  )
+    );
+
+  const normed_scores = normalize(scores);
 
   // Candidate peaks are indices whose score is above the sensitivity threshold
-  let candidates = d3.range(scores.length).filter(index => scores[index] > sensitivity)
+  const candidates = d3.range(normed_scores.length).filter(index => normed_scores[index] > sensitivity);
 
   // If we have multiple peaks, coalesce those that are close together
-  let groups = candidates.length ? [[candidates[0]]] : []
+  const groups = candidates.length ? [[candidates[0]]] : [];
+
   d3.pairs(candidates).forEach(([a, b]) => {
     if (b - a < coalesce) {
       groups[groups.length - 1].push(b)
     } else {
       groups.push([b])
     }
-  })
+  });
 
   // Represent every group of peaks by the highest peak in the group
-  let peaks = groups.map(
+  const peaks = groups.map(
     group => group[d3.scan(group, (a, b) => values[b] - values[a])]
-  )
+  );
 
-  return full ? { data, values, scores, candidates, groups, peaks } : peaks
+  return full ? { data, values, scores, normed_scores, candidates, groups, peaks } : peaks;
 }
 
 //peakiness = ƒ(left, value, right)
@@ -60,3 +61,12 @@ normalize = xs => {
   let stdev = d3.deviation(xs)
   return xs.map(x => (x - mean) / stdev)
 }
+
+// // d3.scan source code excerpt
+// for (const value of values) {
+//   ++index
+//   if (minIndex === undefined ? compare(value, value) === 0 : compare(value, min) < 0) {
+//     min = value;
+//     minIndex = index;
+//   }
+// }
