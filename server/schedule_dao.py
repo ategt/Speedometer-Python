@@ -64,7 +64,16 @@ class ScheduleDao(object):
 		with open(self._path, 'r+') as handle:
 			items = [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
 			schedule_dict = dict((item['id'], item) for item in items)
-			default_schedule = dict((item.get('default', False), item) for item in items).get(True, None)
+
+			default_schedule = None
+
+			for item in items:
+				try:
+					if item['default']:
+						default_schedule = item
+				except KeyError:
+					pass						
+
 			schedule_set = schedule_dict.values()
 
 			filtered_schedule_set = filter(lambda schedule: len(schedule.values()) > 1, schedule_set)
