@@ -24,7 +24,7 @@ class ScheduleDao(object):
 		return self._nextId
 
 	def create(self, data):
-		schedule = {"id": self._getNextId(), **data}
+		schedule = {**data, "id": self._getNextId()}
 		with open(self._path, 'a') as handle:
 			json.dump(schedule, handle)
 			handle.write("\n")
@@ -48,11 +48,11 @@ class ScheduleDao(object):
 
 			filtered_schedule_set = filter(lambda schedule: len(schedule.values()) > 1, schedule_set)
 
-			return {"schedules": sorted(filtered_schedule_set, key=lambda schedue:schedule['id']),
+			return {"schedules": sorted(filtered_schedule_set, key=lambda schedule:schedule['id']),
 					"default": schedule_dict.get(-1, None)}
 
 	def get(self, id):
-		schedules = self.getAll()
+		schedules = self.getAll()['schedules']
 		return [r for r in schedules if r['id'] == id][0]
 
 	def retire(self, id):
