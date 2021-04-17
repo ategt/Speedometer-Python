@@ -17,7 +17,7 @@ class TestScheduleDao(unittest.TestCase):
 
     def test_readScheduleLiveData(self):
         "Confirm that the current schedule file can be loaded."
-        schedules = ScheduleDao("data\\schedule.json")
+        schedules = ScheduleDao("data\\schedules.json")
 
         _ = schedules.getAll()['schedules']
 
@@ -192,7 +192,9 @@ class TestScheduleDao(unittest.TestCase):
 
         self.assertDictEqual(first_default_schedule, retrieved_schedule)
 
-        random_schedule = some_schedules[random.randint(0, len(some_schedules)-1)]
+        filtered_schedules = [s for s in some_schedules if s['id'] != schedule_id]
+        self.assertTrue(len(filtered_schedules) > 0)
+        random_schedule = filtered_schedules[random.randint(0, len(filtered_schedules)-1)]
         schedule_id = random_schedule['id']
 
         different_retrieved_schedule = schedules.get(schedule_id)
@@ -211,6 +213,25 @@ class TestScheduleDao(unittest.TestCase):
         self.assertDictEqual(second_default_schedule, different_retrieved_schedule)
 
         self.assertEqual(len(after_default_change_schedules), len(some_schedules))
+
+    def test_onlyOneScheduleNameAllowed(self):
+        "Create two schedules with the same name, and see what happens."
+        schedules = ScheduleDao("FakeSchedulePath")
+
+        try:
+            before = schedules.getAll()
+        except FileNotFoundError:
+            before = {"schedules": list(), "default": {"item1": 252000}}
+
+        some_number = random.randint(0, 2**32)
+        starting_date = 99999999999
+
+        schedules.create({"item1": some_number, "name": "Name One", "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+        schedules.create({"item1": some_number, "name": "Name One", "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+
+        retrieved_schedules = schedules.getAll()['schedules']
+
+        self.assertNotEqual(retrieved_schedules[-1]['name'], retrieved_schedules[-2]['name'])
 
 if __name__ == '__main__':
     unittest.main()
