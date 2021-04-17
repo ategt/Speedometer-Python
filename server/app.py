@@ -4,6 +4,7 @@ from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
+from schedule_dao import ScheduleDao
 from report_dao import ReportDao
 from recorder import Recorder
 import flask
@@ -13,10 +14,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
+scheduleDao = ScheduleDao(os.getenv("SCHEDULE_FILE_PATH"))
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
 reports = ReportDao(os.getenv("REPORT_FILE_PATH"))
-timer = TabataTimer()
 socketio = SocketIO(app)
+timer = TabataTimer()
 
 @app.route('/')
 def index():
@@ -116,17 +118,49 @@ def disconnect():
     print('Client disconnected')
     emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
 
+@app.route('/schedules', defaults={'schedule_id':None})
+@app.route('/schedule', defaults={'schedule_id':None})
+@app.route('/schedule/<path:schedule_id>')
+def get_schedule(schedule_id):
+    schedules = scheduleDao.getAll()
+    return flask.jsonify(schedules = schedules)
+
+@app.route('/schedules', methods={"POST"})
+def endpointSchedulesPost():
+    schedule = scheduleDao.create(flask.request.get_json())
+
+    if schedule['default']:
+        scheduleDao.setDefault(schedule['id'])
+
+    return flask.make_response()
+
+@app.route('/schedules', methods={"PATCH"})
+def endpointSchedulesPatch():
+    schedules.patch(flask.request.get_json())
+
+    return flask.make_response()
+
+@app.route('/schedules', methods={"PUT"})
+def endpointSchedulesPut():
+    schedules.setDefault(flask.request.get_json())
+
+    return flask.make_response()
+
+@app.route('/schedules/<path:id>', methods={"DELETE"})
+def endpointSchedulesDelete(id):
+    schedules.retire(int(id))
+
+    return flask.make_response()
+
 @app.route('/', defaults={'path1':'', 'path2':''})
 @app.route('/<path:path1>', defaults={'path2':''})
 @app.route('/<path:path1>/<path:path2>')
 def catch_all(path1, path2):
     return flask.redirect("/")
-    #return flask.make_response()
 
 @app.errorhandler(404)
 def handle_404(e):
     return flask.redirect("/")
-    #return flask.make_response()
 
 @app.after_request
 def add_header(response):
