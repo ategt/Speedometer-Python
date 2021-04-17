@@ -44,12 +44,13 @@ class ScheduleDao(object):
 		with open(self._path, 'r+') as handle:
 			items = [json.loads(line) for line in handle.read().split("\n") if len(line.strip()) > 1]
 			schedule_dict = dict((item['id'], item) for item in items)
+			default_schedule = dict((item.get('default', False), item) for item in items).get(True, None)
 			schedule_set = schedule_dict.values()
 
 			filtered_schedule_set = filter(lambda schedule: len(schedule.values()) > 1, schedule_set)
 
 			return {"schedules": sorted(filtered_schedule_set, key=lambda schedule:schedule['id']),
-					"default": schedule_dict.get(-1, None)}
+					"default": default_schedule}
 
 	def get(self, id):
 		schedules = self.getAll()['schedules']
@@ -60,4 +61,4 @@ class ScheduleDao(object):
 
 	def setDefault(self, id):
 		schedule = self.get(id)
-		self.patch({**schedule, "id":-1})
+		self.patch({**schedule, "default":True})

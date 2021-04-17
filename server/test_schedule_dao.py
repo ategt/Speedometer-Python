@@ -150,5 +150,67 @@ class TestScheduleDao(unittest.TestCase):
         with self.assertRaises(Exception):
             _deleted_schedule = schedules.get(schedule_id)
 
+    def test_setDefaultSchedule(self):
+        "Create a schedule, then set it as the default."
+        schedules = ScheduleDao("FakeSchedulePath")
+
+        try:
+            before = schedules.getAll()
+        except FileNotFoundError:
+            before = {"schedules": list(), "default": {"item1": 252000}}
+
+        some_number = random.randint(0, 2**32)
+        starting_date = 99999999999
+
+        schedules.create({"item1": some_number, "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+        starting_date+=1
+
+        schedules.create({"item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+        starting_date+=1
+
+        schedules.create({"item1": random.randint(0, 2**32), "item2": "Some Data", "item3": uuid.uuid4().hex, "date":starting_date})
+        starting_date+=1
+
+        after = schedules.getAll()
+        some_schedules = after['schedules']
+
+        self.assertEqual(len(before['schedules']) + 3, len(some_schedules))
+
+        random_schedule = some_schedules[random.randint(0, len(some_schedules)-1)]
+        schedule_id = random_schedule['id']
+
+        retrieved_schedule = schedules.get(schedule_id)
+
+        schedules.setDefault(schedule_id)
+
+        self.assertDictEqual(random_schedule, retrieved_schedule)
+
+        first_default_schedule = schedules.getAll()['default']
+
+        _ = retrieved_schedule.pop("default", None)
+        _ = first_default_schedule.pop("default", None)
+
+        self.assertDictEqual(first_default_schedule, retrieved_schedule)
+
+        random_schedule = some_schedules[random.randint(0, len(some_schedules)-1)]
+        schedule_id = random_schedule['id']
+
+        different_retrieved_schedule = schedules.get(schedule_id)
+
+        schedules.setDefault(schedule_id)
+
+        after_default_change = schedules.getAll()
+        after_default_change_schedules = after_default_change['schedules']
+        second_default_schedule = after_default_change['default']
+
+        _ = different_retrieved_schedule.pop("default", None)
+        _ = first_default_schedule.pop("default", None)
+        _ = second_default_schedule.pop("default", None)
+
+        self.assertNotEqual(first_default_schedule, second_default_schedule)
+        self.assertDictEqual(second_default_schedule, different_retrieved_schedule)
+
+        self.assertEqual(len(after_default_change_schedules), len(some_schedules))
+
 if __name__ == '__main__':
     unittest.main()
