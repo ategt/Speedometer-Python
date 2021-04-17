@@ -1,3 +1,4 @@
+import uuid
 import json
 import os
 
@@ -23,8 +24,27 @@ class ScheduleDao(object):
 		self._nextId += 1
 		return self._nextId
 
+	def _validateName(self, name):
+		try:
+			schedules = self.getAll()['schedules']
+			names = {schedule['name'] for schedule in schedules}
+		except FileNotFoundError:
+			names = set()
+
+		if len(name.strip()) < 1:
+			name = "- Empty -"
+
+		if name in names:
+			for index in range(1, 50):
+				new_name = f"{name} ({index})"
+				if new_name not in names:
+					return new_name
+			return f"{name} - {uuid.uuid4().hex}"
+		else:
+			return name
+
 	def create(self, data):
-		schedule = {**data, "id": self._getNextId()}
+		schedule = {**data, "name":self._validateName(data.get("name","")), "id": self._getNextId()}
 		with open(self._path, 'a') as handle:
 			json.dump(schedule, handle)
 			handle.write("\n")
