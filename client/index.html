@@ -94,6 +94,9 @@
 		        		<td>
 		        			<input type="text" name="interval" v-bind:data-id="item.id" v-on:blur="updateInterval" class="interval-input" v-bind:value="item.interval"></input>
 		        		</td>
+		        		<td>
+		        			<span v-text="prettyTime(item.interval)"></span>
+		        		</td>
 		      		</tr>
 				</table>
 			</div>

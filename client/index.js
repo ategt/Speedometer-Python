@@ -27,6 +27,12 @@ function loadScheduleFromStorage () {
 	}
 }
 
+Number.prototype.pad = function (size) {
+	let s = String(this);
+	while ( s.length < ( size || 2)) { s = "0" + s;}
+	return s;
+}
+
 window.addEventListener("load", function (event) {
 	const vm = new Vue({
 	  el: '#schedule-area',
@@ -106,6 +112,9 @@ window.addEventListener("load", function (event) {
 		  			resolve(response.data);
 		  		});
 	  		});
+	  	},
+	  	prettyTime: function (seconds) {
+		    return `${Math.floor(seconds/60)}:${(seconds%60).pad(2)}`;
 	  	},
 	  	loadSchedule: function (event) {
 			const schedule_id = event.currentTarget.dataset['id'];

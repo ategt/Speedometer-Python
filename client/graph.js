@@ -139,10 +139,6 @@ const load_peak = peaks => {
 		peak_element.innerText = itm[0];
 		peak_pane.append(peak_element);
 	}
-	//const peak_summary = peaks.map(itm => `Speed:${itm[0]} &nbsp;Timestamp:${itm[1]} &nbsp;Index:${itm.idx}`).join("<br />");
-
-	// peak_pane.innerHTML = `<div class="peaks-count">${peaks.length}</div>
-	// 						${peak_summary}`;
 
 	return peak_pane;
 };
