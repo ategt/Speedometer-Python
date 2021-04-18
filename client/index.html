@@ -71,39 +71,97 @@
 		<div id="recieved" class="recieved-field"></div>
 	</div>
 	<div id="schedule-area" class="schedule-area">
-		<div class="sub-banner schedule-sub-banner">
-			<div class="half-pane left-pane">
-				<h2>Schedule:</h2>
-			</div>
-			<div class="half-pane right-pane">
-				<div id="save-schedule-button" v-on:click="saveSchedule" class="timer-button schedule-button">
-					SAVE SCHEDULE
+		<div class="left-schedule-panel schedule-panel">
+			<div class="sub-banner schedule-sub-banner">
+				<div class="half-pane left-pane schedule-meta">
+					<h2>Schedule:</h2>
+					<span class="schedule-name">
+						<input type="text" id="schedule-name" name="schedule-name" class="schedule-name-input" v-model="schedule.name"></input>
+					</span>
 				</div>
 			</div>
+			<div id="schedule" class="schedule-field" v-if="schedule.items.length">
+				<table class="schedule-table">
+					<tr v-for="(item, index) in schedule.items"
+		                        v-bind:index="index"
+		                        v-bind:key="item.id"
+		                        class="schedule-row">
+		        		<td class="retire-report delete-button" v-bind:data-id="item.id" v-on:click="retire">X</td>
+		        		<td class="schedule-id">{{item.id}}</td>
+		        		<td>
+		        			<input type="text" maxlength="10" name="activity" v-model="item.activity" class="activity-input"></input>
+		        		</td>
+		        		<td>
+		        			<input type="text" name="interval" v-bind:data-id="item.id" v-on:blur="updateInterval" class="interval-input" v-bind:value="item.interval"></input>
+		        		</td>
+		      		</tr>
+				</table>
+			</div>
+			<div class="nothing-yet" v-else>
+	      		<p><h1>- No HIIT Items Scheduled - Using Default -</h1></p>
+	      		<p><h3>Press Add Schedule Item To Get Started</h3></p>
+	    	</div>
+	    	<div id="add-schedule-button" v-on:click="addScheduleItem" class="timer-button schedule-button">
+				+ ADD SCHEDULE ITEM
+			</div>
 		</div>
-		<div id="schedule" class="schedule-field" v-if="schedule.length">
-			<table class="schedule-table">
-				<tr v-for="(item, index) in schedule"
-	                        v-bind:index="index"
-	                        v-bind:key="item.id"
-	                        class="schedule-row">
-	        		<td class="retire-report delete-button" v-bind:data-id="item.id" v-on:click="retire">X</td>
-	        		<td class="schedule-id">{{item.id}}</td>
-	        		<td>
-	        			<input type="text" maxlength="10" name="activity" v-model="item.activity" class="activity-input"></input>
-	        		</td>
-	        		<td>
-	        			<input type="text" name="interval" v-bind:data-id="item.id" v-on:blur="updateInterval" class="interval-input" v-bind:value="item.interval"></input>
-	        		</td>
-	      		</tr>
-			</table>
-		</div>
-		<div class="nothing-yet" v-else>
-      		<p><h1>- No HIIT Items Scheduled - Using Default -</h1></p>
-      		<p><h3>Press Add Schedule Item To Get Started</h3></p>
-    	</div>
-    	<div id="add-schedule-button" v-on:click="addScheduleItem" class="timer-button schedule-button">
-			+ ADD SCHEDULE ITEM
+		<div class="right-panel schedule-panel right-schedule-panel">
+			<div class="right-pane button-panel">
+				<div id="save-schedule-button" v-on:click="saveAsSchedule" class="timer-button schedule-button">
+					DUPLICATE SCHEDULE
+				</div>
+				<div id="save-schedule-button" v-on:click="saveSchedule" class="timer-button schedule-button">
+					UPDATE SCHEDULE
+				</div>
+				<div id="new-schedule-button" v-on:click="newSchedule" class="timer-button schedule-button">
+					NEW SCHEDULE
+				</div>
+			</div>
+
+			<div id="schedule-list" class="schedule-field other-schedules-field" v-if="otherSchedules.length">
+				<table class="other-schedule-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th class="schedule-name-display-header">Name</th>
+							<th>Items</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tr v-for="(item, index) in otherSchedules"
+		                        v-bind:index="index"
+		                        v-bind:key="item.id"
+		                        class="schedule-row">
+		        		<td class="schedule-id-column" v-bind:data-id="item.id" v-on:click="loadSchedule">
+		        			{{item.id}}
+		        		</td>
+		        		<td class="schedule-name-display" v-bind:data-id="item.id" v-on:click="loadSchedule">
+		        			{{ item.name }}
+		        		</td>
+		        		<td class="items-count" v-bind:data-id="item.id" v-on:click="loadSchedule">
+		        			{{ item.items.length }}
+		        		</td>
+		        		<td class="schedule-status" v-if="item.id == defaultScheduleId">
+		        			DEFAULT
+		        		</td>
+		        		<td class="schedule-status" v-else>
+		        			<span class="set-default-button" v-bind:data-id="item.id" v-on:click="setDefault">SET DEFAULT</span>
+		        		</td>
+		        		<td class="retire-schedule delete-button retire-schedule-button cannot-do-this-button" v-on:click="cannotRetire" v-if="item.id == defaultScheduleId">
+		        			-
+		        		</td>
+		        		<td class="retire-schedule delete-button retire-schedule-button" v-bind:data-id="item.id" v-on:click="retireSchedule" v-else>
+		        			DELETE
+		        		</td>
+		      		</tr>
+				</table>
+			</div>
+			<div class="nothing-yet" v-else>
+	      		<p><h1>- No HIIT Items Scheduled - Using Default -</h1></p>
+	      		<p><h3>Press Add Schedule Item To Get Started</h3></p>
+	    	</div>
+
 		</div>
 	</div>
 	<footer>

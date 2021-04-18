@@ -128,6 +128,9 @@ path {
     border-radius: 4px;
     font-size: 2em;
 }
+.schedule-area {
+	display: flex;
+}
 .activity-input {
     width: 8em;
     text-align: left;
@@ -142,7 +145,7 @@ path {
     font-size: 2em;
     padding: 0.1em;
 }
-.retire-report {
+.retire-report, .retire-schedule {
 	cursor: pointer;
     border: 1px solid black;
     padding: 1px;
@@ -156,7 +159,6 @@ path {
 }
 .nothing-yet {
 	text-align: center;
-    width: 60%;
     padding: 2em;
 }
 .schedule-field {
@@ -166,7 +168,7 @@ path {
     padding: 0.5em 0em;
     cursor: pointer;
     border: 1px solid black;
-    margin: 0.5em 6.5em;
+    margin: 0em 0.5em 0.5em 6.5em;
     width: 16.7em;
     border-radius: 4px;
 }
@@ -182,4 +184,74 @@ path {
     font-size: large;
     text-decoration: none;
     font-family: sans-serif;
+}
+.schedule-name-input {
+    width: 10.4em;
+    text-align: left;
+    border-radius: 4px;
+    font-size: 2em;
+    padding: 0.1em 1em;
+    margin: 0em 1.8em;
+    display: inline-flex;
+}
+.schedule-meta {
+	display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+.schedule-panel {
+	display: inline-block;
+}
+.right-schedule-panel {
+	width: auto;
+}
+.button-panel {
+	display: block;	
+}
+.other-schedule-table {
+	width: 100%;
+}
+.retire-schedule {	
+	padding: 2px;
+    width: 5em;
+}
+.retire-schedule-button {
+	font-size: smaller;
+}
+.items-count, .schedule-status {
+	text-align: center;
+}
+.schedule-id-column {
+    font-size: xx-small;
+    text-align: center;
+    vertical-align: middle;
+    width: 3em;
+}
+.schedule-name-display, .schedule-name-display-header {
+	text-align: left;
+	width: 15em;
+}
+.schedule-status {
+	width: 7em;
+	cursor: default;
+}
+.items-count {
+	width: 4em;
+}
+.other-schedules-field {
+	margin: 0em;
+    margin-left: 5em;
+}
+.set-default-button {
+    border: 1px solid black;
+    cursor: default;
+    background-color: lightgrey;
+    font-size: xx-small;
+    padding: 0.4em;
+}
+.schedule-name-display {
+	cursor: pointer;
+}
+.cannot-do-this-button {
+	background-color: white;
 }

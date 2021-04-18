@@ -122,8 +122,8 @@ def disconnect():
 @app.route('/schedule', defaults={'schedule_id':None})
 @app.route('/schedule/<path:schedule_id>')
 def get_schedule(schedule_id):
-    schedules = scheduleDao.getAll()
-    return flask.jsonify(schedules = schedules)
+    schedule_info = scheduleDao.getAll()
+    return flask.jsonify(schedule_info)
 
 @app.route('/schedules', methods={"POST"})
 def endpointSchedulesPost():
@@ -136,19 +136,21 @@ def endpointSchedulesPost():
 
 @app.route('/schedules', methods={"PATCH"})
 def endpointSchedulesPatch():
-    schedules.patch(flask.request.get_json())
+    scheduleDao.patch(flask.request.get_json())
 
     return flask.make_response()
 
+@app.route('/schedule', methods={"PUT"})
 @app.route('/schedules', methods={"PUT"})
 def endpointSchedulesPut():
-    schedules.setDefault(flask.request.get_json())
+    scheduleDao.setDefault(flask.request.get_json()["id"])
 
     return flask.make_response()
 
+@app.route('/schedule/<path:id>', methods={"DELETE"})
 @app.route('/schedules/<path:id>', methods={"DELETE"})
 def endpointSchedulesDelete(id):
-    schedules.retire(int(id))
+    scheduleDao.retire(int(id))
 
     return flask.make_response()
 

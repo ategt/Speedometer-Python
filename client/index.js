@@ -2,49 +2,129 @@ const NUMBER_REGEX = new RegExp("b\\'([\\d]+)");
 const socket = io();
 let clock_started = false;
 
-const schedule = [{id: 1, activity:"Warmup",    interval: 2*60},
-      	          {id: 2, activity:"Sprint!",   interval: 30},
-        	      {id: 3, activity:"Recover",   interval: 3*60},
-            	  {id: 4, activity:"Sprint!",   interval: 30},
-	              {id: 5, activity:"Recover",   interval: 3*60},
-              	  {id: 6, activity:"Sprint!",   interval: 30},
-                  {id: 7, activity:"Recover",   interval: 3*60},
-              	  {id: 8, activity:"Sprint!",   interval: 30},
-              	  {id: 9, activity:"Recover",   interval: 3*60},
-              	  {id:10, activity:"Sprint!",   interval: 30},
-              	  {id:11, activity:"Cool Down", interval: 3*60}];
+const schedule = {name: "Default",
+				  default: true,
+				  id: 0,
+				  items:
+				 	 [{id: 1, activity:"Warmup",    interval: 2*60},
+	      	          {id: 2, activity:"Sprint!",   interval: 30},
+	        	      {id: 3, activity:"Recover",   interval: 3*60},
+	            	  {id: 4, activity:"Sprint!",   interval: 30},
+		              {id: 5, activity:"Recover",   interval: 3*60},
+	              	  {id: 6, activity:"Sprint!",   interval: 30},
+	                  {id: 7, activity:"Recover",   interval: 3*60},
+	              	  {id: 8, activity:"Sprint!",   interval: 30},
+	              	  {id: 9, activity:"Recover",   interval: 3*60},
+	              	  {id:10, activity:"Sprint!",   interval: 30},
+	              	  {id:11, activity:"Cool Down", interval: 3*60}]
+	              };
+
+function loadScheduleFromStorage () {
+	try{
+		return JSON.parse(sessionStorage['schedule']);
+	} catch (ex) {
+		return schedule;
+	}
+}
 
 window.addEventListener("load", function (event) {
 	const vm = new Vue({
 	  el: '#schedule-area',
 	  data: {
-	    schedule: 'schedule' in sessionStorage ? JSON.parse(sessionStorage['schedule']) : schedule,
+	    schedule: 'schedule' in sessionStorage ? loadScheduleFromStorage() : schedule,
+	    otherSchedules: new Object(),
+	    defaultScheduleId: 0,
 	  },
 	  methods: {
 	  	retire: function (event) {
 	  		const retire_id = event.currentTarget.dataset['id'];
-	  		vm.schedule = vm.schedule.filter(item => item.id != retire_id);
+	  		vm.schedule.items = vm.schedule.items.filter(item => item.id != retire_id);
 	  	},
 	  	addScheduleItem: function (event) {
-	  		const new_id = vm.schedule.map(item => item.id).reduce((itm, acc) => itm > acc ? itm : acc, 0) + 1;
-	  		vm.schedule.push({id:new_id, activity:"Activity", interval: 5});
+	  		const new_id = vm.schedule.items.map(item => item.id).reduce((itm, acc) => itm > acc ? itm : acc, 0) + 1;
+	  		vm.schedule.items.push({id:new_id, activity:"Activity", interval: 5});
 	  	},
 	  	buildSchedule: function () {
-	  		return vm.schedule;
+	  		return vm.schedule.items;
 	  	},
 	  	saveSchedule: function (event) {
-			sessionStorage['schedule'] = JSON.stringify(vm.schedule);
-			alert("This Feature is not Implimented Yet.");
+			this.saveScheduleLocally(vm.schedule);
+
+			if (Object.keys(vm.schedule).includes("id")) {
+				this.updateSchedule(vm.schedule);
+			} else {
+				this.createSchedule(vm.schedule);
+			}
+	  	},
+	  	saveAsSchedule: function (event) {
+			this.saveScheduleLocally(vm.schedule);
+			this.createSchedule(vm.schedule);
+	  	},
+	  	saveScheduleLocally: function (schedule) {
+			sessionStorage['schedule'] = JSON.stringify(schedule);
+	  	},
+	  	createSchedule: function (schedule) {
+			axios.post("./schedules", {...schedule, created: +new Date()}).then(function (response) {
+				vm.loadOtherSchedules();
+			});
+	  	},
+	  	updateSchedule: function (schedule) {
+			axios.patch("./schedules", {...schedule, updated: +new Date()}).then(function (response) {
+				vm.loadOtherSchedules();
+			}).catch(function (error) {
+				alert("Something went wrong - see log for details");
+				console.error(error);
+			});
+	  	},
+	  	newSchedule: function (event) {
+			vm.schedule = {name: "New Schedule",
+				  			default: true,
+				  			items: new Array()};
+			
+			const scheduleNameElement = document.getElementById("schedule-name");
+			window.setTimeout(() => scheduleNameElement.select(), 100);
+	  	},
+	  	retireSchedule: function (event) {
+	  		const retire_id = event.currentTarget.dataset['id'];
+	  		vm.otherSchedules = vm.otherSchedules.filter(item => item.id != retire_id);
+	  		axios.delete(`./schedules/${retire_id}`);
+	  	},
+	  	cannotRetire: function (event) {
+	  		alert("Cannot Delete Default Schedule\nYou must set another schedule as default first.");
 	  	},
 	  	updateInterval: function (event) {
 	  		const updated_id = event.currentTarget.dataset['id'];
 	  		const evaluated_value = eval(event.currentTarget.value);
 	  		event.currentTarget.value = evaluated_value;
-	  		vm.schedule.filter(item => item.id == updated_id)[0].interval = evaluated_value;
-	  	}
+	  		vm.schedule.items.filter(item => item.id == updated_id)[0].interval = evaluated_value;
+	  	},
+	  	loadOtherSchedules: function () {
+	  		return new Promise(function (resolve, reject) {
+	  			axios.get("./schedule").then(function (response) {
+		  			vm.otherSchedules = response.data.schedules;
+		  			vm.defaultScheduleId = response.data.default.id;
+		  			resolve(response.data);
+		  		});
+	  		});
+	  	},
+	  	loadSchedule: function (event) {
+			const schedule_id = event.currentTarget.dataset['id'];
+			vm.schedule = vm.otherSchedules.filter(itm => itm.id == schedule_id)[0];
+	  	},
+	  	setDefault: function (event) {
+			const schedule_id = parseInt(event.currentTarget.dataset['id']);
+			vm.defaultScheduleId = schedule_id;
+			axios.put("./schedule", {id:schedule_id});
+	  	},
 	  },
 	  computed: {},
-	  mounted () {},
+	  mounted () {
+	  	this.loadOtherSchedules().then(function (data) {
+		  	if (!('schedule' in sessionStorage)) {
+		  		vm.schedule = data.default;
+		  	}
+	  	});
+	  },
 	});
 
 	const make_fullscreen = function (element) {
