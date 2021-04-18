@@ -1,4 +1,10 @@
 from flask import Blueprint
+import flask
+import os
+
+from schedule_dao import ScheduleDao
+
+scheduleDao = ScheduleDao(os.getenv("SCHEDULE_FILE_PATH"))
 
 scheduleController = Blueprint("schedule", __name__)
 schedulesController = Blueprint("schedules", __name__)

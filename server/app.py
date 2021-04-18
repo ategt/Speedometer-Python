@@ -6,7 +6,6 @@ from importlib import import_module
 
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
-from report_dao import ReportDao
 from recorder import Recorder
 import flask
 import os
@@ -15,9 +14,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
-scheduleDao = ScheduleDao(os.getenv("SCHEDULE_FILE_PATH"))
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
-reports = ReportDao(os.getenv("REPORT_FILE_PATH"))
 socketio = SocketIO(app)
 timer = TabataTimer()
 
@@ -55,28 +52,6 @@ def reading_get():
 def get_last_timecode():
     tc = speedLogFile.getLastTimecode()
     return flask.jsonify(result=tc)
-
-@app.route('/report', methods={"POST"})
-def endpointReportPost():
-    reports.create(flask.request.get_json())
-
-    return flask.make_response()
-
-@app.route('/report', methods={"PATCH"})
-def endpointReportPatch():
-    reports.patch(flask.request.get_json())
-
-    return flask.make_response()
-
-@app.route('/report/<path:id>', methods={"DELETE"})
-def endpointReportDelete(id):
-    reports.retire(int(id))
-
-    return flask.make_response()
-
-@app.route('/report')
-def endpointReportRead():
-    return flask.jsonify(reports=reports.getAll())
 
 @socketio.on('speedometer update')
 def speedometer_update(message):
@@ -119,15 +94,15 @@ def disconnect():
     print('Client disconnected')
     emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
 
-@app.route('/', defaults={'path1':'', 'path2':''})
-@app.route('/<path:path1>', defaults={'path2':''})
-@app.route('/<path:path1>/<path:path2>')
-def catch_all(path1, path2):
-    return flask.redirect("/")
+# @app.route('/', defaults={'path1':'', 'path2':''})
+# @app.route('/<path:path1>', defaults={'path2':''})
+# @app.route('/<path:path1>/<path:path2>')
+# def catch_all(path1, path2):
+#     return flask.redirect("/")
 
-@app.errorhandler(404)
-def handle_404(e):
-    return flask.redirect("/")
+# @app.errorhandler(404)
+# def handle_404(e):
+#     return flask.redirect("/")
 
 @app.after_request
 def add_header(response):
@@ -140,17 +115,15 @@ def add_header(response):
 def shutdown_session(exception=None):
     pass
 
-modules = [{"url":"/schedules", }]
+modules = [{"module":"schedule_controller", "controller":"schedulesController"},
+           {"module":"schedule_controller", "controller":"scheduleController"},
+           {"module":"report_controller", "controller":"reportController"}]
 
 # Import modules
 for module in modules:
-    # Get module name from 'url' setting, exclude leading slash
-    modname = module['url'][1:]
-
-    # from project.controllers.<modname> import <modname>
-    mod = __import__(modname,None,None,modname)
-    mod = getattr(mod, modname) # Get blueprint from module
-    app.register_blueprint(mod, url_prefix=module['url'])
+    controller = import_module(module['module'])
+    mod = getattr(controller, module['controller'])
+    app.register_blueprint(mod)
 
 if __name__ == '__main__':
     socketio.run(app)
