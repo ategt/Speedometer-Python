@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")  # or socketio.init_app()
 timer = TabataTimer()
 
 @app.route('/')
