@@ -2,9 +2,10 @@ import utils.log_decorator
 
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
+from importlib import import_module
+
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
-from schedule_dao import ScheduleDao
 from report_dao import ReportDao
 from recorder import Recorder
 import flask
@@ -118,42 +119,6 @@ def disconnect():
     print('Client disconnected')
     emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
 
-@app.route('/schedules', defaults={'schedule_id':None})
-@app.route('/schedule', defaults={'schedule_id':None})
-@app.route('/schedule/<path:schedule_id>')
-def get_schedule(schedule_id):
-    schedule_info = scheduleDao.getAll()
-    return flask.jsonify(schedule_info)
-
-@app.route('/schedules', methods={"POST"})
-def endpointSchedulesPost():
-    schedule = scheduleDao.create(flask.request.get_json())
-
-    if schedule['default']:
-        scheduleDao.setDefault(schedule['id'])
-
-    return flask.make_response()
-
-@app.route('/schedules', methods={"PATCH"})
-def endpointSchedulesPatch():
-    scheduleDao.patch(flask.request.get_json())
-
-    return flask.make_response()
-
-@app.route('/schedule', methods={"PUT"})
-@app.route('/schedules', methods={"PUT"})
-def endpointSchedulesPut():
-    scheduleDao.setDefault(flask.request.get_json()["id"])
-
-    return flask.make_response()
-
-@app.route('/schedule/<path:id>', methods={"DELETE"})
-@app.route('/schedules/<path:id>', methods={"DELETE"})
-def endpointSchedulesDelete(id):
-    scheduleDao.retire(int(id))
-
-    return flask.make_response()
-
 @app.route('/', defaults={'path1':'', 'path2':''})
 @app.route('/<path:path1>', defaults={'path2':''})
 @app.route('/<path:path1>/<path:path2>')
@@ -174,6 +139,18 @@ def add_header(response):
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     pass
+
+modules = [{"url":"/schedules", }]
+
+# Import modules
+for module in modules:
+    # Get module name from 'url' setting, exclude leading slash
+    modname = module['url'][1:]
+
+    # from project.controllers.<modname> import <modname>
+    mod = __import__(modname,None,None,modname)
+    mod = getattr(mod, modname) # Get blueprint from module
+    app.register_blueprint(mod, url_prefix=module['url'])
 
 if __name__ == '__main__':
     socketio.run(app)
