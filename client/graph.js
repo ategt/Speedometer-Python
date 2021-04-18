@@ -237,7 +237,7 @@ window.addEventListener("load", function (event) {
 				.attr("stroke-opacity", "1")
 				.attr("d", line(speeds));
 
-		const peaksIndexes = detectPeaks(response.data.result, d => d[0],
+		const peaksIndexes = detectPeaks(response.data.result.filter(d => d[0] < top_speed), d => d[0],
 									{ 
 									  lookaround: 20,  // the number of neighbors to compare to on each side
 									  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
@@ -270,20 +270,28 @@ window.addEventListener("load", function (event) {
 					const last_report = response.data.reports[response.data.reports.length-1];
 					const report = generate_report(speeds, start_time, stop_time);
 
-					if (response.data.reports.filter(r => r.startTime == start_time).length === 0) {
-						const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
+					axios.get("/schedules").then(function (schedulesResponse) {
+						const default_schedule = schedulesResponse.data.default;
 
-						if ( different_reports ) {
-							axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {
-					        	console.warn(problem);
-					      	});
+						report.scheduleId = default_schedule.id;
+						report.scheduleName = default_schedule.name;
+
+						if (response.data.reports.filter(r => r.startTime == start_time).length === 0) {
+							const different_reports = Object.keys(report).filter(k => k !== "date").filter(k => last_report[k] !== report[k]).length > 0;
+
+							if ( different_reports ) {
+								axios.post("http://127.0.0.1:5000/report", report).catch(function(problem) {
+						        	console.warn(problem);
+						      	});
+							} else {
+								console.log("Chart Created Using Archived Data.");
+							}
 						} else {
-							console.log("Chart Created Using Archived Data.");
+							console.log("Chart Created Using Archived Data. - Overlapping Start Times.");
 						}
-					} else {
-						console.log("Chart Created Using Archived Data. - Overlapping Start Times.");
-					}
-
+					}).catch(function(problem) {
+    					console.warn(problem);
+  					});
 				}).catch(function(problem) {
     				console.warn(problem);
   				});
