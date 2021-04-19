@@ -1,5 +1,3 @@
-//detectPeaks = ƒ(data, accessor, options)
-
 export function detectPeaks(data, accessor, options) {
   const {lookaround, sensitivity, coalesce, full} = Object.assign({
     lookaround: 2,
@@ -46,27 +44,14 @@ export function detectPeaks(data, accessor, options) {
   return full ? { data, values, scores, normed_scores, candidates, groups, peaks } : peaks;
 }
 
-//peakiness = ƒ(left, value, right)
-
 // Assigns a spikiness score to `value`, based on its left and right neighbors
 export const peakiness = (left, value, right) => {
   // assume zero outside the boundary
   return value - d3.max([d3.min(left) || 0, d3.min(right) || 0]) // this can be max or mean.
 }
 
-//normalize = ƒ(xs)
-
 export const normalize = xs => {
   let mean = d3.mean(xs)
   let stdev = d3.deviation(xs)
   return xs.map(x => (x - mean) / stdev)
 }
-
-// // d3.scan source code excerpt
-// for (const value of values) {
-//   ++index
-//   if (minIndex === undefined ? compare(value, value) === 0 : compare(value, min) < 0) {
-//     min = value;
-//     minIndex = index;
-//   }
-// }

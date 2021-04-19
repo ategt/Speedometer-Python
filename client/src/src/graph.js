@@ -1,4 +1,5 @@
 import { detectPeaks } from './peak-detection';
+import axios from 'axios';
 
 export const top_speed = 2000;
 
@@ -307,5 +308,3 @@ export const runOnLoad = function (event) {
     	console.warn(problem);
   	});
 };
-
-//window.addEventListener("load", runOnLoad);
