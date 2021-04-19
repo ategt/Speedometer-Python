@@ -37,6 +37,14 @@ def send_file(filename):
     else:
         return send_from_directory("..\\client", filename, as_attachment=False)
 
+@app.route('/dist/<path:filename>')
+def build_endpoint(filename):
+    return send_from_directory("..\\client\\dist", filename, as_attachment=False)
+
+@app.route('/public/<path:filename>')
+def public_endpoint(filename):
+    return send_from_directory("..\\client\\public", filename, as_attachment=False)
+
 @app.route('/readings')
 def reading_get():
     args = flask.request.args

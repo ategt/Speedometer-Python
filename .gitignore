@@ -1,5 +1,6 @@
 __pycache__/
 node_modules/
+node_modules_old/
 
 socket.io.js
 socket.io.js.map
@@ -24,3 +25,7 @@ speed-log.txt
 temp.txt
 temp2.txt 
 chromedriver.exe 
+
+.cache/
+dist/
+log/
