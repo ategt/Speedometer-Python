@@ -1,3 +1,5 @@
+import { detectPeaks } from './peak-detection';
+
 export const top_speed = 2000;
 
 Number.prototype.pad = function (size) {
@@ -306,4 +308,4 @@ export const runOnLoad = function (event) {
   	});
 };
 
-window.addEventListener("load", runOnLoad);
+//window.addEventListener("load", runOnLoad);
