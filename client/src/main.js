@@ -1,7 +1,9 @@
-//import Vue from 'vue'
-import Vue from '../../node_modules/vue/dist/vue.js';
-import Graph from './Graph.vue';
-// import router from './router'
+import Vue from 'vue'
+//import Vue from '../../node_modules/vue/dist/vue.js';
+//import Graph from './views/Graph.vue';
+import router from './router';
+import App from './App.vue';
+
 // import './../node_modules/bulma/css/bulma.css';
 
 // // Import the Auth0 configuration
@@ -23,11 +25,11 @@ import Graph from './Graph.vue';
 //   }
 // });
 
-// Vue.config.productionTip = false
+Vue.config.productionTip = false
 
 window.addEventListener("load", function (event) {
   new Vue({
-    //router,
-    render: h => h(Graph)
+    router,
+    render: h => h(App)
   }).$mount('#main');
 });
