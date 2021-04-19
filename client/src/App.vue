@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Footer />
+    <router-view></router-view>
+    <Footer></Footer>
   </div>
 </template>
 <script>
-//<router-view/>
 import Footer from './components/partials/Footer.vue';
 export default {
   name: 'app',

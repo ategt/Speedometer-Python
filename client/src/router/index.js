@@ -12,22 +12,22 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'graph',
       component: Graph
     },
     {
       path: '/:place',
-      name: 'home',
+      name: 'any-placeVar',
       component: Graph
     },
     {
       path: '/public/:place',
-      name: 'home',
+      name: 'public-placeVar',
       component: Graph
     },
     {
-      path: '/public/d3/html.html',
-      name: 'home',
+      path: '/public/d3.html',
+      name: 'specific',
       component: Graph
     }
     // ,

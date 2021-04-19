@@ -31,5 +31,5 @@ window.addEventListener("load", function (event) {
   new Vue({
     router,
     render: h => h(App)
-  }).$mount('#main');
+  }).$mount('#app');
 });
