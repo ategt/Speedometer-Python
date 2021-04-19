@@ -16,6 +16,11 @@ export default new Router({
       component: Graph
     },
     {
+      path: '/public/info',
+      name: 'public-info',
+      component: () => import('../views/Reports.vue')
+    },
+    {
       path: '/:place',
       name: 'any-placeVar',
       component: Graph
