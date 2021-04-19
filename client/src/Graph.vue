@@ -7,10 +7,15 @@
 <script>
 //import Nav from './components/partials/Nav.vue';
 //import Footer from './components/Footer.vue';
+import { runOnLoad } from './src/graph.js';
+
 export default {
   name: 'graph',
   components: {
     //Footer
-  }  
+  },
+  mounted () {
+    runOnLoad();
+  }
 }
 </script>
