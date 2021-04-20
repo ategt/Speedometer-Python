@@ -45,7 +45,7 @@ export default new Router({
     {
       path: '/graph/:id(\\d+)?',
       name: "Graph",
-      component: () => import('../views/Graph.vue')
+      component: () => import('../views/ReportDetail.vue')
     },
     // {
     //   path: '/public/graph',
