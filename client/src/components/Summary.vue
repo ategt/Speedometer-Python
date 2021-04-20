@@ -28,7 +28,7 @@
 			<PeaksReadout v-bind:peaks="peaks"></PeaksReadout>
 			<textarea class="comment-textarea" v-model="report.remarks" v-on:blur="remarksUpdated"></textarea>
 		</div>
-		<div class="error-report" v-else-if="errors">
+		<div class="error-report" v-else-if="errors.length">
 			There was a problem loading the Report.
 		</div>
 		<div class="loading-report" v-else-if="loading">
@@ -97,8 +97,10 @@ export default {
 		updateRemarks(this.report.id, this.report.remarks);
   	},
   	populate: function (report) {
-  		this.report = report;
-  		this.getPeaks(report.startTime, report.stopTime);
+  		if (report) {  			
+  			this.report = report;
+  			this.getPeaks(report.startTime, report.stopTime);
+  		}
   	},
   	getPeaks: function (start, stop) {
   		getReadings(start, stop).then(this.parsePeaks)
@@ -117,7 +119,10 @@ export default {
   	},
   	loadingDone: function () {
   		this.loading = false;
-  	}
+  	},
+  	accumulateErrors: function (error) {
+  		this.errors.push(error);
+  	},
   },
   created () {
   	const params = {};
@@ -134,25 +139,7 @@ export default {
 	
 	const reportId = parseInt(route.params.id);
 
-	getReport(reportId).then(this.populate).finally(this.loadingDone);
-
-	// axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (response) {
-	 //  	const peaksIndexes = detectPeaks(response.data.result.filter(d => d[0] < top_speed), d => d[0],
-		// 							{ 
-		// 							  lookaround: 20,  // the number of neighbors to compare to on each side
-		// 							  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
-		// 							  coalesce: 5     // coalesce together peaks within this distance of each other
-		// 							});
-
-	 //  	const peakSet = new Set(peaksIndexes);
-		// const peaks = response.data.result.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
-		// const peaks_element = load_peak(peaks);
-
-		// axios.get("http://127.0.0.1:5000/report").then(function (response) {
-		// 	const relevant_report = response.data.reports.filter(itm => itm.id === reportId)[0];
-		// 	load_summary(relevant_report, peaks_element);
-		// });
-	//});
+	getReport(reportId).then(this.populate).catch(this.accumulateErrors).finally(this.loadingDone);
   },
   mounted () {
   }
