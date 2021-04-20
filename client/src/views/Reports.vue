@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 import { top_speed, days_abreviated, days, months } from '../src/constants';
 import { printReports } from '../src/reports';
 

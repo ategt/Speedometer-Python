@@ -2,6 +2,10 @@ import { shallowMount, mount, RouterLinkStub, createLocalVue } from '../../../no
 import VueRouter from 'vue-router';
 import { mockGet } from './helpers.js';
 
+import axios from 'axios';
+import moxios from 'moxios';
+import sinon from 'sinon';
+
 import chai from './lib/chai.js';
 import './lib/mocha.js';
 
