@@ -28,9 +28,24 @@ export default new Router({
     },
     {
       path: '/public/:place',
-      name: 'public-placeVar',
+      //name: '',
       //component: Graph
       component: () => import('../views/Schedule.vue')
+    },
+    {
+      path: '/public/info',
+      name: "Reports",
+      component: () => import('../views/Reports.vue')
+    },
+    {
+      path: '/public/schedule',
+      name: "Schedule",
+      component: () => import('../views/Schedule.vue')
+    },
+    {
+      path: '/public/graph',
+      name: "Graph",
+      component: Graph
     },
     {
       path: '/public/d3.html',
