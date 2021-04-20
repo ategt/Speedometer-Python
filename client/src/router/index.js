@@ -22,12 +22,15 @@ export default new Router({
     },
     {
       path: '/public/:place',
+      name: "Sumplace",
       component: () => import('../components/Summary.vue')
     },
     {
       path: '/summary/:id/:spec(text|graph)?',
+      //path: '/summary/:id',
       name: 'Summary',
       component: () => import('../components/Summary.vue')
+      //component: () => import('../views/Graph.vue')
     },
     {
       path: '/public/info',
