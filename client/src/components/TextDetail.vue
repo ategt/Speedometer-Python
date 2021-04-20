@@ -142,6 +142,7 @@ export default {
 	getReport(reportId).then(this.populate).catch(this.accumulateErrors).finally(this.loadingDone);
   },
   mounted () {
+	console.log(this.$route);
   }
 }
 </script>
