@@ -3,7 +3,7 @@
 		<div v-if="reports.length">
 			Number of reports: {{ reports.length }}
 			<div class="report-item" v-for="(report, index) in reports" v-bind:index="report.id" v-bind:key="report.id">
-				<a v-bind:id="'retire-report-' + report.id" class="retire-report" v-bind:data-report="report.id">X</a>&nbsp;
+				<a v-bind:id="'retire-report-' + report.id" class="retire-report" v-on:click="" v-bind:data-report="report.id">X</a>&nbsp;
 				<router-link :to="{path:'/d3', query: {start: report.startTime, stop: report.stopTime, id: report.id}}">
 						{{report.id}}: <ReportTimestamp v-bind:report="report"></ReportTimestamp></router-link>
 						<span class="remarks">{{report.remarks}}</span>
@@ -23,7 +23,7 @@
 
 <script>
 import { top_speed, days_abreviated, days, months } from '../src/constants';
-import { getReports, printReports } from '../src/reports';
+import { getReports, printReports, retireReport } from '../src/reports';
 import ReportTimestamp from '../components/partials/ReportTimestamp.vue';
 
 export default {
@@ -41,6 +41,9 @@ export default {
 			}).finally(function (not_sure) {
 				context.loading = false;
 			});
+		},
+		retireReport: function (event) {
+			retireReport(event.target.dataset.report);
 		},
 	},
 	data () {

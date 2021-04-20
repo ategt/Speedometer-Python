@@ -30,7 +30,7 @@ export default new Router({
       path: '/public/:place',
       name: 'public-placeVar',
       //component: Graph
-      component: () => import('../views/Reports.vue')
+      component: () => import('../views/Schedule.vue')
     },
     {
       path: '/public/d3.html',
