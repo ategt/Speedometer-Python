@@ -26,6 +26,13 @@ def index():
 def graph():
     return send_from_directory("..\\client","d3.html", as_attachment=False)
 
+# @app.route('/', defaults={'path1':'', 'path2':''})
+@app.route('/summary', defaults={'path':''})
+@app.route('/summary/', defaults={'path':''})
+@app.route('/summary/<path:path>')
+def spa(path):
+    return send_from_directory("..\\client\\public","index.html", as_attachment=False)
+
 @app.route('/info')
 def info():
     return send_from_directory("..\\client","reports.html", as_attachment=False)

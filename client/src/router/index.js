@@ -21,16 +21,21 @@ export default new Router({
       name: 'public-info',
       component: () => import('../views/Reports.vue')
     },
-    {
-      path: '/:place',
-      name: 'any-placeVar',
-      component: Graph
-    },
+    // {
+    //   path: '/:place',
+    //   name: 'any-placeVar',
+    //   component: Graph
+    // },
     {
       path: '/public/:place',
       //name: '',
       //component: Graph
       //component: () => import('../views/Schedule.vue')
+      component: () => import('../components/Summary.vue')
+    },
+    {
+      path: '/summary/:id',
+      name: 'Summary',
       component: () => import('../components/Summary.vue')
     },
     {
