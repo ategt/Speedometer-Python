@@ -30,7 +30,8 @@ export default new Router({
       path: '/public/:place',
       //name: '',
       //component: Graph
-      component: () => import('../views/Schedule.vue')
+      //component: () => import('../views/Schedule.vue')
+      component: () => import('../components/Summary.vue')
     },
     {
       path: '/public/info',

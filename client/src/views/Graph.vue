@@ -16,4 +16,4 @@ export default {
   }
 }
 </script>
-<style type="text/css" src="../graph.css"></style>
+<style src="../graph.css"></style>
