@@ -5,17 +5,15 @@
   </div>
 </template>
 <script>
-//import Nav from './components/partials/Nav.vue';
-//import Footer from './components/Footer.vue';
 import { runOnLoad } from '../src/graph';
 
 export default {
   name: 'graph',
   components: {
-    //Footer
   },
   mounted () {
     runOnLoad();
   }
 }
 </script>
+<style type="text/css" src="../graph.css"></style>

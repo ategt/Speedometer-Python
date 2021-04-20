@@ -1,23 +1,24 @@
 <template>
 	<div class="half-pane right-pane">
-        <div id="start-timer-button" class="timer-button">
+        <div id="start-timer-button" class="timer-button" v-on:click="startTimer">
           START TIMER
         </div>
-        <div id="stop-timer-button" class="timer-button">
+        <div id="stop-timer-button" class="timer-button" v-on:click="stopTimer">
           STOP TIMER
         </div>
-        <div id="reset-timer-button" class="timer-button">
+        <div id="reset-timer-button" class="timer-button" v-on:click="resetTimer">
           RESET TIMER
         </div>
         <h2>
           <span class="fullscreen-button-span">
-            <a id="fullscreen-button" class="no-decoration">FULL&nbsp;SCREEN</a>
+            <a id="fullscreen-button"v-on:click="fullScreen" class="no-decoration">FULL&nbsp;SCREEN</a>
           </span>
         </h2>
     </div>
 </template>
 <script type="text/javascript">
 import io from "socket.io-client";
+import { make_fullscreen } from '../../src/status'
 //const socket = io();
 export default {
 	name: "Buttons",
@@ -25,6 +26,21 @@ export default {
 		return {
 			socket: io(),
 		}
-	}
+	},
+  methods: {
+    fullScreen: function (event) {
+      const element = document.getElementsByClassName("info-banner-panel")[0];
+      make_fullscreen(element);
+    },
+    startTimer: function (event) {
+      start_timer();
+    },
+    stopTimer: function (event) {
+      stop_timer();
+    },
+    resetTimer: function (event) {
+      reset_timer();
+    }
+  }
 }
 </script>

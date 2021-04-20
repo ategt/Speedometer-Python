@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 export function detectPeaks(data, accessor, options) {
   const {lookaround, sensitivity, coalesce, full} = Object.assign({
     lookaround: 2,

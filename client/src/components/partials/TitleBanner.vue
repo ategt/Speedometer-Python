@@ -1,0 +1,17 @@
+<template>
+	<div class="title-banner">
+		<div class="title-panel">
+			<h1>HIIT MON</h1>
+		</div>
+		<div class="graph-link-panel">
+			<h1>
+				<router-link to="/d3" id="graph-link" class="no-decoration">GRAPH</a>
+			</h1>
+		</div>
+	</div>
+</template>
+<script type="text/javascript">
+export default {
+	name: "Title-Banner",
+}
+</script>

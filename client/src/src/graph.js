@@ -1,5 +1,6 @@
 import { detectPeaks } from './peak-detection';
 import axios from 'axios';
+import * as d3 from "d3";
 
 export const top_speed = 2000;
 
