@@ -12,7 +12,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'graph',
+      name: 'Home',
       //component: Graph
       component: () => import('../views/Reports.vue')
     },
@@ -34,10 +34,15 @@ export default new Router({
       component: () => import('../components/Summary.vue')
     },
     {
-      path: '/summary/:id',
+      path: '/summary/:id/:spec(text|graph)?',
+      //path: '/summary/:id',
       name: 'Summary',
       component: () => import('../components/Summary.vue')
     },
+    // {
+    //   name: 'Summary',
+    //   component: () => import('../components/Summary.vue')
+    // },
     {
       path: '/public/info',
       name: "Reports",
@@ -48,6 +53,11 @@ export default new Router({
       name: "Schedule",
       component: () => import('../views/Schedule.vue')
     },
+    // {
+    //   path: '/graph/:id?',
+    //   name: "Graph",
+    //   component: () => import('../views/Graph.vue')
+    // },
     {
       path: '/public/graph',
       name: "Graph",
