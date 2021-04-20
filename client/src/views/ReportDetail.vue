@@ -1,6 +1,7 @@
 <template>
   <div id="main" class="main">
     <Graph v-if="showGraph"></Graph>
+    <Summary></Summary>
   </div>
 </template>
 <script>
