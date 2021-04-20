@@ -32,26 +32,28 @@ describe('Reports Shell Test', function () {
       axios.get = axiosGet;
   })
   
-  it('shallow mount', () => {
+  it('shallow mount', (done) => {
     //const wrapper = shallowMount(Footer, stubs: ["router-link"])
     const wrapper = shallowMount(Reports, {stubs: {RouterLink: RouterLinkStub}})
 
-    expect(wrapper.text()).contains('Home')
-    expect(wrapper.text()).contains('Info')
-    expect(wrapper.text()).contains('Graph')
+    // expect(wrapper.text()).contains('Home')
+    // expect(wrapper.text()).contains('Info')
+    // expect(wrapper.text()).contains('Graph')
 
-    // wrapper.vm.$nextTick().then(function () {
-    //   expect(wrapper.text()).contains('Pending List')
-    //   expect(wrapper.findAll('.mot-parent').length > 1).equal(true)
-    //   expect(wrapper.findAll('.mot-parent').length > 1).equals(true)
-    //   //expect(wrapper.findAll('.mot-parent').length > 1).same(true)
+    wrapper.vm.$nextTick().then(function () {
+      wrapper.vm.$nextTick().then(function () {
+          expect(wrapper.text()).contains('A comment goes here.')
+          expect(wrapper.findAll('.report-item').length > 1).equal(true)
+          expect(wrapper.findAll('.report-item').length > 1).equals(true)
+          //expect(wrapper.findAll('.mot-parent').length > 1).same(true)
 
-    //   // click one of the mot buttons
-    //   wrapper.findAll('.mot-parent').at(0).trigger('click').then(() => {
-    //     console.log(wrapper.vm.currentMot)
-    //     done()
-    //   })
-    // })
+          // click one of the mot buttons
+          wrapper.findAll('.report-item').at(0).trigger('click').then(() => {
+            console.log(wrapper.vm.currentMot)
+            done()
+          })
+        })
+    })
   })
 
   it('mount with actual routes', () => {

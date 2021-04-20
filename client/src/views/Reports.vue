@@ -1,20 +1,57 @@
 <template>
-	<div id="reports"></div>
+	<div id="reports">
+		<div v-if="reports.length">
+			Number of reports: {{ reports.length }}
+			<div class="report-item" v-for="(report, index) in reports" v-bind:index="report.id" v-bind:key="report.id">
+				<a v-bind:id="'retire-report-' + report.id" class="retire-report" v-bind:data-report="report.id">X</a>&nbsp;
+				<a v-bind:href="`/d3?start=${report.startTime}&stop=${report.stopTime}&id=${report.id}`">
+						{{report.id}}: <ReportTimestamp v-bind:report="report"></ReportTimestamp></a>
+						<span class="remarks">{{report.remarks}}</span>
+			</div>
+		</div>
+		<div v-else-if="errors.length">
+			{{ errors }}
+		</div>
+		<div v-else-if="loading">
+			Loading Reports...
+		</div>
+		<div v-else>
+			No Reports Found
+		</div>
+	</div>
 </template>
 
 <script>
 import { top_speed, days_abreviated, days, months } from '../src/constants';
-import { printReports } from '../src/reports';
+import { getReports, printReports } from '../src/reports';
+import ReportTimestamp from '../components/partials/ReportTimestamp.vue';
 
 export default {
 	name: "Reports",
+	components: {
+		ReportTimestamp,
+	},
 	methods: {
-		printReports: () => {
-			printReports();
+		loadReports: function () {
+			const context = this;
+			getReports().then(function (reports) {
+				context.reports = reports;
+			}).catch(function (error) {
+				context.errors = [error];
+			}).finally(function (not_sure) {
+				context.loading = false;
+			});
 		},
 	},
+	data () {
+      return {
+      	reports: new Array(),
+      	loading: true,
+      	errors: new Array(),
+      }
+  	},
 	created () {
-		this.printReports();
+		this.loadReports();
 	}
 }
 	// function runTests() {
