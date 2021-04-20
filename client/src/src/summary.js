@@ -147,6 +147,16 @@ export const load_peak = peaks => {
 	return peak_pane;
 };
 
+export const getLatestTimeCode = function () {
+	return new Promise(function (resolve, reject) {
+		axios.get("http://127.0.0.1:5000/last-timecode").then(function (timecodeResponse) {
+			const timecode = timecodeResponse.data.result;
+			resolve(timecode);
+			//axios.get("http://127.0.0.1:5000/readings", {params:{start: timecode - (2 * 60 * 60), stop: timecode}}).then(function (readingsResponse) {		
+		});
+	});
+};
+
 export const runOnLoad = function (event) {
 	const queryParams = Object.fromEntries([... new URLSearchParams(window.location.search)]);
 

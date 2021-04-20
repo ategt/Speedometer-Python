@@ -3,6 +3,7 @@
 </template>
 <script>
 import { getReport, getReadings } from '../src/reports';
+import { getLatestTimeCode } from '../src/summary';
 import { top_speed } from '../src/constants';
 import { graphSpeeds } from '../src/graph';
 
@@ -38,6 +39,9 @@ export default {
       const speeds = readings.map(item => item[0]);
       graphSpeeds(speeds, top_speed);
     },
+    loadFromTimecode: function (timecode) {
+      this.loadGraph(timecode - (2 * 60 * 60), timecode);
+    },
   },
   created () {
     const params = {};
@@ -60,7 +64,7 @@ export default {
       if (Object.keys(params).includes("start") && Object.keys(params).includes("stop")) {
         this.loadGraph(params.start, params.stop);
       } else {
-        console.error("Nothing to load");
+        getLatestTimeCode().then(this.loadFromTimecode);
       }
     }
   },
