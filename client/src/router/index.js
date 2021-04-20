@@ -13,7 +13,8 @@ export default new Router({
     {
       path: '/',
       name: 'graph',
-      component: Graph
+      //component: Graph
+      component: () => import('../views/Reports.vue')
     },
     {
       path: '/public/info',
@@ -28,7 +29,8 @@ export default new Router({
     {
       path: '/public/:place',
       name: 'public-placeVar',
-      component: Graph
+      //component: Graph
+      component: () => import('../views/Reports.vue')
     },
     {
       path: '/public/d3.html',
