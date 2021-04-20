@@ -7,7 +7,7 @@ import './lib/mocha.js';
 
 mocha.setup('bdd');
 
-import Footer from '../components/partials/Footer.vue';
+import Footer from '../views/Reports.vue';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
