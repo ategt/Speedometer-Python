@@ -15,7 +15,7 @@ export default {
 		}
 	},
 	created () {
-		this.html = load_peak(this.peaks);
+		this.html = load_peak(this.peaks).outerHTML;
 	}
 }
 </script>

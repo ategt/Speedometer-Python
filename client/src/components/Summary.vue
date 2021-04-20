@@ -25,6 +25,7 @@
 				<div class="summary-grid-item">Stop Time</div>
 				<div class="summary-grid-item">{{stopTime.toLocaleTimeString()}}</div>
 			</div>
+			<PeaksReadout v-bind:peaks="peaks"></PeaksReadout>
 			<textarea class="comment-textarea" v-model="report.remarks" v-on:blur="remarksUpdated"></textarea>
 		</div>
 		<div class="error-report" v-else-if="errors">
@@ -55,7 +56,7 @@ Number.prototype.pad = function (size) {
 export default {
   name: 'Summary',
   components: {
-  	PeaksReadout
+  	PeaksReadout,
   },
   data () {
   	return {
@@ -66,12 +67,6 @@ export default {
   	}
   },
   computed: {
-  	//const startTime = new Date(parseInt(report.startTime)*1000);
-	//const stopTime = new Date(parseInt(report.stopTime)*1000);
-	//const date = new Date(parseInt(report.date));
-
-	//const display_string = `${months[startTime.getMonth()]} ${startTime.getDate()}, ${startTime.getFullYear()}`;
-
   	startTime: function () {
   		return new Date(parseInt(this.report.startTime)*1000);
   	},
@@ -103,9 +98,6 @@ export default {
   	},
   	populate: function (report) {
   		this.report = report;
-  		//const empty_element = document.createElement("div");
-  		//empty_element.id = "peaks-readout";
-  		//load_summary(report, empty_element);
   		this.getPeaks(report.startTime, report.stopTime);
   	},
   	getPeaks: function (start, stop) {
@@ -122,7 +114,6 @@ export default {
 	  	const peakSet = new Set(peaksIndexes);
 		const peaks = readings.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
 		this.peaks = peaks;
-		//const peaks_element = load_peak(peaks);
   	},
   	loadingDone: function () {
   		this.loading = false;
