@@ -30,6 +30,11 @@ def graph():
 @app.route('/summary', defaults={'path':''})
 @app.route('/summary/', defaults={'path':''})
 @app.route('/summary/<path:path>')
+@app.route('/summary/<path:path>/text', defaults={'path':''})
+@app.route('/summary/<path:path>/graph', defaults={'path':''})
+@app.route('/graph', defaults={'path':''})
+@app.route('/graph/', defaults={'path':''})
+@app.route('/graph/<path:path>')
 def spa(path):
     return send_from_directory("..\\client\\public","index.html", as_attachment=False)
 
