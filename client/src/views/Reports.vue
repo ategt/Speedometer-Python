@@ -4,7 +4,7 @@
 			Number of reports: {{ reports.length }}
 			<div class="report-item" v-for="(report, index) in reports" v-bind:index="report.id" v-bind:key="report.id">
 				<a v-bind:id="'retire-report-' + report.id" class="retire-report" v-on:click="" v-bind:data-report="report.id">X</a>&nbsp;
-				<router-link :to="{path:'/d3', query: {start: report.startTime, stop: report.stopTime, id: report.id}}">
+				<router-link :to="{name:'Summary', params: {id: report.id}}">
 						{{report.id}}: <ReportTimestamp v-bind:report="report"></ReportTimestamp></router-link>
 						<span class="remarks">{{report.remarks}}</span>
 			</div>
