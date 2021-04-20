@@ -57,7 +57,7 @@ export default new Router({
     {
       path: '/bill/:id',
       name: "Bill",
-      component: () => import('../views/Test.vue')
+      component: () => import('../views/ReportDetail.vue')
     },
     // {
     //   path: '/public/graph',
