@@ -3,12 +3,44 @@
 </template>
 <script>
 import { runOnLoad, load_summary, load_peak, top_speed } from '../src/summary';
+import { getReport, getReadings } from '../src/reports';
 import { detectPeaks } from '../src/peak-detection';
+import PeaksReadout from './PeaksReadout.vue';
 import axios from "axios";
 
 export default {
   name: 'Summary',
   components: {
+  	PeaksReadout
+  },
+  data () {
+  	return {
+  		peaks: new Array(),
+  	}
+  },
+  methods: {
+  	populate: function (report) {
+  		const empty_element = document.createElement("div");
+  		empty_element.id = "peaks-readout";
+  		load_summary(report, empty_element);
+  		this.getPeaks(report.startTime, report.stopTime);
+  	},
+  	getPeaks: function (start, stop) {
+  		getReadings(start, stop).then(this.parsePeaks)
+  	},
+  	parsePeaks: function (readings) {
+  		const peaksIndexes = detectPeaks(readings.filter(d => d[0] < top_speed), d => d[0],
+									{ 
+									  lookaround: 20,  // the number of neighbors to compare to on each side
+									  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
+									  coalesce: 5     // coalesce together peaks within this distance of each other
+									});
+
+	  	const peakSet = new Set(peaksIndexes);
+		const peaks = readings.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
+		this.peaks = peaks;
+		//const peaks_element = load_peak(peaks);
+  	}
   },
   created () {
   	const params = {};
@@ -22,34 +54,30 @@ export default {
 		params.start = Math.round(baseTimecode/1000) - (24*60*60);
 		params.stop = Math.round(baseTimecode/1000);
 	}
+	
+	const reportId = parseInt(route.params.id);
 
-	axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (response) {
-	  	const peaksIndexes = detectPeaks(response.data.result.filter(d => d[0] < top_speed), d => d[0],
-									{ 
-									  lookaround: 20,  // the number of neighbors to compare to on each side
-									  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
-									  coalesce: 5     // coalesce together peaks within this distance of each other
-									});
+	getReport(reportId).then(this.populate)
 
-	  	const peakSet = new Set(peaksIndexes);
-		const peaks = response.data.result.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
-		const peaks_element = load_peak(peaks);
+	// axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (response) {
+	 //  	const peaksIndexes = detectPeaks(response.data.result.filter(d => d[0] < top_speed), d => d[0],
+		// 							{ 
+		// 							  lookaround: 20,  // the number of neighbors to compare to on each side
+		// 							  sensitivity: 0.5, // sensitivity, in terms of standard deviations above the mean
+		// 							  coalesce: 5     // coalesce together peaks within this distance of each other
+		// 							});
 
-		const reportId = parseInt(route.params.id);
-		axios.get("http://127.0.0.1:5000/report").then(function (response) {
-			const relevant_report = response.data.reports.filter(itm => itm.id === reportId)[0];
-			load_summary(relevant_report, peaks_element);
-		});
-	});
+	 //  	const peakSet = new Set(peaksIndexes);
+		// const peaks = response.data.result.map((itm, idx) => ({idx:idx, ...itm})).filter((itm, idx) => peakSet.has(idx));
+		// const peaks_element = load_peak(peaks);
+
+		// axios.get("http://127.0.0.1:5000/report").then(function (response) {
+		// 	const relevant_report = response.data.reports.filter(itm => itm.id === reportId)[0];
+		// 	load_summary(relevant_report, peaks_element);
+		// });
+	//});
   },
-  // beforeResolve (to) {
-  //   if (to.meta.requiresCamera) {
-  //     // do async things asking for camera
-  //   }
-  // },
   mounted () {
-    //console.log("Holla!");
-    //runOnLoad();
   }
 }
 </script>

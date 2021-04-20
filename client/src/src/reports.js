@@ -9,6 +9,15 @@ export const getReports = function () {
 	});
 };
 
+export const getReport = function (reportId) {
+	return new Promise(function (resolve, reject) {
+		getReports().then(function (reports) {
+			const relevant_report = reports.filter(itm => itm.id === reportId)[0];
+			resolve(relevant_report);
+		}).catch(reject);
+	});
+};
+
 export const getReadings = function (startTime, stopTime) {
 	return new Promise(function (resolve, reject) {
 		axios.get("http://127.0.0.1:5000/readings", {params:{start: startTime, stop: stopTime}}).then(function (readingsResponse) {
