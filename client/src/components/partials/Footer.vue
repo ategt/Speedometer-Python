@@ -11,7 +11,7 @@
 				<router-link to="/public/info">Info</router-link>
 			</span>
 			<span class="footer-item">
-				<router-link to="/graph">Graph</router-link>
+				<router-link :to="{name:'Graph'}">Graph</router-link>
 			</span>
 			<span class="footer-item">
 				<router-link :to="{name:'Schedule'}">Scheduler</router-link>

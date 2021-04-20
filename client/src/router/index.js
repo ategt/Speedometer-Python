@@ -1,7 +1,7 @@
 //import Vue from '../../node_modules/vue/dist/vue.js';
 import Vue from 'vue'
 import Router from 'vue-router'
-import Graph from '../views/Graph.vue'
+//import Graph from '../views/Graph.vue'
 //import { authGuard } from "../auth/authGuard";
 
 Vue.use(Router)
@@ -13,7 +13,6 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      //component: Graph
       component: () => import('../views/Reports.vue')
     },
     {
@@ -21,28 +20,15 @@ export default new Router({
       name: 'public-info',
       component: () => import('../views/Reports.vue')
     },
-    // {
-    //   path: '/:place',
-    //   name: 'any-placeVar',
-    //   component: Graph
-    // },
     {
       path: '/public/:place',
-      //name: '',
-      //component: Graph
-      //component: () => import('../views/Schedule.vue')
       component: () => import('../components/Summary.vue')
     },
     {
       path: '/summary/:id/:spec(text|graph)?',
-      //path: '/summary/:id',
       name: 'Summary',
       component: () => import('../components/Summary.vue')
     },
-    // {
-    //   name: 'Summary',
-    //   component: () => import('../components/Summary.vue')
-    // },
     {
       path: '/public/info',
       name: "Reports",
@@ -53,22 +39,22 @@ export default new Router({
       name: "Schedule",
       component: () => import('../views/Schedule.vue')
     },
-    // {
-    //   path: '/graph/:id?',
-    //   name: "Graph",
-    //   component: () => import('../views/Graph.vue')
-    // },
     {
-      path: '/public/graph',
+      path: '/graph/:id(\\d+)?',
       name: "Graph",
-      component: Graph
+      component: () => import('../views/Graph.vue')
     },
-    {
-      path: '/public/d3.html',
-      name: 'specific',
-      component: Graph
-    }
-    // ,
+    // {
+    //   path: '/public/graph',
+    //   name: "Graph",
+    //   component: Graph
+    // },
+    // {
+    //   path: '/public/d3.html',
+    //   name: 'specific',
+    //   component: Graph
+    // }
+    // // ,
     // {
     //   path: '/about',
     //   name: 'about',
