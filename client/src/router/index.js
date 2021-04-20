@@ -50,7 +50,8 @@ export default new Router({
     {
       path: '/steve',
       name: "Steve",
-      component: () => import('../views/ReportDetail.vue')
+      component: () => import('../views/Test.vue')
+      //component: () => import('../views/ReportDetail.vue')
       //component: () => import('../components/XSummary.vue')
     },
     // {

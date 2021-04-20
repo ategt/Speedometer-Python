@@ -54,7 +54,7 @@ Number.prototype.pad = function (size) {
 }
 
 export default {
-  name: 'Summary',
+  name: 'Summary-Custom',
   components: {
   	PeaksReadout,
   },

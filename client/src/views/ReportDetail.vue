@@ -1,43 +1,39 @@
 <template>
-  <div id="main" class="main">
-    <Graph v-if="showGraph"></Graph>
-    <Summary></Summary>
+  <div id="asn" class="asn">
   </div>
 </template>
 <script>
-    //<Summary v-if="showText"></Summary>
-//<Summary v-if="showText"></Summary>
-//import { runOnLoad } from '../src/graph';
-//import Summary from '../components/Summary.vue';
-import Summary from '../components/Summary.vue';
-import Graph from '../components/Graph.vue';
+//<Summary></Summary>
+import Gry from '../components/Summary.vue';
+//    <Graph v-if="showGraph"></Graph>
+//import Graph from '../components/Graph.vue';
 
 export default {
-  name: 'graph',
+  name: 'ReportDetail',
   components: {
-    Graph,
-    Summary,
+    //Graph,
+    //Summary,
   },
-  data () {
-    return {
-      showText: true,
-      showGraph: true,
-    }
-  },
-  mounted () {
-    if (this.$route.params.spec) {
-      // switch (this.$route.params.spec) {
-      //   case "graph":
-      //     this.showText = false;
-      //     break; 
-      //   case "text":
-      //     this.showGraph = false;
-      //     break;
-      //   default:
-           console.log("Here");        
-      // }
-    }
-    console.log("Holla!");
-  }
+  // data () {
+  //   return {
+  //     showText: true,
+  //     showGraph: true,
+  //   }
+  // },
+  // mounted () {
+  //   if (this.$route.params.spec) {
+  //     // switch (this.$route.params.spec) {
+  //     //   case "graph":
+  //     //     this.showText = false;
+  //     //     break; 
+  //     //   case "text":
+  //     //     this.showGraph = false;
+  //     //     break;
+  //     //   default:
+  //          console.log("Here");        
+  //     // }
+  //   }
+  //   console.log("Holla!");
+  //},
 }
 </script>
