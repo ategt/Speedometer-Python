@@ -1,9 +1,9 @@
 import { shallowMount, mount, RouterLinkStub, createLocalVue } from '../../../node_modules/@vue/test-utils/dist/vue-test-utils.js';
-import VueRouter from 'vue-router';
+//import VueRouter from 'vue-router';
 import { mockGet } from './helpers.js';
 
 import axios from 'axios';
-import moxios from 'moxios';
+//import moxios from 'moxios';
 import sinon from 'sinon';
 
 import chai from './lib/chai.js';
@@ -11,18 +11,18 @@ import './lib/mocha.js';
 
 mocha.setup('bdd');
 
-import Footer from '../views/Reports.vue';
+import Reports from '../views/Reports.vue';
 
-const localVue = createLocalVue();
-localVue.use(VueRouter);
+// const localVue = createLocalVue();
+// localVue.use(VueRouter);
 
-import router from '../router';
+// import router from '../router';
 
 const expect = chai.expect;
 
 let axiosGet;
 
-describe('Footer Shell Test', function () {
+describe('Reports Shell Test', function () {
   beforeEach(() => {
       axiosGet = axios.get;
       axios.get = mockGet;
@@ -34,7 +34,7 @@ describe('Footer Shell Test', function () {
   
   it('shallow mount', () => {
     //const wrapper = shallowMount(Footer, stubs: ["router-link"])
-    const wrapper = shallowMount(Footer, {stubs: {RouterLink: RouterLinkStub}})
+    const wrapper = shallowMount(Reports, {stubs: {RouterLink: RouterLinkStub}})
 
     expect(wrapper.text()).contains('Home')
     expect(wrapper.text()).contains('Info')
@@ -55,11 +55,11 @@ describe('Footer Shell Test', function () {
   })
 
   it('mount with actual routes', () => {
-    const wrapper = mount(Footer, {localVue, router})
+  //   const wrapper = mount(Reports, {localVue, router})
 
-    expect(wrapper.text()).contains('Home')
-    expect(wrapper.text()).contains('Info')
-    expect(wrapper.text()).contains('Graph')
+  //   expect(wrapper.text()).contains('Home')
+  //   expect(wrapper.text()).contains('Info')
+  //   expect(wrapper.text()).contains('Graph')
   })
 })
 

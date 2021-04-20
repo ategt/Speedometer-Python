@@ -43,7 +43,7 @@ def build_endpoint(filename):
 
 @app.route('/test-js/<path:filename>')
 def test_js_endpoint(filename):
-    return send_from_directory("..\\client\\dist\\tests", filename, as_attachment=False)
+    return send_from_directory("..\\client\\dist", filename, as_attachment=False)
 
 @app.route('/test/<path:filename>')
 def test_html_endpoint(filename):

@@ -114,6 +114,6 @@ export const printReports = function () {
 				    Array.from(document.getElementsByClassName("retire-report")).forEach(element => element.addEventListener("click", function(event) {
 			    		retireReport(event.target.dataset.report);
 					}));
-			    });
+			    }).catch(reject);
 			});
 		};
