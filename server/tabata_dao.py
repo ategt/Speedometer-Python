@@ -12,34 +12,19 @@ class TabataDao(object):
 
         return d
 
-    # def __init__(self, **kwargs):
-    #     super(DatabaseConnection, self).__init__()
-    #     self.dbPath = kwargs.get('dbPath', os.path.join(os.getcwd(), 'database.sqlite3'))
-    #     self._dict_factory = kwargs.get('dictFactory', DatabaseConnection._dict_factory)
-
     def __init__(self, path = None):
         super(TabataDao, self).__init__()
         self.sqliteFile = os.path.join(os.getcwd(), 'data', 'database.sqlite3') if path is None else path
-        # self._setupDb()
 
     def _setupDb(self):
         self.conn = sqlite3.connect(self.sqliteFile)        
         c = self.conn.cursor()
         c.execute('CREATE TABLE IF NOT EXISTS recorder_directives (action TEXT, time TIMESTAMP, pytime INTEGER)')
 
-        def dict_factory(cursor, row):
-            d = {}
-            for idx, col in enumerate(cursor.description):
-                d[col[0]] = row[idx]
-
-            return d
-
-        self.conn.row_factory = dict_factory
+        self.conn.row_factory = TabataDao._dict_factory
 
     def __enter__(self):
         self._setupDb()
-        # self.dbConnection = sqlite3.connect(self.dbPath)
-        # self.dbConnection.row_factory = self._dict_factory
 
         return self
 
@@ -54,8 +39,4 @@ class TabataDao(object):
         self.conn.close()
 
     def getAll(self):
-        print(dir(self))
         return self.conn.cursor().execute('SELECT * FROM recorder_directives').fetchall()
-
-# class DatabaseConnection(object):    
-#     """docstring for DatabaseConnection"""
