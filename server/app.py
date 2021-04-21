@@ -6,6 +6,7 @@ from importlib import import_module
 
 from speed_log_file import SpeedLogFile
 from tabata_timer import TabataTimer
+from recorder_action_logger import ActionLogger
 from recorder import Recorder
 import flask
 import os
@@ -15,6 +16,7 @@ app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
+actionLogger = ActionLogger(os.getenv("DB_FILE_PATH"))
 socketio = SocketIO(app, cors_allowed_origins="*")  # or socketio.init_app()
 timer = TabataTimer()
 
@@ -114,10 +116,12 @@ def tabata_timer_action(message):
 @socketio.on('recorder directive')
 def recoder_directive(data):
     emit('recorder directive broadcast', data, broadcast=True)
+	actionLogger.log(data)
 
 @socketio.on('recorder action')
 def recoder_action(data):
     emit('recorder action broadcast', data, broadcast=True)
+	actionLogger.log(data)
 
 @socketio.on('connect')
 def connect():
