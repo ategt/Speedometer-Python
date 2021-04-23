@@ -1,3 +1,6 @@
+#graph, .aGraph, div#graph {
+	width: 965px;
+}
 textarea {
     height: 10em;
 	width: 18em;
