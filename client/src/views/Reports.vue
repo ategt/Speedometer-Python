@@ -4,9 +4,10 @@
 			Number of reports: {{ reports.length }}
 			<div class="report-item" v-for="report in reports">
 				<a v-bind:id="'retire-report-' + report.id" class="retire-report" v-on:click="" v-bind:data-report="report.id">X</a>&nbsp;
-				<router-link :to="{name:'Summary', params: {id: report.id}}">
-						{{report.id}}: <ReportTimestamp v-bind:report="report"></ReportTimestamp></router-link>
+				<router-link v-bind:to="{name:'Graph', params: {id: report.id}}">
+						{{report.id}}: <ReportTimestamp v-bind:report="report"></ReportTimestamp>
 						<span class="remarks">{{report.remarks}}</span>
+				</router-link>
 			</div>
 		</div>
 		<div v-else-if="errors.length">
@@ -23,7 +24,7 @@
 
 <script>
 import { top_speed, days_abreviated, days, months } from '../src/constants';
-import { getReports, printReports, retireReport } from '../src/reports';
+import { getReports, printReports, retireReport, sortByStartingTime } from '../src/reports';
 import ReportTimestamp from '../components/partials/ReportTimestamp.vue';
 
 export default {
@@ -35,7 +36,7 @@ export default {
 		loadReports: function () {
 			const context = this;
 			getReports().then(function (reports) {
-				context.reports = reports;
+				context.reports = reports.sort(context.sortFunction);
 			}).catch(function (error) {
 				context.errors = [error];
 			}).finally(function (not_sure) {
@@ -51,6 +52,7 @@ export default {
       	reports: new Array(),
       	loading: true,
       	errors: new Array(),
+      	sortFunction: sortByStartingTime,
       }
   	},
 	created () {
