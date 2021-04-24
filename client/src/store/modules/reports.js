@@ -1,5 +1,5 @@
 import * as reportApi from '../../api/reports';
-import { sortByStartingTime } from '../src/reports';
+import { sortByStartingTime } from '../../src/reports';
 
 // initial state
 const state = () => ({
@@ -27,7 +27,7 @@ const actions = {
 
   retireReport ({ state, commit }, event) {
       const reportIdString = event.target.dataset.report;
-      retireReport(reportIdString).then(() => commit("removeReport", parseInt(reportIdString))).catch((error) => commit("addError", error))
+      reportApi.retireReport(reportIdString).then(() => commit("removeReport", parseInt(reportIdString))).catch((error) => commit("addError", error))
   },
 }
 

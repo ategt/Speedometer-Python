@@ -26,6 +26,7 @@
 import { top_speed, days_abreviated, days, months } from '../src/constants';
 import { getReports, printReports, retireReport, sortByStartingTime } from '../src/reports';
 import ReportTimestamp from '../components/partials/ReportTimestamp.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
 	name: "Reports",
@@ -41,10 +42,10 @@ export default {
     	'retireReport'
   	]),
 	computed: mapState({
-    	reports: state => state.reports.reports,
+    	reports: state => Array.from(state.reports.reports).sort(state.reports.sortFunction),
     	loading: state => state.reports.loading,
     	errors: state => state.reports.errors,
-    	sortFunction: state => state.reports.sortFunction,
+    	//sortFunction: state => state.reports.sortFunction,
   	}),
 	// data () {
  //      return {

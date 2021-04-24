@@ -21,21 +21,11 @@ export const getReport = function (reportId) {
 };
 
 export const createReport = function (report) {
-	return new Promise(function (resolve, reject) {
-		axios.post(REPORT_API_ENDPOINT, report).then(resolve).catch(reject);
-	});
-};
-
-export const updateRemarks = function (id, comment) {
-	return new Promise(function (resolve, reject) {
-		axios.patch(REPORT_API_ENDPOINT, {id:id, remarks:comment}).then(resolve).catch(reject);
-	});
+	axios.post(REPORT_API_ENDPOINT, report);
 };
 
 export const retireReport = function (id) {
-	return new Promise(function (resolve, reject) {
-		axios.delete(`http://127.0.0.1:5000/report/${id}`).then(resolve).catch(reject);
-	});
+	return axios.delete(`http://127.0.0.1:5000/report/${id}`);
 };
 
 export const updateTimes = function (id, start_time, stop_time) {
