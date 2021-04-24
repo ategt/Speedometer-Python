@@ -6,22 +6,46 @@ import { getReport, getReadings } from '../src/reports';
 import { getLatestTimeCode } from '../src/summary';
 import { top_speed } from '../src/constants';
 import { graphSpeeds } from '../src/graph';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Graph',
   components: {
   },
+  computed: {
+    ...mapState({
+          reports: state => Array.from(state.reports.reports).sort(state.reports.sortFunction),
+          loading: state => state.reports.loading,
+          errors: state => state.reports.errors,
+          //sortFunction: state => state.reports.sortFunction,
+          //readings: state => new A
+    }),
+    report: function () {
+      return this.$store.getters["reports/getReport"](90);
+    },
+  }
   data () {
-    return {
-      report: null,
-      readings: new Array(),
-      loading: true,
-      errors: new Array(),
-    }
-  },
+     return {
+  //    report: null,
+        readings: new Array(),
+  //    loading: true,
+  //    errors: new Array(),
+     }
+   },
+  // methods: mapActions('reports', [
+  //     'retireReport'
+  //   ]),
+  // watch: {
+  //   report: function () {
+  //     this.$nextTick(() => {
+  //       const ul = this.$refs.list
+  //       ul.scrollTop = ul.scrollHeight
+  //     })
+  //   }
+  // },
   methods: {
     populate: function (report) {
-      if (report) {       
+      if (report) {
         this.report = report;
         this.loadGraph(report.startTime, report.stopTime);
       }
@@ -42,6 +66,9 @@ export default {
     loadFromTimecode: function (timecode) {
       this.loadGraph(timecode - (2 * 60 * 60), timecode);
     },
+    getReport: function (reportId) {
+      return this.$store.getters["reports/getReport"](90);
+    },
   },
   created () {
     const params = {};
@@ -50,7 +77,9 @@ export default {
     if ( route.params.id ) {
       const reportId = parseInt(route.params.id);
 
-      getReport(reportId).then(this.populate).catch(this.accumulateErrors).finally(this.loadingDone);
+      //this.getReport(reportId).then(this.populate).catch(this.accumulateErrors).finally(this.loadingDone);
+      //this.$store.dispatch('reports/getAllReports')
+      this.report.then(this.populate).catch(this.accumulateErrors).finally(this.loadingDone);
     } else {
       if (Object.keys(route.query).includes("start") && Object.keys(route.query).includes("stop")) {
         params.start = route.query.start;

@@ -10,7 +10,22 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+  getReport: (state, getters, rootState) => (id) => {
+    return state.reports.find(report => report.id === id);
+  }
+  // cartProducts: ({state, getters, rootState}, id) => {
+  //   return state; 
+     //}//.items.map(({ id, quantity }) => {
+  //     const product = rootState.products.all.find(product => product.id === id)
+  //     return {
+  //       title: product.title,
+  //       price: product.price,
+  //       quantity
+  //     }
+  //   })
+  // },
+}
 
 // actions
 const actions = {
