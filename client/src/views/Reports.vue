@@ -32,31 +32,31 @@ export default {
 	components: {
 		ReportTimestamp,
 	},
-	methods: {
-		loadReports: function () {
-			const context = this;
-			getReports().then(function (reports) {
-				context.reports = reports.sort(context.sortFunction);
-			}).catch(function (error) {
-				context.errors = [error];
-			}).finally(function (not_sure) {
-				context.loading = false;
-			});
-		},
-		retireReport: function (event) {
-			retireReport(event.target.dataset.report);
-		},
-	},
-	data () {
-      return {
-      	reports: new Array(),
-      	loading: true,
-      	errors: new Array(),
-      	sortFunction: sortByStartingTime,
-      }
-  	},
+	// methods: {
+	// 	retireReport: function (event) {
+	// 		retireReport(event.target.dataset.report);
+	// 	},
+	// },
+	methods: mapActions('reports', [
+    	'retireReport'
+  	]),
+	computed: mapState({
+    	reports: state => state.reports.reports,
+    	loading: state => state.reports.loading,
+    	errors: state => state.reports.errors,
+    	sortFunction: state => state.reports.sortFunction,
+  	}),
+	// data () {
+ //      return {
+ //      	reports: new Array(),
+ //      	loading: true,
+ //      	errors: new Array(),
+ //      	sortFunction: sortByStartingTime,
+ //      }
+ //  	},
 	created () {
-		this.loadReports();
+		//this.loadReports();
+		this.$store.dispatch('reports/getAllReports')
 	}
 }
 	// function runTests() {

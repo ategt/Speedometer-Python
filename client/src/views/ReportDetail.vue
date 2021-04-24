@@ -5,13 +5,11 @@
   </div>
 </template>
 <script>
-//<Summary v-if="showText"></Summary>
 import Graph from '../components/Graph.vue';
 import TextDetail from '../components/TextDetail.vue';
-//import { runOnLoad } from '../src/graph';
 
 export default {
-  name: 'graph',
+  name: 'ReportDetail',
   components: {
     Graph,
     TextDetail,
@@ -35,7 +33,6 @@ export default {
           console.log("Here");        
       }
     }
-    console.log("Holla!");
   }
 }
 </script>
