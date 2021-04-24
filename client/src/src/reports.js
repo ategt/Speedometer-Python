@@ -1,30 +1,5 @@
-import axios from 'axios';
-
-export const getReports = function () {
-	return new Promise(function (resolve, reject) {
-		axios.get("http://127.0.0.1:5000/report").then(function (response) {
-		    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
-		    resolve(reports);
-		}).catch(reject);
-	});
-};
-
-export const getReport = function (reportId) {
-	return new Promise(function (resolve, reject) {
-		getReports().then(function (reports) {
-			const relevant_report = reports.filter(itm => itm.id === reportId)[0];
-			resolve(relevant_report);
-		}).catch(reject);
-	});
-};
-
-export const getReadings = function (startTime, stopTime) {
-	return new Promise(function (resolve, reject) {
-		axios.get("http://127.0.0.1:5000/readings", {params:{start: startTime, stop: stopTime}}).then(function (readingsResponse) {
-			resolve(readingsResponse.data.result);
-		}).catch(reject);
-	});
-};
+import { createReport, getReports, getReport } from "../api/reports";
+import { getReadings } from "../api/readings";
 
 export const buildReport = function (startTime, stopTime) {
 	return new Promise(function (resolve, reject) {
@@ -39,7 +14,7 @@ export const buildReport = function (startTime, stopTime) {
 				const report = generate_report(speeds, start_time, stop_time);
 				
 				if (reports.filter(r => r.startTime == start_time).length === 0) {
-					axios.post("http://127.0.0.1:5000/report", report).then(resolve).catch(reject);
+					createReport(report).then(resolve).catch(reject);
 				} else {
 					console.log("Report Submission Refused - Start Time Overlaps With Existing Report.");
 				}
@@ -49,34 +24,18 @@ export const buildReport = function (startTime, stopTime) {
 };
 
 export const sortByStartingTime =  function (reportA, reportB) {
-			return reportA.startTime - reportB.startTime;
-		};
-export const updateRemarks = function (id, comment) {
-	return new Promise(function (resolve, reject) {
-		axios.patch("http://127.0.0.1:5000/report", {id:id, remarks:comment}).then(resolve).catch(reject);
-	});
+	return reportA.startTime - reportB.startTime;
 };
 
-export const retireReport = function (id) {
+export const rebuiltTimes = function (reportId) {
 	return new Promise(function (resolve, reject) {
-		axios.delete(`http://127.0.0.1:5000/report/${id}`).then(resolve).catch(reject);
-	});
-};
-
-export const updateTimes = function (id) {
-	return new Promise(function (resolve, reject) {
-		axios.get("http://127.0.0.1:5000/report").then(function (response) {
-		    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
-
-			const report = reports.filter(r => r.id === id)[0];
+		getReport(reportId).then(function (report) {
 			const baseTimecode = report.date;
 
-			const params = {};
+			const start = Math.round(baseTimecode/1000) - (24*60*60);
+			const stop = Math.round(baseTimecode/1000) + (2*60*60);
 
-			params.start = Math.round(baseTimecode/1000) - (24*60*60);
-			params.stop = Math.round(baseTimecode/1000) + (2*60*60);
-
-			axios.get("http://127.0.0.1:5000/readings", {params:params}).then(function (readingsResponse) {
+			getReadings(start, stop).then(function (readingsResponse) {
 				const readings = readingsResponse.data.result;
 
 				const speeds = readings.map(item => item[0]);
@@ -84,7 +43,7 @@ export const updateTimes = function (id) {
 				const start_time = Math.min(...timecodes);
 				const stop_time  = Math.max(...timecodes);
 
-				axios.patch("http://127.0.0.1:5000/report", {id:id, startTime: start_time, stopTime: stop_time}).then(resolve).catch(reject);
+				updateTimes(id, start_time, stop_time).then(resolve);
 			}).catch(reject);
 		}).catch(reject);
 	});
@@ -92,37 +51,61 @@ export const updateTimes = function (id) {
 
 export const runUpdateReports = function () {
 	return new Promise(function (resolve, reject) {
-		axios.get("http://127.0.0.1:5000/report").then(function (response) {
-		    const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r));
-
+		getReports().then(function (reports) {
 		    for (let report of reports) {
 		    	if (!Object.keys(report).includes("startTime") || !Object.keys(report).includes("stopTime")) {
 		    		console.log("Updating", report.id);
-		    		updateTimes(report.id);
+		    		rebuiltTimes(report.id);
 		    		console.log("Done.");
 		    	}
 		    }
+		    resolve();
 		}).catch(reject);
 	});
 };
 
-export const printReports = function () {
-			return new Promise(function (resolve, reject) {
-			    axios.get("http://127.0.0.1:5000/report").then(function (response) {
-			    	const reports = response.data.reports.map(r => Object.assign({}, {remarks:""}, r)).sort(sortByStartingTime);
+export function count_sprints(speeds) {
+	// I know that the reporter is using a different threshold for
+	// determining sprint boundry. Tests suggested this had be the 
+	// case, and I hope to come up with a better determinate someday.
+    let sprint_count = 0;
+    const gap = 1;
 
-				    const reportEl = document.getElementById("reports");
+    for (let i = 0; i < speeds.length - gap; i+=gap ) {
+        if (speeds[i] > 400 && speeds[i+gap] < 400) {
+            sprint_count += 1;
+        }
+    }
 
-				    for (let report of reports) {
-				        const d = new Date(parseInt(report.startTime)*1000);
-				        const display_string = `<div class="report-item"><a id="retire-report-${report.id}" class="retire-report" data-report="${report.id}">X</a>&nbsp;<a href="/d3?start=${report.startTime}&stop=${report.stopTime}&id=${report.id}">${report.id}: ${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} ${d.toLocaleTimeString()}</a><span class="remarks">${report.remarks}</span></div>`;
+    return sprint_count;
+}
 
-				        reportEl.innerHTML += display_string;
-				    }
+export const generate_report = (speeds, start_time, stop_time) => {		
+	const sprint_differential = 200;
 
-				    Array.from(document.getElementsByClassName("retire-report")).forEach(element => element.addEventListener("click", function(event) {
-			    		retireReport(event.target.dataset.report);
-					}));
-			    }).catch(reject);
-			});
-		};
+	const length_of_workout = speeds.length;
+
+	const sprintings = speeds.filter(d => d > sprint_differential).filter(d => d < top_speed);
+	const average_speed_during_sprint = sprintings.reduce((acc, itm) => acc + itm, 0) / sprintings.length;
+	const highest_speed = Math.max(...speeds.filter(d => d < top_speed));
+
+	const last_sprint_timecount = speeds.reduce((acc, itm) => { return [itm > sprint_differential ? acc[1] : acc[0], acc[1] + 1];}, [0, 0])[0];
+	const cooldown_time = (speeds.length - last_sprint_timecount);
+
+	const bad_readings = speeds.filter(d => d >= top_speed).length;
+
+	const sprint_count = count_sprints(speeds);
+	const avg_sprint_length = sprintings.length / sprint_count;
+
+	// Sensor readings are taken about once a second, so readings and seconds are used interchangably.
+	return {date: +new Date(), // The now of when the report was generated, allowing for data re-retrieval
+			startTime: start_time,
+			stopTime: stop_time,
+			lengthOfWorkout: length_of_workout, // in readings 
+			averageSpeedDuringSprint: average_speed_during_sprint,  // in RPMs
+			cooldownTime: cooldown_time, // in readings
+			faultyReadingCount: bad_readings, // in readings above the plausability threshold
+			sprintCount: sprint_count, // self explanitory
+			avgSprintLength: avg_sprint_length,  // in readings
+			topSpeed: highest_speed}; // in RPMs
+};
