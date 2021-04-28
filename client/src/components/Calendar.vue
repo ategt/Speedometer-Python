@@ -1,36 +1,38 @@
 <template>
-	<div id="calendar"></div>
+	<div id="calendar">
+		<table>
+			<tr v-for="(week, week_index) in weeksInMonth">
+				<td v-for="(day, day_index) in daysInAWeek">
+
+					{{ dayOfMonth(week_index, day_index) }}
+				</td>
+			</tr>
+		</table>
+	</div>
 </template>
 <script>
 export default {
-  name: 'Graph',
+  name: 'Calendar',
+  data () {
+  	const daysInAWeek = 7;
+  	const daysMonth = 31;
+
+  	return {
+  		weeksInMonth: Math.ceil(daysMonth/daysInAWeek),
+  		daysInAWeek,
+  		daysMonth,
+  	}
+  },
   components: {
   },
   methods: {
+  	dayOfMonth: function (week_index, day_index) {
+	  return week_index * this.daysInAWeek + day_index;
+  	},
 	daysOfMonth: function () {
-		let _table = "<p>jol</p>";
-		const rows = 5;
-		const cols = 6;
-		let c = 1;
-		const daysMonth = 31;
-		for ( let r = 0 ; r < rows ; r++ ) {
-			_table += "<tr>";
-			for ( let i = 0 ; i <= cols ; i++ ) {
-				if ( c <= daysMonth ) {
-					_table += "<td>" + c + "</td>";
-				} else {
-					break;
-				}
-				c++;
-				// each col should display number at i
-			}
-			_table += "</tr>";
-		}
-		document.getElementById("calendar").innerHTML = "<table>hola" + _table + "</table>";
 	},
   },
   mounted () {
-	this.daysOfMonth();
   }
 }
 </script>
