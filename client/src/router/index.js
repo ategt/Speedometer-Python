@@ -55,6 +55,11 @@ export default new Router({
       //component: () => import('../components/XSummary.vue')
     },
     {
+      path: '/ted',
+      name: "Ted",
+      component: () => import('../components/Calendar.vue')
+    },
+    {
       path: '/bill/:id',
       name: "Bill",
       component: () => import('../views/ReportDetail.vue')

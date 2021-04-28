@@ -1,14 +1,21 @@
-
+<template>
+	<div id="calendar"></div>
+</template>
 <script>
-	function daysOfMonth() {
+export default {
+  name: 'Graph',
+  components: {
+  },
+  methods: {
+	daysOfMonth: function () {
 		let _table = "<p>jol</p>";
 		const rows = 5;
 		const cols = 6;
 		let c = 1;
 		const daysMonth = 31;
-		for ( const r = 0 ; r < rows ; r++ ) {
+		for ( let r = 0 ; r < rows ; r++ ) {
 			_table += "<tr>";
-			for ( const i = 0 ; <= cols ; i++ ) {
+			for ( let i = 0 ; i <= cols ; i++ ) {
 				if ( c <= daysMonth ) {
 					_table += "<td>" + c + "</td>";
 				} else {
@@ -19,7 +26,11 @@
 			}
 			_table += "</tr>";
 		}
-		document.gtElementById("calendar").innerHTML = "<table>hola" + _table + "</table>";
-	}
-	daysOfMonth();
+		document.getElementById("calendar").innerHTML = "<table>hola" + _table + "</table>";
+	},
+  },
+  mounted () {
+	this.daysOfMonth();
+  }
+}
 </script>
