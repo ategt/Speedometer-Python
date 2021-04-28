@@ -23,7 +23,7 @@ export default {
     report: function () {
       return this.$store.getters["reports/getReport"](90);
     },
-  }
+  },
   data () {
      return {
   //    report: null,
