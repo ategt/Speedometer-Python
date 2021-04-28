@@ -34,3 +34,10 @@ export default {
   }
 }
 </script>
+<style type="text/css">
+	table > td, td {
+	    border: 1px solid black;
+    	padding: 11px;
+    	text-align: right;
+	}
+</style>
