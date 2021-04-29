@@ -31,6 +31,22 @@ export default {
   	},
 	daysOfMonth: function () {
 	},
+	getLastDateOfMonth: function (month, year) {
+	  const date = new Date();
+	  date.setYear(year);
+	  date.setMonth(month + 1);
+	  date.setDate(0);
+
+	  return date.getDate();
+	},
+	getFirstDayOfMonth: function (month, year) {
+	  const date = new Date();
+	  date.setYear(year);
+	  date.setMonth(month);
+	  date.setDate(1);
+
+	  return date.getDay();
+	},
   },
   mounted () {
   }
