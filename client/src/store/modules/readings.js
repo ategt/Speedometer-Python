@@ -1,11 +1,13 @@
+import Vue from "vue";
 import * as readingsApi from '../../api/readings';
 //import { sortByStartingTime } from '../../src/reports';
 
 // initial state
 const state = () => ({
-  readings: [],
+  readings: new Object(),
   errors: [],
   loading: false,
+  outstanding: new Set(),
 })
 
 // getters
@@ -28,22 +30,27 @@ const getters = {
 
 // actions
 const actions = {
-  getReadings ({ commit }, report) {
-    commit('setLoading', true);
-    readingsApi.getReadings(report.startTime, report.stopTime).then(function (readings) {
-      commit('setReadings', readings);
-    }).catch(function (error) {
-      commit('addError', error);
-    }).finally(function (not_sure) {
-      commit('setLoading', false);
-    });
+  getReadings ({ commit, state }, report) {
+    if ( !Object.keys(state.readings).map(reportId => parseInt(reportId)).includes(report.id) && !state.outstanding.has(report.id) ) {
+      commit('setLoading', true);
+      commit('addOutstanding', report.id);
+
+      readingsApi.getReadings(report.startTime, report.stopTime).then(function (readings) {
+        commit('setReadings', {readings, report});
+      }).catch(function (error) {
+        commit('addError', error);
+      }).finally(function (not_sure) {
+        commit('setLoading', false);
+        commit('removeOutstanding', report.id);
+      });
+    }
   },
 }
 
 // mutations
 const mutations = {
-  setReadings (state, readings) {
-    state.readings = readings;
+  setReadings (state, {readings, report}) {
+    Vue.set(state.readings, report.id, readings);
   },
 
   addError (state, error) {
@@ -52,6 +59,14 @@ const mutations = {
 
   setLoading (state, loadingValue) {
     state.loading = loadingValue;
+  },
+
+  addOutstanding (state, reportId) {
+    state.outstanding.add(reportId);
+  },
+
+  removeOutstanding (state, reportId) {
+    state.outstanding.delete(reportId);
   },
 }
 
