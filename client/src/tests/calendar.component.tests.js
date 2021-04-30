@@ -266,8 +266,10 @@ describe('Calendar Data/Reports Test', function () {
 
     const randomReportCellWrapper = report_tds.wrappers[Math.floor(Math.random()*report_tds.length)];
 
-    randomReportCellWrapper.trigger('click').then(() => {
-         //console.log(randomReportCellWrapper.html());
+    const clickPromise = randomReportCellWrapper.trigger('click');
+    clickPromise.then(() => {
+      const emittedReportId = wrapper.emitted()["report-clicked"][0][0].id;
+         equal( emittedReportId == 5 || emittedReportId == 3, true);
          done();
     });
   });
