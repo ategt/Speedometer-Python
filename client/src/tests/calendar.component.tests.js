@@ -14,7 +14,83 @@ describe('Calendar Shell Test', function () {
   // beforeEach(() => {})
 
   // afterEach(() => {})
+
+  const leadingBlankSpaces = function (spaces) {
+    let result = "<tr>";
+
+    for ( let i = 0 ; i < spaces ; i += 1 ) {
+      result += `<td></td>`;
+    }
+
+    result += `<td>1</td>`;
+
+    return result;
+  };
   
+  const trailingBlankSpaces = function (lastDate, spaces) {
+    let result = `<td>${lastDate}</td>`;
+
+    for ( let i = 0 ; i < spaces ; i += 1 ) {
+      result += `<td></td>`;
+    }
+
+    result += `</tr>`;
+
+    return result;
+  };
+  
+  it('leading blank space', () => {
+    const one_blank_space = `<tr><td>1</td>`;
+    equal(one_blank_space, leadingBlankSpaces(0));
+
+    const two_blank_spaces = `<tr><td></td><td>1</td>`;
+    equal(two_blank_spaces, leadingBlankSpaces(1));
+
+    const three_blank_spaces = `<tr><td></td><td></td><td>1</td>`;
+    equal(three_blank_spaces, leadingBlankSpaces(2));
+
+    const four_blank_spaces = `<tr><td></td><td></td><td></td><td>1</td>`;
+    equal(four_blank_spaces, leadingBlankSpaces(3));
+
+    const five_blank_spaces = `<tr><td></td><td></td><td></td><td></td><td>1</td>`;
+    equal(five_blank_spaces, leadingBlankSpaces(4));
+
+    const six_blank_spaces = `<tr><td></td><td></td><td></td><td></td><td></td><td>1</td>`;
+    equal(six_blank_spaces, leadingBlankSpaces(5));
+
+    const seven_blank_spaces = `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td>`;
+    equal(seven_blank_spaces, leadingBlankSpaces(6));
+
+    const eight_blank_spaces = `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td>`;
+    equal(eight_blank_spaces, leadingBlankSpaces(7));
+  });
+
+  it('trailing blank space', () => {
+    const one_blank_space = `<td>35</td></tr>`;
+    equal(one_blank_space, trailingBlankSpaces(35, 0));
+
+    const two_blank_spaces = `<td>35</td><td></td></tr>`;
+    equal(two_blank_spaces, trailingBlankSpaces(35, 1));
+
+    const three_blank_spaces = `<td>35</td><td></td><td></td></tr>`;
+    equal(three_blank_spaces, trailingBlankSpaces(35, 2));
+
+    const four_blank_spaces = `<td>35</td><td></td><td></td><td></td></tr>`;
+    equal(four_blank_spaces, trailingBlankSpaces(35, 3));
+
+    const five_blank_spaces = `<td>35</td><td></td><td></td><td></td><td></td></tr>`;
+    equal(five_blank_spaces, trailingBlankSpaces(35, 4));
+
+    const six_blank_spaces = `<td>35</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+    equal(six_blank_spaces, trailingBlankSpaces(35, 5));
+
+    const seven_blank_spaces = `<td>35</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+    equal(seven_blank_spaces, trailingBlankSpaces(35, 6));
+
+    const eight_blank_spaces = `<td>35</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+    equal(eight_blank_spaces, trailingBlankSpaces(35, 7));
+  });
+
   it('shallow mount february with nothing', () => {
     const reportFixtures = [];
 
@@ -30,6 +106,11 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\n0\t");
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
+
+    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+
+    expect(modifiedHtml).contains(leadingBlankSpaces(1)); // First space on calendar should be blank.
+    expect(modifiedHtml).contains(trailingBlankSpaces(28, 6)); // Last six spaces on calendar should be blank.
   });
 
   it('shallow mount leap february with nothing', () => {
@@ -47,6 +128,11 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\n0\t");
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
+
+    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+
+    expect(modifiedHtml).contains(leadingBlankSpaces(6));
+    expect(modifiedHtml).contains(trailingBlankSpaces(29, 0));
   });
 
   it('shallow mount january with nothing', () => {
@@ -63,6 +149,11 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\n0\t");
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
+
+    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+
+    expect(modifiedHtml).contains(leadingBlankSpaces(3));
+    expect(modifiedHtml).contains(trailingBlankSpaces(31, 1));
   });
 
   it('shallow mount december with nothing', () => {
@@ -82,8 +173,8 @@ describe('Calendar Shell Test', function () {
 
     const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
 
-    expect(modifiedHtml).contains(`<tr><td></td><td></td><td>1</td>`); // Last two spaces on calendar should be blank.
-    expect(modifiedHtml).contains(`<td>31</td><td></td><td></td></tr>`); // Last two spaces on calendar should be blank.
+    expect(modifiedHtml).contains(leadingBlankSpaces(2));
+    expect(modifiedHtml).contains(trailingBlankSpaces(31, 2));
   });
 
   it('shallow mount november with nothing', () => {
@@ -100,6 +191,11 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\n0\t");
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
+
+    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+
+    expect(modifiedHtml).contains(leadingBlankSpaces(0));
+    expect(modifiedHtml).contains(trailingBlankSpaces(30, 5));
   });
 
   it('shallow mount with data', () => {
