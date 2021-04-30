@@ -29,6 +29,12 @@ const getters = {
 
 // actions
 const actions = {
+  populateReports ({ commit, state }) {
+    if ( state.reports.length === 0 && state.loading == false ) {
+      this.dispatch("reports/getAllReports");
+    }
+  },
+
   getAllReports ({ commit }) {
     commit('setLoading', true);
     reportApi.getReports().then(function (reports) {

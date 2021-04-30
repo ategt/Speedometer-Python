@@ -1,5 +1,3 @@
-import { detectPeaks } from './peak-detection';
-import { top_speed } from './constants';
 import * as d3 from "d3";
 
 export const graphSpeeds = function (speeds, top_speed) {
