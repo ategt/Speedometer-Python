@@ -11,6 +11,7 @@ import './lib/mocha.js';
 mocha.setup('bdd');
 
 import Reports from '../views/Reports.vue';
+import { sortByStartingTime } from '../src/reports';
 
 const expect = chai.expect;
 
@@ -48,6 +49,21 @@ describe('Reports Shell Test', function () {
       })
     })
   }).timeout(9000)
+
+  it("sort by start time", () => {
+    const testReports = [{id: 2, date: 1616207821217, startTime: 1612556555, stopTime: 1612831634},
+                         {id: 3, date: 1616207878565, startTime: 1616175953, stopTime: 1616177165},
+                         {id: 1, date: 1616207821217, startTime: 1612, stopTime: 1615}];
+
+    const sortResults = testReports.sort(sortByStartingTime).map(r => r.id);
+    const sortTestExpectations = [1,2,3];
+
+    if (!sortResults.map((n,i) => sortResults[i] === n).some(v => v === false)) {
+      console.log("Sort test passed.");
+    } else {
+      console.error("Sort test failure", sortResults);
+    }  
+  });
 
   // it('mount with actual routes', () => {
   // //   const wrapper = mount(Reports, {localVue, router})
