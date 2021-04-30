@@ -1,6 +1,4 @@
 import { shallowMount, mount, RouterLinkStub, createLocalVue } from '../../../node_modules/@vue/test-utils/dist/vue-test-utils.js';
-// import VueRouter from 'vue-router';
-// import { mockGet } from './helpers.js';
 import { equal } from 'assert';
 
 import chai from './lib/chai.js';
@@ -8,35 +6,38 @@ import './lib/mocha.js';
 
 mocha.setup('bdd');
 
-//import Footer from '../components/partials/Footer.vue';
 import Calendar from '../components/Calendar.vue';
-
-// const localVue = createLocalVue();
-// localVue.use(VueRouter);
-
-// import router from '../router';
 
 const expect = chai.expect;
 
-//let axiosGet;
-
 describe('Calendar Shell Test', function () {
-  // beforeEach(() => {
-  //     axiosGet = axios.get;
-  //     axios.get = mockGet;
-  // })
+  // beforeEach(() => {})
 
-  // afterEach(() => {
-  //     axios.get = axiosGet;
-  // })
+  // afterEach(() => {})
   
-  it('shallow mount', () => {
-    //const wrapper = shallowMount(Footer, stubs: ["router-link"])
+  it('shallow mount with nothing', () => {
     const reportFixtures = [];
 
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures] }}); //{stubs: {RouterLink: RouterLinkStub}});
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
 
-    equal();
+    console.log(wrapper.html());
+    console.log(wrapper.text());
+
+    for ( let date = 1 ; date <= 31 ; date += 1 ) {
+        expect(wrapper.text()).contains(String(date));
+    }
+
+    expect(wrapper.text()).not.contains("32");
+    expect(wrapper.text()).not.contains("0");
+  });
+
+  it('shallow mount with data', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
+
+    //equal();
+  });
 
     // expect(wrapper.text()).contains('Home')
     // expect(wrapper.text()).contains('Info')
@@ -54,15 +55,7 @@ describe('Calendar Shell Test', function () {
     //     done()
     //   })
     // })
-  });
-
-  // it('mount with actual routes', () => {
-  //   const wrapper = mount(Footer, {localVue, router})
-
-  //   expect(wrapper.text()).contains('Home')
-  //   expect(wrapper.text()).contains('Info')
-  //   expect(wrapper.text()).contains('Graph')
-  // })
-})
+  // });
+});
 
 mocha.run();
