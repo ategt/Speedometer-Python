@@ -12,7 +12,6 @@
 			</tr>
 			<tr v-for="(week, week_index) in weeksInMonth">
 				<td v-for="(day, day_index) in daysInAWeek">
-
 					{{ dayOfMonth(week_index, day_index) }}
 				</td>
 			</tr>

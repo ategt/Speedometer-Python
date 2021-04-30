@@ -79,6 +79,11 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\n0\t");
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
+
+    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+
+    expect(modifiedHtml).contains(`<tr><td></td><td></td><td>1</td>`); // Last two spaces on calendar should be blank.
+    expect(modifiedHtml).contains(`<td>31</td><td></td><td></td></tr>`); // Last two spaces on calendar should be blank.
   });
 
   it('shallow mount november with nothing', () => {
