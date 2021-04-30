@@ -13,10 +13,21 @@
         <span class="reload-button" v-on:click="reload">Reload</span>
       </div>
     </div>
+	<div id="summary" class="summary" v-if="showText">
+	  	<TextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></TextDetail>
+		<div class="error-report" v-else-if="errors.length">
+			There was a problem loading the Report.
+		</div>
+		<div class="loading-report" v-else-if="loading">
+			Loading Report Details...
+		</div>
+		<div class="other-report" v-else>
+			No Report Details Found
+		</div>
+	</div>
   </div>
 </template>
 <script>
-//<TextDetail v-if="showText"></TextDetail>
 import Graph from '../components/Graph.vue';
 import TextDetail from '../components/TextDetail.vue';
 import { mapState, mapActions } from 'vuex';
@@ -31,7 +42,7 @@ export default {
     return {
       showText: true,
       showGraph: true,
-      activeReport: new Object(),
+      activeReport: null,
     }
   },
   computed: {

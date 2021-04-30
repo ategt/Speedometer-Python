@@ -32,6 +32,6 @@ export const updateTimes = function (id, start_time, stop_time) {
 	return axios.patch(REPORT_API_ENDPOINT, {id:id, startTime: start_time, stopTime: stop_time});
 };
 
-export async function updateRemarks(id, comment) {
+export const updateRemarks = function (id, comment) {
   	return axios.patch(REPORT_API_ENDPOINT, {id:id, remarks:comment});
 };

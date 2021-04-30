@@ -39,6 +39,10 @@ const actions = {
       const reportIdString = event.target.dataset.report;
       reportApi.retireReport(reportIdString).then(() => commit("removeReport", parseInt(reportIdString))).catch((error) => commit("addError", error))
   },
+
+  updateRemarks ({ commit }, report ) {
+    reportApi.updateRemarks(report.id, report.remarks).catch((error) => commit("addError", error));
+  },
 }
 
 // mutations
@@ -53,6 +57,10 @@ const mutations = {
 
   setLoading (state, loadingValue) {
     state.loading = loadingValue;
+  },
+
+  setRemarks (state, {reportId, comment}) {
+    state.reports.find(_report => _report.id == reportId).remarks = comment;
   },
 
   removeReport (state, id) {
