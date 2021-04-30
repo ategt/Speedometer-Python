@@ -15,20 +15,86 @@ describe('Calendar Shell Test', function () {
 
   // afterEach(() => {})
   
-  it('shallow mount with nothing', () => {
+  it('shallow mount february with nothing', () => {
     const reportFixtures = [];
 
     const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
 
-    console.log(wrapper.html());
-    console.log(wrapper.text());
+    for ( let date = 1 ; date <= 28 ; date += 1 ) {
+        expect(wrapper.text()).contains(String(date));
+    }
+
+    expect(wrapper.text()).not.contains("29");
+    expect(wrapper.text()).not.contains("32");
+    expect(wrapper.text()).not.contains("\n0\n");
+    expect(wrapper.text()).not.contains("\n0\t");
+    expect(wrapper.text()).not.contains("\t0\n");
+    expect(wrapper.text()).not.contains("\t0\t");
+  });
+
+  it('shallow mount leap february with nothing', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2020 }});
+
+    for ( let date = 1 ; date <= 29 ; date += 1 ) {
+        expect(wrapper.text()).contains(String(date));
+    }
+
+    expect(wrapper.text()).not.contains("30");
+    expect(wrapper.text()).not.contains("32");
+    expect(wrapper.text()).not.contains("\n0\n");
+    expect(wrapper.text()).not.contains("\n0\t");
+    expect(wrapper.text()).not.contains("\t0\n");
+    expect(wrapper.text()).not.contains("\t0\t");
+  });
+
+  it('shallow mount january with nothing', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 0, year: 2020 }});
 
     for ( let date = 1 ; date <= 31 ; date += 1 ) {
         expect(wrapper.text()).contains(String(date));
     }
 
     expect(wrapper.text()).not.contains("32");
-    expect(wrapper.text()).not.contains("0");
+    expect(wrapper.text()).not.contains("\n0\n");
+    expect(wrapper.text()).not.contains("\n0\t");
+    expect(wrapper.text()).not.contains("\t0\n");
+    expect(wrapper.text()).not.contains("\t0\t");
+  });
+
+  it('shallow mount december with nothing', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 11, year: 2020 }});
+
+    for ( let date = 1 ; date <= 31 ; date += 1 ) {
+        expect(wrapper.text()).contains(String(date));
+    }
+
+    expect(wrapper.text()).not.contains("32");
+    expect(wrapper.text()).not.contains("\n0\n");
+    expect(wrapper.text()).not.contains("\n0\t");
+    expect(wrapper.text()).not.contains("\t0\n");
+    expect(wrapper.text()).not.contains("\t0\t");
+  });
+
+  it('shallow mount november with nothing', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 10, year: 2020 }});
+
+    for ( let date = 1 ; date <= 30 ; date += 1 ) {
+        expect(wrapper.text()).contains(String(date));
+    }
+
+    expect(wrapper.text()).not.contains("31");
+    expect(wrapper.text()).not.contains("\n0\n");
+    expect(wrapper.text()).not.contains("\n0\t");
+    expect(wrapper.text()).not.contains("\t0\n");
+    expect(wrapper.text()).not.contains("\t0\t");
   });
 
   it('shallow mount with data', () => {
@@ -38,10 +104,6 @@ describe('Calendar Shell Test', function () {
 
     //equal();
   });
-
-    // expect(wrapper.text()).contains('Home')
-    // expect(wrapper.text()).contains('Info')
-    // expect(wrapper.text()).contains('Graph')
 
     // wrapper.vm.$nextTick().then(function () {
     //   expect(wrapper.text()).contains('Pending List')

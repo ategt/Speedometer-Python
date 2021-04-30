@@ -1,6 +1,15 @@
 <template>
 	<div id="calendar">
 		<table>
+			<tr>
+				<th>S</th>
+				<th>M</th>
+				<th>T</th>
+				<th>W</th>
+				<th>R</th>
+				<th>F</th>
+				<th>S</th>
+			</tr>
 			<tr v-for="(week, week_index) in weeksInMonth">
 				<td v-for="(day, day_index) in daysInAWeek">
 
@@ -16,10 +25,11 @@ export default {
   props: ['reports', 'month', 'year'],
   data () {
   	const daysInAWeek = 7;
-  	const daysMonth = 31;
+  	const daysMonth = this.getLastDateOfMonth(this.month, this.year);
+  	const weeksInMonth = Math.ceil((this.getFirstDayOfMonth(this.month, this.year) + daysMonth)/daysInAWeek);
 
   	return {
-  		weeksInMonth: Math.ceil(daysMonth/daysInAWeek),
+  		weeksInMonth,
   		daysInAWeek,
   		daysMonth,
   	}
@@ -28,7 +38,11 @@ export default {
   },
   methods: {
   	dayOfMonth: function (week_index, day_index) {
-	  return week_index * this.daysInAWeek + day_index;
+  	  const dayOfCalendar = this.getFirstDayOfMonth(this.month, this.year) + this.daysMonth;
+  	  //dayOfCalendar + this.getFirstDayOfMonth(this.month, this.year);
+	  const output = week_index * this.daysInAWeek + day_index - this.getFirstDayOfMonth(this.month, this.year) + 1;
+
+	  return output > 0 && output <= this.getLastDateOfMonth(this.month, this.year) ? output : "";
   	},
 	daysOfMonth: function () {
 	},
@@ -50,7 +64,7 @@ export default {
 	},
   },
   mounted () {
-  }
+  },
 }
 </script>
 <style type="text/css">
