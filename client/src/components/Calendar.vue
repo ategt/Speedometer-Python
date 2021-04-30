@@ -52,6 +52,8 @@ export default {
   	},
 	getLastDateOfMonth: function (month, year) {
 	  const date = new Date();
+	  date.setHours(0, 1, 0);
+	  date.setDate(1);
 	  date.setYear(year);
 	  date.setMonth(month + 1);
 	  date.setDate(0);
@@ -59,12 +61,13 @@ export default {
 	  return date.getDate();
 	},
 	getFirstDayOfMonth: function (month, year) {
-	  const date = new Date();
-	  date.setYear(year);
-	  date.setMonth(month);
-	  date.setDate(1);
+	  const temp_date = new Date();
+	  temp_date.setHours(0, 1, 0);
+	  temp_date.setDate(1);
+	  temp_date.setYear(year);
+	  temp_date.setMonth(month);
 
-	  return date.getDay();
+	  return temp_date.getDay();
 	},
 	isReport: function (week_index, day_index) {
 	  return this.getReport(week_index, day_index);
@@ -76,9 +79,12 @@ export default {
 	  const dateOfMonth = this.dayOfMonth(week_index, day_index);
 
 	  const date = new Date();
+	  date.setHours(0, 1, 0);
+	  date.setDate(dateOfMonth);
 	  date.setMonth(this.month);
 	  date.setYear(this.year);
 	  date.setDate(dateOfMonth);
+	  date.setMonth(this.month);
 
 	  return date;
 	},

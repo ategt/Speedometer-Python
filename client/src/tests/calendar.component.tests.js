@@ -95,10 +95,57 @@ describe('Calendar Shell Test', function () {
     equal(eight_blank_spaces, trailingBlankSpaces(35, 7));
   });
 
+  it('get first day of month', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 1, year: 2021 }});
+
+    equal(wrapper.vm.month, 1);
+    equal(wrapper.vm.year, 2021);
+
+    const firstDayOfMonth = wrapper.vm.getFirstDayOfMonth(wrapper.vm.month, wrapper.vm.year);
+
+    equal(firstDayOfMonth, 1);
+
+    const getFirstDayOfMonth = wrapper.vm.getFirstDayOfMonth;
+
+    equal(getFirstDayOfMonth(3, 2021), 4);
+    equal(getFirstDayOfMonth(1, 2020), 6);
+  });
+
+  it('get day of month', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 1, year: 2021 }});
+
+    const firstCellInCalendar = wrapper.vm.dayOfMonth(0, 0);
+
+    equal(firstCellInCalendar, "");
+
+    const secondCellInCalendar = wrapper.vm.dayOfMonth(0, 1);
+
+    equal(secondCellInCalendar, 1);
+  });
+
+  it('get leap februrary day of month', () => {
+    const reportFixtures = [];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 1, year: 2020 }});
+
+    const getFirstDayOfMonth = wrapper.vm.getFirstDayOfMonth;
+    const dayOfMonth = wrapper.vm.dayOfMonth;
+
+    equal(getFirstDayOfMonth(1, 2020), 6);
+
+    const secondCellInCalendar = wrapper.vm.dayOfMonth(0, 1);
+
+    equal(secondCellInCalendar, "");
+  });
+
   it('shallow mount february with nothing', () => {
     const reportFixtures = [];
 
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 1, year: 2021 }});
 
     for ( let date = 1 ; date <= 28 ; date += 1 ) {
         expect(wrapper.text()).contains(String(date));
@@ -111,6 +158,9 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
+    equal(wrapper.vm.dayOfMonth(0,0), "");
+    equal(wrapper.vm.dayOfMonth(0,1), 1);
+
     const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(1)); // First space on calendar should be blank.
@@ -120,7 +170,7 @@ describe('Calendar Shell Test', function () {
   it('shallow mount leap february with nothing', () => {
     const reportFixtures = [];
 
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2020 }});
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 1, year: 2020 }});
 
     for ( let date = 1 ; date <= 29 ; date += 1 ) {
         expect(wrapper.text()).contains(String(date));
@@ -135,6 +185,14 @@ describe('Calendar Shell Test', function () {
 
     const modifiedHtml = buildModifiedHtml(wrapper.html());
 
+    equal(wrapper.vm.dayOfMonth(0,0), "", `wrapper.vm.dayOfMonth(0,0) should be '' but was ${wrapper.vm.dayOfMonth(0,0)}`);
+    equal(wrapper.vm.dayOfMonth(0,1), "", `wrapper.vm.dayOfMonth(0,1) should be '' but was ${wrapper.vm.dayOfMonth(0,1)}`);
+    equal(wrapper.vm.dayOfMonth(0,2), "", `wrapper.vm.dayOfMonth(0,2) should be '' but was ${wrapper.vm.dayOfMonth(0,2)}`);
+    equal(wrapper.vm.dayOfMonth(0,3), "", `wrapper.vm.dayOfMonth(0,3) should be '' but was ${wrapper.vm.dayOfMonth(0,3)}`);
+    equal(wrapper.vm.dayOfMonth(0,4), "", `wrapper.vm.dayOfMonth(0,4) should be '' but was ${wrapper.vm.dayOfMonth(0,4)}`);
+    equal(wrapper.vm.dayOfMonth(0,5), "", `wrapper.vm.dayOfMonth(0,5) should be '' but was ${wrapper.vm.dayOfMonth(0,5)}`);
+    equal(wrapper.vm.dayOfMonth(0,6), 1, `wrapper.vm.dayOfMonth(0,6) should be 1 but was ${wrapper.vm.dayOfMonth(0,6)}`);
+
     expect(modifiedHtml).contains(leadingBlankSpaces(6));
     expect(modifiedHtml).contains(trailingBlankSpaces(29, 0));
   });
@@ -142,7 +200,7 @@ describe('Calendar Shell Test', function () {
   it('shallow mount january with nothing', () => {
     const reportFixtures = [];
 
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 0, year: 2020 }});
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 0, year: 2020 }});
 
     for ( let date = 1 ; date <= 31 ; date += 1 ) {
         expect(wrapper.text()).contains(String(date));
@@ -258,9 +316,11 @@ describe('Calendar Data/Reports Test', function () {
     const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 3, year: 2021 }});
 
     const report_tds = wrapper.findAll(".has-report");
-    
+
     equal(report_tds.length, 2);
+
     const reportIds = report_tds.wrappers.map(w => w.element.dataset.reportId);
+
     equal(reportIds.includes("3"), true, `${reportIds}`);
     equal(reportIds.includes("5"), true, `${reportIds}`);
 
