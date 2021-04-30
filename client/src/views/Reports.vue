@@ -34,7 +34,7 @@ export default {
     	errors: state => state.reports.errors,
   	}),
 	created () {
-		this.$store.dispatch('reports/getAllReports');
+		this.$store.dispatch('reports/populateReports');
 	}
 }
 </script>

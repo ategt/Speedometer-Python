@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import reports from './modules/reports';
 import readings from './modules/readings';
-//import products from './modules/products'
 //import createLogger from '../../../src/plugins/logger'
 
 Vue.use(Vuex)
