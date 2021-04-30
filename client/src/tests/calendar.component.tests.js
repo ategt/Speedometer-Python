@@ -199,11 +199,53 @@ describe('Calendar Shell Test', function () {
   });
 
   it('shallow mount with data', () => {
+    const reportFixtures = [{
+      "averageSpeedDuringSprint": 750.3551401869158, 
+      "avgSprintLength": 35.666666666666664, 
+      "cooldownTime": 650, 
+      "date": 1616010834052, 
+      "faultyReadingCount": 0, 
+      "id": 1, 
+      "lengthOfWorkout": 1256, 
+      "sprintCount": 3, 
+      "startTime": 1616009560, 
+      "stopTime": 1616010814, 
+      "topSpeed": 1000
+    }, {
+      "averageSpeedDuringSprint": 751.3551401869158, 
+      "avgSprintLength": 35.666666666666664, 
+      "cooldownTime": 653, 
+      "date": 1616010834052, 
+      "faultyReadingCount": 0, 
+      "id": 2, 
+      "lengthOfWorkout": 1256, 
+      "sprintCount": 3, 
+      "startTime": 1616009560, 
+      "stopTime": 1616010814, 
+      "topSpeed": 1000
+    }, {
+      "averageSpeedDuringSprint": 751.3551401869158, 
+      "avgSprintLength": 35.666666666666664, 
+      "cooldownTime": 653, 
+      "date": 1616010834052, 
+      "faultyReadingCount": 0, 
+      "id": 3, 
+      "lengthOfWorkout": 1256, 
+      "sprintCount": 3, 
+      "startTime": 1616009560, 
+      "stopTime": 1616010814, 
+      "topSpeed": 1000
+    }];
+
+    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 3, year: 2021 }});
+
+    console.log(wrapper.html());
+  });
+
+  it('shallow mount with data', () => {
     const reportFixtures = [];
 
     const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
-
-    //equal();
   });
 
     // wrapper.vm.$nextTick().then(function () {

@@ -1,6 +1,10 @@
 <template>
 	<div id="calendar">
+		<div class="month-name">
+			{{ monthName }}
+		</div>
 		<table>
+			<thead v-text="monthName"></thead>
 			<tr>
 				<th>S</th>
 				<th>M</th>
@@ -19,6 +23,8 @@
 	</div>
 </template>
 <script>
+import { months } from "../src/constants";
+
 export default {
   name: 'Calendar',
   props: ['reports', 'month', 'year'],
@@ -26,11 +32,13 @@ export default {
   	const daysInAWeek = 7;
   	const daysMonth = this.getLastDateOfMonth(this.month, this.year);
   	const weeksInMonth = Math.ceil((this.getFirstDayOfMonth(this.month, this.year) + daysMonth)/daysInAWeek);
+  	const monthName = months[this.month];
 
   	return {
   		weeksInMonth,
   		daysInAWeek,
   		daysMonth,
+  		monthName,
   	}
   },
   components: {
@@ -38,7 +46,6 @@ export default {
   methods: {
   	dayOfMonth: function (week_index, day_index) {
   	  const dayOfCalendar = this.getFirstDayOfMonth(this.month, this.year) + this.daysMonth;
-  	  //dayOfCalendar + this.getFirstDayOfMonth(this.month, this.year);
 	  const output = week_index * this.daysInAWeek + day_index - this.getFirstDayOfMonth(this.month, this.year) + 1;
 
 	  return output > 0 && output <= this.getLastDateOfMonth(this.month, this.year) ? output : "";
