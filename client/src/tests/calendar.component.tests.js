@@ -15,6 +15,10 @@ describe('Calendar Shell Test', function () {
 
   // afterEach(() => {})
 
+  const buildModifiedHtml = function (html) {
+    return html.replaceAll("\n","").replaceAll(" ","").replaceAll(/class=\"([^\"]*)\"/g, "").replaceAll(/data\-report\-id=\"([^\"]*)\"/g, "");
+  };
+
   const leadingBlankSpaces = function (spaces) {
     let result = "<tr>";
 
@@ -107,7 +111,7 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
-    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+    const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(1)); // First space on calendar should be blank.
     expect(modifiedHtml).contains(trailingBlankSpaces(28, 6)); // Last six spaces on calendar should be blank.
@@ -129,7 +133,7 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
-    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+    const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(6));
     expect(modifiedHtml).contains(trailingBlankSpaces(29, 0));
@@ -150,7 +154,7 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
-    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+    const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(3));
     expect(modifiedHtml).contains(trailingBlankSpaces(31, 1));
@@ -171,7 +175,7 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
-    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+    const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(2));
     expect(modifiedHtml).contains(trailingBlankSpaces(31, 2));
@@ -192,13 +196,15 @@ describe('Calendar Shell Test', function () {
     expect(wrapper.text()).not.contains("\t0\n");
     expect(wrapper.text()).not.contains("\t0\t");
 
-    const modifiedHtml = wrapper.html().replaceAll("\n","").replaceAll(" ","");
+    const modifiedHtml = buildModifiedHtml(wrapper.html());
 
     expect(modifiedHtml).contains(leadingBlankSpaces(0));
     expect(modifiedHtml).contains(trailingBlankSpaces(30, 5));
   });
+});
 
-  it('shallow mount with data', () => {
+describe('Calendar Data/Reports Test', function () {
+  it('shallow mount with data', (done) => {
     const reportFixtures = [{
       "averageSpeedDuringSprint": 750.3551401869158, 
       "avgSprintLength": 35.666666666666664, 
@@ -232,35 +238,39 @@ describe('Calendar Shell Test', function () {
       "id": 3, 
       "lengthOfWorkout": 1256, 
       "sprintCount": 3, 
-      "startTime": 1616009560, 
+      "startTime": 1617504154, 
+      "stopTime": 1616010814, 
+      "topSpeed": 1000
+    }, {
+      "averageSpeedDuringSprint": 751.3551401869158, 
+      "avgSprintLength": 35.666666666666664, 
+      "cooldownTime": 653, 
+      "date": 1616010834052, 
+      "faultyReadingCount": 0, 
+      "id": 5, 
+      "lengthOfWorkout": 1256, 
+      "sprintCount": 4, 
+      "startTime": 1619405837, 
       "stopTime": 1616010814, 
       "topSpeed": 1000
     }];
 
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 3, year: 2021 }});
+    const wrapper = shallowMount(Calendar, {propsData: { reports: reportFixtures, month: 3, year: 2021 }});
 
-    console.log(wrapper.html());
+    const report_tds = wrapper.findAll(".has-report");
+    
+    equal(report_tds.length, 2);
+    const reportIds = report_tds.wrappers.map(w => w.element.dataset.reportId);
+    equal(reportIds.includes("3"), true, `${reportIds}`);
+    equal(reportIds.includes("5"), true, `${reportIds}`);
+
+    const randomReportCellWrapper = report_tds.wrappers[Math.floor(Math.random()*report_tds.length)];
+
+    randomReportCellWrapper.trigger('click').then(() => {
+         //console.log(randomReportCellWrapper.html());
+         done();
+    });
   });
-
-  it('shallow mount with data', () => {
-    const reportFixtures = [];
-
-    const wrapper = shallowMount(Calendar, {propsData: { reports: [reportFixtures], month: 1, year: 2021 }});
-  });
-
-    // wrapper.vm.$nextTick().then(function () {
-    //   expect(wrapper.text()).contains('Pending List')
-    //   expect(wrapper.findAll('.mot-parent').length > 1).equal(true)
-    //   expect(wrapper.findAll('.mot-parent').length > 1).equals(true)
-    //   //expect(wrapper.findAll('.mot-parent').length > 1).same(true)
-
-    //   // click one of the mot buttons
-    //   wrapper.findAll('.mot-parent').at(0).trigger('click').then(() => {
-    //     console.log(wrapper.vm.currentMot)
-    //     done()
-    //   })
-    // })
-  // });
 });
 
 mocha.run();
