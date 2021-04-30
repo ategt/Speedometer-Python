@@ -13,6 +13,7 @@
 <script>
 export default {
   name: 'Calendar',
+  props: ['reports'],
   data () {
   	const daysInAWeek = 7;
   	const daysMonth = 31;
