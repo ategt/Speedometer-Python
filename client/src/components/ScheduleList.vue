@@ -63,6 +63,6 @@ export default {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
             this.$emit("retire-schedule", schedule_id);
         },
-    }
+    },
 }	
 </script>
