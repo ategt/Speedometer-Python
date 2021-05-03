@@ -329,8 +329,8 @@ describe('Calendar Data/Reports Test', function () {
     const clickPromise = randomReportCellWrapper.trigger('click');
     clickPromise.then(() => {
       const emittedReportId = wrapper.emitted()["report-clicked"][0][0].id;
-         equal( emittedReportId == 5 || emittedReportId == 3, true);
-         done();
+      equal( emittedReportId == 5 || emittedReportId == 3, true);
+      done();
     });
   });
 });
