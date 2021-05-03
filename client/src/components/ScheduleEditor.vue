@@ -4,13 +4,13 @@
 			<div class="half-pane left-pane schedule-meta">
 				<h2>Schedule:</h2>
 				<span class="schedule-name">
-					<input type="text" id="schedule-name" name="schedule-name" class="schedule-name-input" v-model="internalSchedule.name"></input>
+					<input type="text" id="schedule-name" name="schedule-name" class="schedule-name-input" v-model="schedule.name"></input>
 				</span>
 			</div>
 		</div>
-		<div id="schedule" class="schedule-field" v-if="internalSchedule.items.length">
+		<div id="schedule" class="schedule-field" v-if="schedule.items.length">
 			<table class="schedule-table">
-				<tr v-for="item in internalSchedule.items"
+				<tr v-for="item in schedule.items"
 	                        v-bind:key="item.id"
 	                        class="schedule-row">
 	        		<td class="retire-report delete-button" v-bind:data-id="item.id" v-on:click="retire">X</td>
@@ -40,27 +40,32 @@
 import { prettyTime	} from '../src/schedule';
 export default {
   name: "ScheduleEditor",
-  props: ['schedule'],
-  data: function () {
-  	return {
-  		internalSchedule: Object.assign({}, this.schedule, {items: this.schedule.items}),
-  	}
+  props: ['scheduleEdit'],
+  computed: {
+    schedule: {
+      get () {
+        return Object.assign({}, this.scheduleEdit, {items: this.scheduleEdit.items});
+      },
+      set (value) {
+        this.$store.commit('schedule/updateScheduleEdit', value);
+      }
+    },
   },
   methods: {
    	addScheduleItem: function (event) {
   		const new_id = this.internalSchedule.items.map(item => item.id).reduce((itm, acc) => itm > acc ? itm : acc, 0) + 1;
-  		this.internalSchedule.items.push({id:new_id, activity:"Activity", interval: 5});
+  		this.schedule.items.push({id:new_id, activity:"Activity", interval: 5});
   	},
   	prettyTime,
 	retire: function (event) {
   		const retire_id = event.currentTarget.dataset['id'];
-  		this.internalSchedule.items = this.internalSchedule.items.filter(item => item.id != retire_id);
+  		this.schedule.items = this.internalSchedule.items.filter(item => item.id != retire_id);
 	},
 	updateInterval: function (event) {
   		const updated_id = event.currentTarget.dataset['id'];
   		const evaluated_value = eval(event.currentTarget.value);
   		event.currentTarget.value = evaluated_value;
-  		this.internalSchedule.items.filter(item => item.id == updated_id)[0].interval = evaluated_value;
+  		this.schedule.items.filter(item => item.id == updated_id)[0].interval = evaluated_value;
   	},
   },
 }

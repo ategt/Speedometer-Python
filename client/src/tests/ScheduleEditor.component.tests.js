@@ -15,7 +15,7 @@ describe('ScheduleEditor Shell Test', function () {
   	const scheduleItems = [];
     const scheduleFixture = {id:5, name:"Test Schedule", items: scheduleItems};
 
-    const wrapper = shallowMount(ScheduleEditor, {propsData: { schedule: scheduleFixture }});
+    const wrapper = shallowMount(ScheduleEditor, {propsData: { scheduleEdit: scheduleFixture }});
 
     equal(wrapper.vm.schedule.items.length, 0);
     equal(wrapper.find(".nothing-yet").isVisible(), true);
@@ -25,7 +25,7 @@ describe('ScheduleEditor Shell Test', function () {
   	const scheduleItems = [{name:"Start", duration:10}, {name:"Stop", duration: 20}];
     const scheduleFixture = {id:5, name:"Test Schedule", items: scheduleItems};
 
-    const wrapper = shallowMount(ScheduleEditor, {propsData: { schedule: scheduleFixture }});
+    const wrapper = shallowMount(ScheduleEditor, {propsData: { scheduleEdit: scheduleFixture }});
 
     equal(wrapper.vm.schedule.items.length, 2);
     equal(wrapper.findAll(".nothing-yet").length, 0);
