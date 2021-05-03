@@ -116,28 +116,7 @@ describe('ScheduleList Shell Test', function () {
       const emittedScheduleId = wrapper.emitted()["set-default-schedule"][0][0];
       equal( emittedScheduleId == 5, true);
 
-      wrapper.vm.defaultScheduleId = emittedScheduleId;
-
-      wrapper.vm.$nextTick(() => {
-        const afterClickScheduleRows = wrapper.findAll('tr.schedule-row');
-
-        equal(afterClickScheduleRows.length, 2);
-
-        expect(cleanText(afterClickScheduleRows.at(0).element.innerText).toLowerCase().replaceAll("set default", "")).contains("default");
-        expect(cleanText(afterClickScheduleRows.at(1).element.innerText).toLowerCase().replaceAll("set default", "")).not.contains("default");
-
-        expect(cleanText(afterClickScheduleRows.at(0).element.innerText).toLowerCase()).not.contains("set default");
-        expect(cleanText(afterClickScheduleRows.at(1).element.innerText).toLowerCase()).contains("set default");
-
-        expect(cleanText(afterClickScheduleRows.at(0).element.innerText).toLowerCase()).not.contains("delete");
-        expect(cleanText(afterClickScheduleRows.at(1).element.innerText).toLowerCase()).contains("delete");
-
-        const setDefaultButtons = wrapper.findAll('span.set-default-button');
-
-        equal(setDefaultButtons.length, 1);
-
-        done();
-      });
+      done();
     });
   });
 });
