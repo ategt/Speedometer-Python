@@ -73,7 +73,6 @@ export default {
   	},
     remarks: {
       get () {
-        //return this.$store.state.reports.reports.find(report => report.id == this.report.id).remarks;
         return this.report.remarks;
       },
       set (value) {
