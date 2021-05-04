@@ -37,7 +37,7 @@
 	</div>
 </template>
 <script>
-import { SCHEDULE_EDITOR_EVENTS } from "./scr/constants";
+import { SCHEDULE_EDITOR_EVENTS } from "../src/constants";
 import { prettyTime	} from '../src/schedule';
 export default {
   name: "ScheduleEditor",

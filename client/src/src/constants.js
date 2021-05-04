@@ -6,9 +6,10 @@ export const months_abreviated = {0: "Jan",1:"Feb",2:"Mar",3:"Apr",4:"May",5:"Ju
 export const top_speed = 2000;
 
 export const SCHEDULE_LIST_EVENTS = {
-	loadSchedule: "load-schedule", 
+	//loadSchedule: "load-schedule", 
 	setDefaultSchedule: "set-default-schedule", 
 	retireSchedule: "retire-schedule",
+	setActiveSchedule: "set-active-schedule",
 };
 
 export const SCHEDULE_BUTTONS_EVENTS = {
@@ -25,5 +26,5 @@ export const SCHEDULE_INDEX_EVENTS = {
 export const SCHEDULE_EDITOR_EVENTS = {
 	updateInterval: "update-editor-interval",
 	retireScheduleItem: "retire-schedule-item",
-	addScheduleItem: 
+	addScheduleItem: "add-schedule-item",
 };

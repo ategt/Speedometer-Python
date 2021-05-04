@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-import { SCHEDULE_BUTTONS_EVENTS } from "./scr/constants";
+import { SCHEDULE_BUTTONS_EVENTS } from "../src/constants";
 export default {
 	name: "ScheduleButtons",
 	data () {

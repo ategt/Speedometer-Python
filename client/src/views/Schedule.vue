@@ -1,6 +1,6 @@
 <template>
 	<div id="schedule-area" class="schedule-area">
-		<ScheduleEditor v-bind:schedule="schedule" v-on="editorListeners"></ScheduleEditor>
+		<ScheduleEditor v-bind:scheduleEdit="schedule" v-on="editorListeners"></ScheduleEditor>
 		<ScheduleIndex v-bind:schedules="otherSchedules" v-bind:defaultScheduleId="defaultScheduleId" v-on="indexListeners"></ScheduleIndex>
 	</div>
 </template>
@@ -8,8 +8,8 @@
 <script>
 import ScheduleEditor from '../components/ScheduleEditor.vue';
 import ScheduleIndex from '../components/ScheduleIndex.vue';
-import { SCHEDULE_BUTTONS_EVENTS, SCHEDULE_LIST_EVENTS, SCHEDULE_INDEX_EVENTS } from "./scr/constants";
-import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, newSchedule, saveSchedule, saveAsSchedule } from './src/schedule';
+import { SCHEDULE_BUTTONS_EVENTS, SCHEDULE_LIST_EVENTS, SCHEDULE_INDEX_EVENTS, SCHEDULE_EDITOR_EVENTS } from "../src/constants";
+import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, newSchedule, saveSchedule, saveAsSchedule } from '../src/schedule';
 
 export default {
 	  name: "Schedule",
@@ -54,7 +54,7 @@ export default {
 	  	loadOtherSchedules: function () {
 	  		this.$store.dispatch("schedules/populateSchedules");
 	  	},
-	  	setDefault: function (event) {
+	  	setDefaultSchedule: function (event) {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
 			this.$store.dispatch("schedules/putDefault", schedule_id);
 	  	},
@@ -75,6 +75,15 @@ export default {
 	  		const result = {};
 
 			for (const [methodName, eventTag] of Object.entries(SCHEDULE_INDEX_EVENTS)) {
+				result[eventTag] = this[methodName];
+			}
+
+			return result;
+	  	},
+	  	editorListeners: function () {
+	  		const result = {};
+
+			for (const [methodName, eventTag] of Object.entries(SCHEDULE_EDITOR_EVENTS)) {
 				result[eventTag] = this[methodName];
 			}
 

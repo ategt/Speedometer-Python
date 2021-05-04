@@ -1,5 +1,5 @@
 import * as scheduleApi from '../../api/schedules';
-import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, isScheduleInStorage, newSchedule, isScheduleRemote, saveSchedule, saveAsSchedule } from './src/schedule';
+import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, isScheduleInStorage, newSchedule, isScheduleRemote, saveSchedule, saveAsSchedule } from '../../src/schedule';
 
 // initial state
 const state = () => ({

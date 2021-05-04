@@ -44,7 +44,7 @@
 </div>	
 </template>
 <script>
-import { SCHEDULE_LIST_EVENTS } from "./scr/constants";
+import { SCHEDULE_LIST_EVENTS } from "../src/constants";
 
 export default {
 	name: "ScheduleList",
@@ -52,7 +52,7 @@ export default {
     methods: {
         loadSchedule: function (event) {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit(SCHEDULE_LIST_EVENTS.loadSchedule, schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.setActiveSchedule, schedule_id);
         },
         setDefault: function (event) {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
