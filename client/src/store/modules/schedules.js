@@ -1,33 +1,38 @@
-import * as reportApi from '../../api/reports';
-import { sortByStartingTime } from '../../src/reports';
+import * as scheduleApi from '../../api/schedules';
 
 // initial state
 const state = () => ({
-  reports: [],
+  schedules: [],
   errors: [],
   loading: false,
-  sortFunction: sortByStartingTime,
+  default: 0,
 })
 
 // getters
 const getters = {
-  getReport: (state, getters, rootState) => (id) => {
-    return state.reports.find(report => report.id === id);
-  }
-}
+  getSchedule: (state, getters, rootState) => (id) => {
+    return state.schedules.find(schedule => schedule.id === id);
+  },
+  getDefaultScheduleId: (state, getters, rootState) => {
+    return state.default;
+  },
+  getSchedules: (state, getters, rootState) => {
+    return state.schedules;
+  },
+};
 
 // actions
 const actions = {
-  populateReports ({ commit, state }) {
-    if ( state.reports.length === 0 && state.loading == false ) {
-      this.dispatch("reports/getAllReports");
+  populateSchedules ({ commit, state }) {
+    if ( state.schedules.length === 0 && state.loading == false ) {
+      this.dispatch("schedules/loadAllSchedules");
     }
   },
 
-  getAllReports ({ commit }) {
+  loadAllSchedules ({ commit }) {
     commit('setLoading', true);
-    reportApi.getReports().then(function (reports) {
-      commit('setReports', reports);
+    scheduleApi.getSchedules().then(function (schedules) {
+      commit('setSchedules', schedules);
     }).catch(function (error) {
       commit('addError', error);
     }).finally(function (not_sure) {
@@ -35,19 +40,20 @@ const actions = {
     });
   },
 
-  retireReport ({ state, commit }, reportIdString) {
-      reportApi.retireReport(reportIdString).then(() => commit("removeReport", parseInt(reportIdString))).catch((error) => commit("addError", error))
+  retireSchedule ({ state, commit }, scheduleIdString) {
+    scheduleApi.retireSchedule(scheduleIdString).then(() => commit("removeSchedule", parseInt(scheduleIdString))).catch((error) => commit("addError", error));
   },
 
-  updateRemarks ({ commit }, report ) {
-    reportApi.updateRemarks(report.id, report.remarks).catch((error) => commit("addError", error));
+  updateSchedule ({ commit }, schedule ) {
+    // commit('mergeSchedule', schedule);
+    scheduleApi.updateSchedule(schedule).catch((error) => commit("addError", error));
   },
-}
+};
 
 // mutations
 const mutations = {
-  setReports (state, reports) {
-    state.reports = reports;
+  setSchedules (state, schedules) {
+    state.schedules = schedules;
   },
 
   addError (state, error) {
@@ -58,14 +64,16 @@ const mutations = {
     state.loading = loadingValue;
   },
 
-  setRemarks (state, {reportId, comment}) {
-    state.reports.find(_report => _report.id == reportId).remarks = comment;
+  mergeSchedule (state, newSchedule) {
+    const oldSchedule = state.schedules.find(schedule => schedule.id == newSchedule.id);
+    const mergedSchedule = {...oldSchedule, ...newSchedule};
+    state.schedules = [...state.schedules.filter(schedule => schedule.id != newSchedule.id), mergedSchedule];
   },
 
-  removeReport (state, id) {
-    state.reports = state.reports.filter(report => report.id !== id);
+  removeSchedule (state, id) {
+    state.schedules = state.schedules.filter(schedule => schedule.id !== id);
   },
-}
+};
 
 export default {
   namespaced: true,

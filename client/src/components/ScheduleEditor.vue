@@ -4,7 +4,7 @@
 			<div class="half-pane left-pane schedule-meta">
 				<h2>Schedule:</h2>
 				<span class="schedule-name">
-					<input type="text" id="schedule-name" name="schedule-name" class="schedule-name-input" v-model="schedule.name"></input>
+					<input type="text" id="schedule-name" name="schedule-name" class="schedule-name-input" v-model="scheduleName"></input>
 				</span>
 			</div>
 		</div>
@@ -48,6 +48,14 @@ export default {
       },
       set (value) {
         this.$store.commit('schedule/updateScheduleEdit', value);
+      }
+    },
+    scheduleName: {
+      get () {
+        return this.schedule.name;
+      },
+      set (value) {
+        this.$store.commit('schedule/updateScheduleEdit', {...this.schedule, name: value});
       }
     },
   },

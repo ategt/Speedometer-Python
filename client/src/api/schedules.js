@@ -12,4 +12,20 @@ export const retireSchedule = function (id) {
 	return new Promise(function (resolve, reject) {
 		axios.delete(`${SCHEDULE_API_ENDPOINT}/${id}`);
 	});
-}
+};
+
+export const getSchedules = function () {
+	return new Promise(function (resolve, reject) {
+		axios.get(SCHEDULE_API_ENDPOINT).then(function (response) {
+			resolve(response.data);
+		});
+	});
+};
+
+export const updateSchedule = function (schedule) {
+	return axios.patch(SCHEDULE_API_ENDPOINT, {...schedule, updated: +new Date()});
+};
+
+export const createSchedule = function (schedule) {
+	return axios.post(SCHEDULE_API_ENDPOINT, {...schedule, created: +new Date()});
+};

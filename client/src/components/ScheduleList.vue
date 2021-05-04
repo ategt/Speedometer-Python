@@ -44,24 +44,26 @@
 </div>	
 </template>
 <script>
+import { SCHEDULE_LIST_EVENTS } from "./scr/constants";
+
 export default {
 	name: "ScheduleList",
     props: ['schedules', 'defaultScheduleId'],
     methods: {
         loadSchedule: function (event) {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit("load-schedule", schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.loadSchedule, schedule_id);
         },
         setDefault: function (event) {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit("set-default-schedule", schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.setDefaultSchedule, schedule_id);
         },
         cannotRetire: function (event) {
             window.alert("Cannot Delete Default Schedule\nYou must set another schedule as default first.");
         },
         retireSchedule: function (event) {
             const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit("retire-schedule", schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.retireSchedule, schedule_id);
         },
     },
 }	
