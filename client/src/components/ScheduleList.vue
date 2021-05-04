@@ -51,19 +51,16 @@ export default {
     props: ['schedules', 'defaultScheduleId'],
     methods: {
         loadSchedule: function (event) {
-            const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit(SCHEDULE_LIST_EVENTS.setActiveSchedule, schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.switchActiveSchedule, event);
         },
         setDefault: function (event) {
-            const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit(SCHEDULE_LIST_EVENTS.setDefaultSchedule, schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.setDefaultSchedule, event);
         },
         cannotRetire: function (event) {
             window.alert("Cannot Delete Default Schedule\nYou must set another schedule as default first.");
         },
         retireSchedule: function (event) {
-            const schedule_id = parseInt(event.currentTarget.dataset['id']);
-            this.$emit(SCHEDULE_LIST_EVENTS.retireSchedule, schedule_id);
+            this.$emit(SCHEDULE_LIST_EVENTS.retireSchedule, event);
         },
     },
 }	

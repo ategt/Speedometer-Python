@@ -3,7 +3,7 @@
 		<div id="save-schedule-button" v-on:click="$emit(saveAsSchedule)" class="timer-button schedule-button">
 			DUPLICATE SCHEDULE
 		</div>
-		<div id="save-schedule-button" v-on:click="$emit(savechedule)" class="timer-button schedule-button">
+		<div id="save-schedule-button" v-on:click="$emit(saveSchedule)" class="timer-button schedule-button">
 			UPDATE SCHEDULE
 		</div>
 		<div id="new-schedule-button" v-on:click="$emit(newSchedule)" class="timer-button schedule-button">

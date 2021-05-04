@@ -23,7 +23,7 @@ def endpointSchedulesPost():
     if schedule['default']:
         scheduleDao.setDefault(schedule['id'])
 
-    return flask.make_response()
+    return flask.jsonify(schedule)
 
 @schedulesController.route('/schedules', methods={"PATCH"})
 def endpointSchedulesPatch():

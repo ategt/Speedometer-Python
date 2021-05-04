@@ -1,5 +1,7 @@
 import './decorate-number-pad';
 
+const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+
 export const defaultSchedule = {name: "Default",
 				  default: true,
 				  id: 0,
@@ -54,4 +56,24 @@ export const newSchedule = function () {
 */
 export const isScheduleRemote = function (schedule) {
 	return (Object.keys(schedule).includes("id"));
+};
+
+export const sortById =  function (scheduleA, scheduleB) {
+	return scheduleA.id - scheduleB.id;
+};
+
+export const sortByName =  function (scheduleA, scheduleB) {
+	return collator.compare(scheduleA.name, scheduleB.name);
+};
+
+export const sortByCreated =  function (scheduleA, scheduleB) {
+	return collator.compare(scheduleA.created, scheduleB.created);
+};
+
+export const sortByUpdated =  function (scheduleA, scheduleB) {
+	function getUpdated (schedule) {
+		return schedule.updated ? schedule.updated : schedule.created;
+	}
+
+	return collator.compare(getUpdated(scheduleA), getUpdated(scheduleB));
 };

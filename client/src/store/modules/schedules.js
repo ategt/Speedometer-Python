@@ -1,5 +1,5 @@
 import * as scheduleApi from '../../api/schedules';
-import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, isScheduleInStorage, newSchedule, isScheduleRemote, saveSchedule, saveAsSchedule } from '../../src/schedule';
+import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, isScheduleInStorage, newSchedule, isScheduleRemote, saveSchedule, saveAsSchedule, sortByUpdated, sortByCreated, sortByName, sortById } from '../../src/schedule';
 
 // initial state
 const state = () => ({
@@ -8,6 +8,7 @@ const state = () => ({
   loading: false,
   default: 0,
   activeSchedule: loadScheduleFromStorage(),
+  sortingFunction: sortByName,
 })
 
 // getters
@@ -19,7 +20,7 @@ const getters = {
     return state.default;
   },
   getDefaultSchedule: (state, getters, rootState) => {
-    const defaultId = getters.getDefaultScheduleId();
+    const defaultId = getters.getDefaultScheduleId;
     return state.schedules.find(schedule => schedule.id == defaultId);
   },
   getActiveSchedule: (state, getters, rootState) => {
@@ -30,6 +31,9 @@ const getters = {
   },
   makeSchedule: (state, getters, rootState) => {  // This was buildSchedule.  Not sure why we need it, looked unused.
     return state.activeSchedule.items;
+  },
+  getSortedSchedules: (state, getters, rootState) => {
+    return Array.from(state.schedules).sort(state.sortingFunction);
   },
 };
 
@@ -74,11 +78,17 @@ const actions = {
   },
 
   createSchedule ({ commit }, schedule ) {
-    scheduleApi.createSchedule(schedule);
+    scheduleApi.createSchedule(schedule).then((responseSchedule) => {
+      commit("addSchedule", responseSchedule);
+
+      if ( responseSchedule.default ) {
+        commit("setDefault", responseSchedule.id);
+      }
+    });
   },
 
   putDefault ({ commit, getters }, id ) {
-    const oldDefaultId = getters.getDefaultScheduleId();
+    const oldDefaultId = getters.getDefaultScheduleId;
     commit("setDefault", id);
     scheduleApi.setDefault(id).catch((error) => {
       commit("addError", error);
@@ -86,11 +96,12 @@ const actions = {
     });
   },
 
+  //saveActiveSchedule ({ commit, dispatch, getters }) {
   saveActiveSchedule ({ commit, dispatch, getters }) {
-    const schedule = getters.getActiveSchedule();
+    const schedule = getters.getActiveSchedule;
     saveScheduleLocally(schedule);
 
-    if (isScheduleRemote()) {
+    if (isScheduleRemote(schedule)) {
       dispatch("updateSchedule", schedule);
     } else {
       dispatch("createSchedule", schedule);
@@ -98,7 +109,7 @@ const actions = {
   },
 
   createActiveSchedule ({ commit, dispatch, getters }) {
-    const schedule = getters.getActiveSchedule();
+    const schedule = getters.getActiveSchedule;
     saveScheduleLocally(schedule);
 
     dispatch("createSchedule", schedule);
@@ -108,7 +119,7 @@ const actions = {
 // mutations
 const mutations = {
   setSchedules (state, schedules) {
-    state.schedules = schedules;
+    state.schedules = schedules.map(schedule => Object.assign({}, schedule, {default: false}));
   },  
 
   setDefault (state, id) {
@@ -142,7 +153,7 @@ const mutations = {
   },
 
   switchActiveSchedule (state, id) {
-    state.activeSchedule = state.schedules.find(itm => itm.id == id);
+    state.activeSchedule = JSON.parse(JSON.stringify(state.schedules.find(itm => itm.id == id)));
   },
 
   setActiveSchedule (state, schedule) {
@@ -161,6 +172,14 @@ const mutations = {
   updateActiveScheduleItemInterval (state, {id, value}) {
     state.activeSchedule.items.find(item => item.id == id).interval = value;
   },
+
+  replaceItems (state, newScheduleItems) {
+    state.activeSchedule.items = newScheduleItems;
+  },
+
+  updateActiveScheduleName (state, name) {
+    state.activeSchedule.name = name;
+  }
 };
 
 export default {

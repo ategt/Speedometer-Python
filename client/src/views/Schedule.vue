@@ -30,9 +30,9 @@ export default {
 	  	saveAsSchedule: function (event) {
 			this.$store.dispatch("schedules/createActiveSchedule");
 	  	},
-	  	setActiveSchedule: function (event) {
+	  	switchActiveSchedule: function (event) {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
-			this.$store.commit("schedules/setActiveSchedule", schedule_id);
+			this.$store.commit("schedules/switchActiveSchedule", schedule_id);
 	  	},
 	  	retireScheduleItem: function (event) {
 	  		const retire_id = event.currentTarget.dataset['id'];
@@ -58,7 +58,9 @@ export default {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
 			this.$store.dispatch("schedules/putDefault", schedule_id);
 	  	},
-
+		scheduleItemsChanged: function (scheduleItems) {
+			this.$store.commit("schedules/replaceItems", scheduleItems);
+		},
 	  },
 	  computed: {
 	  	schedule: function () {
@@ -68,7 +70,7 @@ export default {
 	  		return this.$store.getters["schedules/getDefaultScheduleId"];
 	  	},
 	  	otherSchedules: function () {
-	  		return this.$store.getters["schedules/getSchedules"];
+	  		return this.$store.getters["schedules/getSortedSchedules"];
 	  	},
 	  	indexListeners: function () {
 	  		//input: function (event) { // Use this format
@@ -82,9 +84,12 @@ export default {
 	  	},
 	  	editorListeners: function () {
 	  		const result = {};
+	  		const vm = this;
 
 			for (const [methodName, eventTag] of Object.entries(SCHEDULE_EDITOR_EVENTS)) {
-				result[eventTag] = this[methodName];
+				result[eventTag] = function (event) {
+					return vm[methodName](event);
+				};
 			}
 
 			return result;

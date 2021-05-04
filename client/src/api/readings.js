@@ -1,6 +1,7 @@
 import axios from "axios";
+import { ROOT_URL } from '../src/constants';
 
-const READINGS_API_ENDPOINT = "http://127.0.0.1:5000/readings";
+const READINGS_API_ENDPOINT = `${ROOT_URL}/readings`;
 
 export const getReadings = function (startTime, stopTime) {
 	return new Promise(function (resolve, reject) {

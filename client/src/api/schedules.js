@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { ROOT_URL } from '../src/constants';
 
-const SCHEDULE_API_ENDPOINT = "http://127.0.0.1:5000/schedule";
+const SCHEDULE_API_ENDPOINT = `${ROOT_URL}/schedules`;
 
 export const setDefault = function (id) {
 	return new Promise(function (resolve, reject) {
@@ -27,5 +28,9 @@ export const updateSchedule = function (schedule) {
 };
 
 export const createSchedule = function (schedule) {
-	return axios.post(SCHEDULE_API_ENDPOINT, {...schedule, created: +new Date()});
+	return new Promise(function (resolve, reject) {
+		axios.post(SCHEDULE_API_ENDPOINT, {...schedule, created: +new Date()}).then(function (response) {
+			resolve(response.data);			
+		}).catch(reject);
+	});
 };

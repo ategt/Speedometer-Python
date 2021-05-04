@@ -1,6 +1,7 @@
 import axios from "axios";
+import { ROOT_URL } from '../src/constants';
 
-const REPORT_API_ENDPOINT = "http://127.0.0.1:5000/report";
+const REPORT_API_ENDPOINT = `${ROOT_URL}/report`;
 
 export const getReports = function () {
 	return new Promise(function (resolve, reject) {
