@@ -21,3 +21,9 @@ export const SCHEDULE_INDEX_EVENTS = {
 	...SCHEDULE_LIST_EVENTS, 
 	...SCHEDULE_BUTTONS_EVENTS,
 };
+
+export const SCHEDULE_EDITOR_EVENTS = {
+	updateInterval: "update-editor-interval",
+	retireScheduleItem: "retire-schedule-item",
+	addScheduleItem: 
+};

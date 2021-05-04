@@ -34,18 +34,12 @@ export default {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
 			this.$store.commit("schedules/setActiveSchedule", schedule_id);
 	  	},
-	  	retire: function (event) {
+	  	retireScheduleItem: function (event) {
 	  		const retire_id = event.currentTarget.dataset['id'];
 	  		this.$store.commit("schedules/removeActiveScheduleItem", retire_id);
 	  	},
 	  	addScheduleItem: function (event) {
 	  		this.$store.commit("schedules/addActiveScheduleItem");
-	  	},
-	  	createSchedule: function (schedule) {
-	  		this.$store.dispatch("schedules/createSchedule", schedule);
-	  	},
-	  	updateSchedule: function (schedule) {
-	  		this.$store.dispatch("schedules/updateSchedule", schedule);
 	  	},
 	  	retireSchedule: function (event) {
 	  		const retire_id = event.currentTarget.dataset['id'];
