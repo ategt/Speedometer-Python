@@ -67,6 +67,7 @@ export default {
   	prettyTime,
 	retire: function (event) {
   		const retire_id = event.currentTarget.dataset['id'];
+  		this.$store.commit('schedule/', {...this.schedule, name: value});
   		this.schedule.items = this.internalSchedule.items.filter(item => item.id != retire_id);
 	},
 	updateInterval: function (event) {
