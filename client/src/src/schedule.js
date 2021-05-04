@@ -29,10 +29,8 @@ export const loadScheduleFromStorage = function () {
 	}
 };
 
-export const saveScheduleToStorage = function () {
-	if (!('schedule' in sessionStorage)) {
-		 context.schedule = data.default;
-	}
+export const isScheduleInStorage = function () {
+	return ('schedule' in sessionStorage);
 };
 
 export const saveScheduleLocally = function (schedule) {
@@ -46,23 +44,14 @@ export const newSchedule = function () {
 		items: new Array(),
 	};
 
-	const scheduleNameElement = document.getElementById("schedule-name");
-	window.setTimeout(() => scheduleNameElement.select(), 100);
-
-	return schedule;
+	return Object.assign({}, schedule);
 };
 
-export const saveSchedule = function (schedule) {
-	saveScheduleLocally(schedule);
-
-	if (Object.keys(schedule).includes("id")) {
-		updateSchedule(schedule);
-	} else {
-		createSchedule(schedule);
-	}
-};
-
-export const saveAsSchedule = function (schedule) {
-	saveScheduleLocally(schedule);
-	createSchedule(schedule);
+/**
+*  Determines if a schedule is on the remote server.
+*  Useful for deciding between creating and updating
+*    a schedule.
+*/
+export const isScheduleExists = function (schedule) {
+	return (Object.keys(schedule).includes("id"));
 };

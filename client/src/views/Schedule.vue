@@ -91,6 +91,9 @@ export default {
 
 	  },
 	  computed: {
+	  	schedule: function () {
+	  		
+	  	},
 	  	defaultScheduleId: function () {
 	  		return this.$store.getters["schedules/getDefaultScheduleId"];
 	  	},
