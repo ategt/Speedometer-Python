@@ -1,4 +1,5 @@
 import * as scheduleApi from '../../api/schedules';
+import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, isScheduleInStorage, newSchedule, isScheduleRemote, saveSchedule, saveAsSchedule } from './src/schedule';
 
 // initial state
 const state = () => ({
@@ -6,7 +7,7 @@ const state = () => ({
   errors: [],
   loading: false,
   default: 0,
-  activeSchedule: new Object(),
+  activeSchedule: loadScheduleFromStorage(),
 })
 
 // getters
@@ -45,6 +46,10 @@ const actions = {
     scheduleApi.getSchedules().then(function (data) {
       commit('setSchedules', data.schedules);
       commit('setDefault', data.default.id);
+
+      if ( !isScheduleInStorage() ) {
+        commit("setActiveSchedule", data.default);
+      }
     }).catch(function (error) {
       commit('addError', error);
     }).finally(function (not_sure) {
@@ -80,13 +85,31 @@ const actions = {
       commit("setDefault", oldDefaultId);
     });
   },
+
+  saveActiveSchedule ({ commit, dispatch, getters }) {
+    const schedule = getters.getActiveSchedule();
+    saveScheduleLocally(schedule);
+
+    if (isScheduleRemote()) {
+      dispatch("updateSchedule", schedule);
+    } else {
+      dispatch("createSchedule", schedule);
+    }
+  },
+
+  createActiveSchedule ({ commit, dispatch, getters }) {
+    const schedule = getters.getActiveSchedule();
+    saveScheduleLocally(schedule);
+
+    dispatch("createSchedule", schedule);
+  },
 };
 
 // mutations
 const mutations = {
   setSchedules (state, schedules) {
     state.schedules = schedules;
-  },
+  },  
 
   setDefault (state, id) {
     state.default = id;
@@ -110,12 +133,20 @@ const mutations = {
     state.schedules.push(schedule);
   },
 
+  newSchedule (state) {
+    state.activeSchedule = newSchedule();
+  },
+
   removeSchedule (state, id) {
     state.schedules = state.schedules.filter(schedule => schedule.id != id);
   },
 
-  setActiveSchedule (state, id) {
+  switchActiveSchedule (state, id) {
     state.activeSchedule = state.schedules.find(itm => itm.id == id);
+  },
+
+  setActiveSchedule (state, schedule) {
+    state.activeSchedule = schedule;
   },
 
   addActiveScheduleItem (state) {

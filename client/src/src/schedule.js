@@ -52,6 +52,6 @@ export const newSchedule = function () {
 *  Useful for deciding between creating and updating
 *    a schedule.
 */
-export const isScheduleExists = function (schedule) {
+export const isScheduleRemote = function (schedule) {
 	return (Object.keys(schedule).includes("id"));
 };

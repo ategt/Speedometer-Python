@@ -13,46 +13,22 @@ import { loadScheduleFromStorage, defaultSchedule, saveScheduleLocally, newSched
 
 export default {
 	  name: "Schedule",
-	  data () {
-	  	let schedule;
-
-	  	if ( 'schedule' in sessionStorage ) {
-	  		schedule = loadScheduleFromStorage();
-	  	} else if ( this.$store.schedules.length > 0 ) {
-			schedule = this.$store.getters['schedules/getDefaultSchedule'];
-	  	} else if ( this.$store.schedules.length > 0 ) {
-			schedule = this.$store.schedules[0];
-	  	} else {
-	  		schedule = defaultSchedule;
-	  	}
-
-	  	return { schedule };
-	  },
 	  components: {
 		ScheduleEditor,
 		ScheduleIndex,
 	  },
 	  methods: {
 	  	newSchedule: function (event) {
-			this.schedule = {name: "New Schedule",
-				  			default: true,
-				  			items: new Array()};
-			
+	  		this.$store.commit("schedules/newSchedule");
+
 			const scheduleNameElement = document.getElementById("schedule-name");
 			window.setTimeout(() => scheduleNameElement.select(), 100);
 	  	},
 	  	saveSchedule: function (event) {
-			saveScheduleLocally(this.schedule);
-
-			if (Object.keys(this.schedule).includes("id")) {
-				this.updateSchedule(this.schedule);
-			} else {
-				this.createSchedule(this.schedule);
-			}
+			this.$store.dispatch("schedules/saveActiveSchedule");
 	  	},
 	  	saveAsSchedule: function (event) {
-			saveScheduleLocally(this.schedule);
-			this.createSchedule(this.schedule);
+			this.$store.dispatch("schedules/createActiveSchedule");
 	  	},
 	  	setActiveSchedule: function (event) {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
@@ -92,7 +68,7 @@ export default {
 	  },
 	  computed: {
 	  	schedule: function () {
-	  		
+	  		return this.$store.getters["schedules/getActiveSchedule"];
 	  	},
 	  	defaultScheduleId: function () {
 	  		return this.$store.getters["schedules/getDefaultScheduleId"];
