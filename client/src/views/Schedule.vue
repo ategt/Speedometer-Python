@@ -84,12 +84,9 @@ export default {
 	  	},
 	  	editorListeners: function () {
 	  		const result = {};
-	  		const vm = this;
 
 			for (const [methodName, eventTag] of Object.entries(SCHEDULE_EDITOR_EVENTS)) {
-				result[eventTag] = function (event) {
-					return vm[methodName](event);
-				};
+				result[eventTag] = this[methodName];
 			}
 
 			return result;
