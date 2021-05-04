@@ -19,6 +19,8 @@ export default {
 	  	if ( 'schedule' in sessionStorage ) {
 	  		schedule = loadScheduleFromStorage();
 	  	} else if ( this.$store.schedules.length > 0 ) {
+			schedule = this.$store.getters['schedules/getDefaultSchedule'];
+	  	} else if ( this.$store.schedules.length > 0 ) {
 			schedule = this.$store.schedules[0];
 	  	} else {
 	  		schedule = defaultSchedule;
@@ -32,18 +34,61 @@ export default {
 	  },
 	  methods: {
 	  	newSchedule: function (event) {
-	  		this.schedule = newSchedule();
-	  	}, 
-	  	saveSchedule: function (event) {
-	  		saveSchedule(this.schedule);
-	  	}, 
-	  	saveAsSchedule: function (event) {
-	  		saveAsSchedule(this.schedule);
-	  	}, 
-	  	loadSchedule: function (event) {
-			const schedule_id = event.currentTarget.dataset['id'];
-			this.schedule = this.otherSchedules.find(itm => itm.id == schedule_id);
+			this.schedule = {name: "New Schedule",
+				  			default: true,
+				  			items: new Array()};
+			
+			const scheduleNameElement = document.getElementById("schedule-name");
+			window.setTimeout(() => scheduleNameElement.select(), 100);
 	  	},
+	  	saveSchedule: function (event) {
+			saveScheduleLocally(this.schedule);
+
+			if (Object.keys(this.schedule).includes("id")) {
+				this.updateSchedule(this.schedule);
+			} else {
+				this.createSchedule(this.schedule);
+			}
+	  	},
+	  	saveAsSchedule: function (event) {
+			saveScheduleLocally(this.schedule);
+			this.createSchedule(this.schedule);
+	  	},
+	  	setActiveSchedule: function (event) {
+			const schedule_id = parseInt(event.currentTarget.dataset['id']);
+			this.$store.commit("schedules/setActiveSchedule", schedule_id);
+	  	},
+	  	retire: function (event) {
+	  		const retire_id = event.currentTarget.dataset['id'];
+	  		this.$store.commit("schedules/removeActiveScheduleItem", retire_id);
+	  	},
+	  	addScheduleItem: function (event) {
+	  		this.$store.commit("schedules/addActiveScheduleItem");
+	  	},
+	  	createSchedule: function (schedule) {
+	  		this.$store.dispatch("schedules/createSchedule", schedule);
+	  	},
+	  	updateSchedule: function (schedule) {
+	  		this.$store.dispatch("schedules/updateSchedule", schedule);
+	  	},
+	  	retireSchedule: function (event) {
+	  		const retire_id = event.currentTarget.dataset['id'];
+	  		this.$store.dispatch("schedules/retireSchedule", retire_id);
+	  	},
+	  	updateInterval: function (event) {
+	  		const updated_id = event.currentTarget.dataset['id'];
+	  		const evaluated_value = eval(event.currentTarget.value);
+	  		//event.currentTarget.value = evaluated_value;
+	  		this.$store.commit("schedules/updateActiveScheduleItemInterval", {id: updated_id, value: evaluated_value});
+	  	},
+	  	loadOtherSchedules: function () {
+	  		this.$store.dispatch("schedules/populateSchedules");
+	  	},
+	  	setDefault: function (event) {
+			const schedule_id = parseInt(event.currentTarget.dataset['id']);
+			this.$store.dispatch("schedules/putDefault", schedule_id);
+	  	},
+
 	  },
 	  computed: {
 	  	defaultScheduleId: function () {

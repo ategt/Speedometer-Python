@@ -6,6 +6,7 @@ const state = () => ({
   errors: [],
   loading: false,
   default: 0,
+  activeSchedule: new Object(),
 })
 
 // getters
@@ -16,8 +17,18 @@ const getters = {
   getDefaultScheduleId: (state, getters, rootState) => {
     return state.default;
   },
+  getDefaultSchedule: (state, getters, rootState) => {
+    const defaultId = getters.getDefaultScheduleId();
+    return state.schedules.find(schedule => schedule.id == defaultId);
+  },
+  getActiveSchedule: (state, getters, rootState) => {
+    return state.activeSchedule;
+  },
   getSchedules: (state, getters, rootState) => {
     return state.schedules;
+  },
+  makeSchedule: (state, getters, rootState) => {  // This was buildSchedule.  Not sure why we need it, looked unused.
+    return state.activeSchedule.items;
   },
 };
 
@@ -31,8 +42,9 @@ const actions = {
 
   loadAllSchedules ({ commit }) {
     commit('setLoading', true);
-    scheduleApi.getSchedules().then(function (schedules) {
-      commit('setSchedules', schedules);
+    scheduleApi.getSchedules().then(function (data) {
+      commit('setSchedules', data.schedules);
+      commit('setDefault', data.default.id);
     }).catch(function (error) {
       commit('addError', error);
     }).finally(function (not_sure) {
@@ -40,13 +52,33 @@ const actions = {
     });
   },
 
-  retireSchedule ({ state, commit }, scheduleIdString) {
-    scheduleApi.retireSchedule(scheduleIdString).then(() => commit("removeSchedule", parseInt(scheduleIdString))).catch((error) => commit("addError", error));
+  retireSchedule ({ state, commit, getters }, scheduleIdString) {
+    const id = parseInt(scheduleIdString);
+    const schedule = getters.getSchedule(id);
+    commit("removeSchedule", id);
+
+    scheduleApi.retireSchedule(scheduleIdString).catch((error) => {
+      commit("addError", error);
+      commit("addSchedule", schedule);
+    });
   },
 
   updateSchedule ({ commit }, schedule ) {
-    // commit('mergeSchedule', schedule);
+    commit('mergeSchedule', schedule);
     scheduleApi.updateSchedule(schedule).catch((error) => commit("addError", error));
+  },
+
+  createSchedule ({ commit }, schedule ) {
+    scheduleApi.createSchedule(schedule);
+  },
+
+  putDefault ({ commit, getters }, id ) {
+    const oldDefaultId = getters.getDefaultScheduleId();
+    commit("setDefault", id);
+    scheduleApi.setDefault(id).catch((error) => {
+      commit("addError", error);
+      commit("setDefault", oldDefaultId);
+    });
   },
 };
 
@@ -54,6 +86,10 @@ const actions = {
 const mutations = {
   setSchedules (state, schedules) {
     state.schedules = schedules;
+  },
+
+  setDefault (state, id) {
+    state.default = id;
   },
 
   addError (state, error) {
@@ -70,8 +106,29 @@ const mutations = {
     state.schedules = [...state.schedules.filter(schedule => schedule.id != newSchedule.id), mergedSchedule];
   },
 
+  addSchedule (state, schedule) {
+    state.schedules.push(schedule);
+  },
+
   removeSchedule (state, id) {
-    state.schedules = state.schedules.filter(schedule => schedule.id !== id);
+    state.schedules = state.schedules.filter(schedule => schedule.id != id);
+  },
+
+  setActiveSchedule (state, id) {
+    state.activeSchedule = state.schedules.find(itm => itm.id == id);
+  },
+
+  addActiveScheduleItem (state) {
+    const new_id = state.activeSchedule.items.map(item => item.id).reduce((itm, acc) => itm > acc ? itm : acc, 0) + 1;
+    state.activeSchedule.items.push({id:new_id, activity:"Activity", interval: 5});
+  },
+
+  removeActiveScheduleItem (state, id) {
+    state.activeSchedule.items = state.activeSchedule.items.filter(item => item.id != id);
+  },
+
+  updateActiveScheduleItemInterval (state, {id, value}) {
+    state.activeSchedule.items.find(item => item.id == id).interval = value;
   },
 };
 
