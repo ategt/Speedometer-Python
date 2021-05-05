@@ -10,17 +10,7 @@ def index():
 def raw_graph():
     return send_from_directory("..\\..\\client","d3.html", as_attachment=False)
 
-# @bp.route('/graph', defaults={'path':''})
-# @bp.route('/graph/', defaults={'path':''})
-# @bp.route('/graph/<path:path>')
-# @bp.route('/public-info', defaults={'path':''})
-# @bp.route('/public-info/', defaults={'path':''})
-# @bp.route('/public-schedule', defaults={'path':''})
-# @bp.route('/public-schedule/', defaults={'path':''})
-#@bp.route('/graph/', strict_slashes=True, endpoint='graphsource', defaults={'path':''})
-# strict_slashes=True,
-
-@bp.route('/graph', endpoint='graphsource_clean', defaults={'path':''})
+@bp.route('/graph', strict_slashes=False, endpoint='graphsource_clean', defaults={'path':''})
 @bp.route('/graph/<path:path>', endpoint='graph')
 @bp.route('/public-schedule/', endpoint='schedule', defaults={'path':''})
 @bp.route('/public-reciever/', endpoint='reciever', defaults={'path':''})
