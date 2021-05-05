@@ -46,5 +46,7 @@ def handle_500(error):
 def add_header(response):
   response.headers['Access-Control-Allow-Origin'] = "*"
   response.headers['Access-Control-Allow-Headers'] = "*"
+  response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+  response.headers['Access-Control-Allow-Credentials'] = True
 
   return response

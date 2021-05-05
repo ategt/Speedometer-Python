@@ -50,3 +50,6 @@ class IOBlueprint(Blueprint):
 
     def emit(self, *args, **kwargs):
         self.socketio.emit(*args, **kwargs)
+
+    def getSocketIO(self):
+        return self.socketio

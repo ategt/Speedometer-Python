@@ -33,6 +33,8 @@ def tabata_timer_action(message):
         emit('tabata timer action broadcast', {'data': timer.pulse()}, broadcast=True)
     elif message['data'] == "SCHEDULE":
         emit('tabata timer action broadcast', {'type': 'SCHEDULE', 'data': timer.getSchedule()}, broadcast=True)
+    elif message['data'] == "INFO":
+        print(dir(bp.getSocketIO()))
 
 @bp.on('disconnect')
 def disconnect():
