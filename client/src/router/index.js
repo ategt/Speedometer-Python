@@ -15,11 +15,11 @@ export default new Router({
       name: 'Home',
       component: () => import('../views/Reports.vue')
     },
-    {
-      path: '/public-info',
-      name: 'public-info',
-      component: () => import('../views/Reports.vue')
-    },
+    // {
+    //   path: '/public-info',
+    //   name: 'public-info',
+    //   component: () => import('../views/Reports.vue')
+    // },
     {
       path: '/public/:place',
       name: "Sumplace",
@@ -33,7 +33,7 @@ export default new Router({
       //component: () => import('../views/Graph.vue')
     },
     {
-      path: '/public/info',
+      path: '/public-info',
       name: "Reports",
       component: () => import('../views/Reports.vue')
     },
@@ -66,8 +66,13 @@ export default new Router({
     },
     {
       path: '/about',
-      name: 'about',
+      name: 'About',
       component: () => import('../views/About.vue')
+    },
+    {
+      path: '/public-reciever',
+      name: 'Reciever', // Reciever
+      component: () => import('../views/Reciever.vue'),
     },
     // {
     //   path: '/public/graph',

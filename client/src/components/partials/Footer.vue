@@ -8,7 +8,10 @@
     			<router-link to="/about">About</router-link>
 			</span>
 			<span class="footer-item">
-				<router-link v-bind:to="{name:'public-info'}">Info</router-link>
+				<router-link v-bind:to="{name:'Reports'}">Info</router-link>
+			</span>
+			<span class="footer-item">
+				<router-link v-bind:to="{name:'Reciever'}">Reciever</router-link>
 			</span>
 			<span class="footer-item">
 				<router-link v-bind:to="{name:'Graph'}">Graph</router-link>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 //import * as io from 'socket.io-client'
-import { io } from '../../node_modules/socket.io-client/dist/socket.io'
+import { io } from 'socket.io-client'
+//import { io } from '../../node_modules/socket.io-client/dist/socket.io'
 //import VueSocketIO from 'vue-socket.io'
 import VueSocketIO from '../../cdn/build'
 //import Vue from '../../node_modules/vue/dist/vue.js';
