@@ -55,15 +55,13 @@ class TestSockets(unittest.TestCase):
         _ = sio_client.get_received()
 
         data = read(os.environ['LOG_FILE_PATH'])
-        lines = data.split("\r\n")
+        lines = [line for line in data.split("\r\n") if len(line.strip()) > 0]
 
         for _ in range(250):
             random_line = lines[random.randint(0, len(lines) - 1)]
 
             try:
                 random_reading = LINE_REGEX.search(random_line).groupdict()
-                print("Used the following line:")
-                print(lines.index(random_line), random_line)
             except AttributeError:
                 print("Problem parsing the following line:")
                 print(lines.index(random_line), random_line)
@@ -74,9 +72,9 @@ class TestSockets(unittest.TestCase):
             recieved = sio_client.get_received()[0]
             payload = recieved['args'][0]['data']
 
-            self.assertEqual('speedometer update broadcast', recieved['name'])
-            self.assertTrue(int(payload['currentRevsPerMin']) >= 0)
-            self.assertTrue(int(payload['currentRevsPerMin']) < 25000)
+            self.assertEqual('speedometer update broadcast', recieved['name'], recieved)
+            self.assertTrue(int(payload['currentRevsPerMin']) >= 0, payload)
+            self.assertTrue(int(payload['currentRevsPerMin']) < 65000, payload)
 
     def test_recorderDirectives(self):
         sio_client = self.sio_client
