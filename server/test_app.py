@@ -123,5 +123,81 @@ class TestApp(unittest.TestCase):
 
         self.assertEqual(len([report for report in after_delete_reports if report['id'] == created_report['id']]), 0)
 
+    def test_scheduleCrud(self):
+        app_client = self.app_client
+
+        schedules_response = app_client.get("/schedules")
+        starting_schedules = schedules_response.json['schedules']
+        starting_default_schedule = schedules_response.json['default']
+
+        items = list()
+
+        for i in range(1, random.randint(3,15)):
+            items.append({'id': i,
+                          "activity": uuid.uuid4().hex,
+                          "interval": random.randint(5, 900)})
+
+        new_schedule = {"name": uuid.uuid4().hex,
+                         "default": False,
+                         "items": items,
+                         "created": random.randint(0, 2**64), 
+                         "updated": random.randint(0, 2**64)}
+
+        schedule_creation_response = app_client.post("/schedules", content_type=r"application/json", json=new_schedule)
+        created_schedule = schedule_creation_response.json
+
+        new_schedule['id'] = created_schedule['id']
+
+        for key in created_schedule.keys():
+            self.assertEqual(new_schedule[key], created_schedule[key])
+
+        schedules_json = app_client.get("/schedules").json
+        after_creation_schedules = schedules_json['schedules']
+        after_creation_default_schedule = schedules_json['default']
+
+        self.assertEqual(starting_default_schedule, after_creation_default_schedule)
+
+        self.assertEqual(len(starting_schedules) + 1, len(after_creation_schedules))
+
+        schedule_from_all_schedules = [schedule for schedule in after_creation_schedules if schedule['id'] == created_schedule['id']][0]
+
+        for key in created_schedule.keys():
+            self.assertEqual(created_schedule[key], schedule_from_all_schedules[key])
+
+        altered_schedule = {"id": created_schedule['id'],
+                            "name": uuid.uuid4().hex,
+                            "default": False,
+                            "items": items,
+                            "created": random.randint(0, 2**64), 
+                            "updated": random.randint(0, 2**64)}
+
+        _schedule_update_response = app_client.patch("/schedules", json=altered_schedule)
+
+        schedules_json = app_client.get("/schedules").json
+        after_update_schedules = schedules_json['schedules']
+        after_update_default_schedule = schedules_json['default']
+
+        self.assertEqual(starting_default_schedule, after_update_default_schedule)
+
+        self.assertEqual(len(after_update_schedules), len(after_creation_schedules))
+
+        updated_schedule = [schedule for schedule in after_update_schedules if schedule['id'] == created_schedule['id']][0]
+
+        for key in updated_schedule.keys():
+            self.assertEqual(altered_schedule[key], updated_schedule[key])
+
+        _delete_response = app_client.delete(f"/schedules/{created_schedule['id']}")
+
+        schedules_json = app_client.get("/schedules").json
+        after_delete_schedules = schedules_json['schedules']
+        after_delete_default_schedule = schedules_json['default']
+
+        self.assertEqual(starting_default_schedule, after_delete_default_schedule)
+
+        self.assertEqual(len(after_creation_schedules) - 1, len(after_delete_schedules))
+        self.assertEqual(len(after_update_schedules) - 1, len(after_delete_schedules))
+
+        self.assertEqual(len([schedule for schedule in after_delete_schedules if schedule['id'] == created_schedule['id']]), 0)
+
 if __name__ == '__main__':
     unittest.main()
