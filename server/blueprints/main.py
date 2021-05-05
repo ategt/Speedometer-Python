@@ -2,22 +2,17 @@ from flask import Blueprint, send_from_directory, request, jsonify
 
 bp = Blueprint("main", __name__)
 
-@bp.route('/summary', defaults={'path':''})
-@bp.route('/summary/', defaults={'path':''})
-@bp.route('/summary/<path:path>')
-@bp.route('/summary/<path:path>/text')
-@bp.route('/summary/<path:path>/graph')
+@bp.route('/')
+def index():
+    return send_from_directory("..\\..\\client","index.html", as_attachment=False)
+
+@bp.route('/d3')
+def graph():
+    return send_from_directory("..\\..\\client","d3.html", as_attachment=False)
+
 @bp.route('/graph', defaults={'path':''})
 @bp.route('/graph/', defaults={'path':''})
 @bp.route('/graph/<path:path>')
-@bp.route('/steve', defaults={'path':''})
-@bp.route('/steve/', defaults={'path':''})
-@bp.route('/steve/<path:path>')
-@bp.route('/bill', defaults={'path':''})
-@bp.route('/bill/', defaults={'path':''})
-@bp.route('/bill/<path:path>')
-@bp.route('/ted/', defaults={'path':''})
-@bp.route('/ted/<path:path>')
 @bp.route('/public-info', defaults={'path':''})
 @bp.route('/public-info/', defaults={'path':''})
 @bp.route('/public-schedule', defaults={'path':''})
@@ -43,6 +38,7 @@ def send_file(filename):
 
 @bp.errorhandler(500)
 def handle_500(error):
+    print("Error handled: ", error)
     return flask.jsonify(error=error)
     #return flask.redirect("/")
 

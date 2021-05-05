@@ -106,7 +106,7 @@ window.addEventListener("load", function (event) {
 	  	},
 	  	loadOtherSchedules: function () {
 	  		return new Promise(function (resolve, reject) {
-	  			axios.get("./schedule").then(function (response) {
+	  			axios.get("./schedules").then(function (response) {
 		  			vm.otherSchedules = response.data.schedules;
 		  			vm.defaultScheduleId = response.data.default.id;
 		  			resolve(response.data);
@@ -123,7 +123,7 @@ window.addEventListener("load", function (event) {
 	  	setDefault: function (event) {
 			const schedule_id = parseInt(event.currentTarget.dataset['id']);
 			vm.defaultScheduleId = schedule_id;
-			axios.put("./schedule", {id:schedule_id});
+			axios.put("./schedules", {id:schedule_id});
 	  	},
 	  },
 	  computed: {},
