@@ -1,4 +1,4 @@
-from flask import Blueprint, send_from_directory, request
+from flask import Blueprint, send_from_directory, request, jsonify
 
 bp = Blueprint("main", __name__)
 
@@ -40,6 +40,11 @@ def send_file(filename):
         return send_from_directory("..\\..\\cdn", filename.replace("cdn-",""), as_attachment=False)
     else:
         return send_from_directory("..\\..\\client", filename, as_attachment=False)
+
+@bp.errorhandler(500)
+def handle_500(error):
+    return flask.jsonify(error=error)
+    #return flask.redirect("/")
 
 @bp.after_request
 def add_header(response):

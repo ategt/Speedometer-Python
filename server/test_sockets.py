@@ -57,18 +57,82 @@ class TestSockets(unittest.TestCase):
         data = read(os.environ['LOG_FILE_PATH'])
         lines = data.split("\r\n")
 
-        random_line = lines[random.randint(0, len(lines) - 1)]
+        for _ in range(250):
+            random_line = lines[random.randint(0, len(lines) - 1)]
 
-        random_reading = LINE_REGEX.search(random_line).groupdict()
+            try:
+                random_reading = LINE_REGEX.search(random_line).groupdict()
+                print("Used the following line:")
+                print(lines.index(random_line), random_line)
+            except AttributeError:
+                print("Problem parsing the following line:")
+                print(lines.index(random_line), random_line)
+                raise
 
-        sio_client.emit("speedometer update", {"data":random_reading})
+            sio_client.emit("speedometer update", {"data":random_reading})
+
+            recieved = sio_client.get_received()[0]
+            payload = recieved['args'][0]['data']
+
+            self.assertEqual('speedometer update broadcast', recieved['name'])
+            self.assertTrue(int(payload['currentRevsPerMin']) >= 0)
+            self.assertTrue(int(payload['currentRevsPerMin']) < 25000)
+
+    def test_recorderDirectives(self):
+        sio_client = self.sio_client
+
+        # Clear whatever connection alerts are sent.
+        _ = sio_client.get_received()
+
+        sio_client.emit("recorder directive", {"directive":"shutdown"})
 
         recieved = sio_client.get_received()[0]
-        payload = recieved['args'][0]['data']
+        payload = recieved['args'][0]
 
-        self.assertEqual('speedometer update broadcast', recieved['name'])
-        self.assertTrue(int(payload['currentRevsPerMin']) >= 0)
-        self.assertTrue(int(payload['currentRevsPerMin']) < 25000)
+        self.assertEqual('recorder directive broadcast', recieved['name'])
+        self.assertEqual("shutdown", payload['directive'])
+
+        sio_client.emit("recorder action", {"data":"Shutdown Order Received"})
+
+        recieved = sio_client.get_received()[0]
+        payload = recieved['args'][0]
+
+        self.assertEqual('recorder action broadcast', recieved['name'])
+        self.assertEqual('Shutdown Order Received', payload['data'])
+
+    def test_timerDirectives(self):
+        sio_client = self.sio_client
+
+        # Clear whatever connection alerts are sent.
+        _ = sio_client.get_received()
+
+        def buildSimulatedSchedule():
+            items = list()
+
+            for i in range(1, random.randint(3,15)):
+                items.append({'id': i,
+                              "activity": uuid.uuid4().hex[:random.randint(0, 32)],
+                              "interval": random.randint(5, 900)})
+
+            return items
+
+        sim_schedule = buildSimulatedSchedule()
+
+        sio_client.emit('tabata timer action', {'data':"STOP"})
+
+        sio_client.emit('tabata timer action', {'data':"START", 'schedule': sim_schedule})
+        sio_client.emit('tabata timer action', {'data':"PULSE"})
+
+        _responses = sio_client.get_received()
+
+        sio_client.emit('tabata timer action', {'data':"SCHEDULE"})
+
+        recieved = sio_client.get_received()[0]
+        payload = recieved['args'][0]
+
+        self.assertEqual('tabata timer action broadcast', recieved['name'])
+        self.assertEqual("SCHEDULE", payload['type'])
+        self.assertEqual(sim_schedule, payload['data'])
 
 if __name__ == '__main__':
     unittest.main()
