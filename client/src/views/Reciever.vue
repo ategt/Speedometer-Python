@@ -41,7 +41,13 @@ export default {
 		this.$socket.on('speedometer update broadcast', this.logToBroadcastField);
 		this.$socket.on('tabata timer update broadcast', this.logToBroadcastField);
 		this.$socket.on('recorder action broadcast', this.logToBroadcastField);
+		this.$socket.io.on("connection", function (socket) {
+    		socket.on("tabata timer update broadcast", function (msg) {
+        		console.log(msg);
+    		});
+		});
 		window.sockx = this.$socket;
+		window.optx  = this.$options;
 	},
 }	
 </script>
