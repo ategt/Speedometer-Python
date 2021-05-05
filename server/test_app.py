@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 import random
 import sys
 import os
@@ -9,38 +8,20 @@ from time import sleep
 import blueprints
 
 class TestApp(unittest.TestCase):
-    #@patch.dict('file.os.environ', {'DB': 'Dummy'})
     def setUp(self):
-        pass
-        #self.class = MyClass()
-
-    def tearDown(self):
-        pass
-
-    #@patch.object(file.MyClass, 'connection_url', 'Dummy')
-    #@patch.dict('blueprints.schedule.os.getenv', {'SCHEDULE_FILE_PATH':'asdfasdfasdf'})
-    #@patch.object('blueprints.schedule.scheduleDao', 'getAll', new_callable=lambda:"asdfsdfasdf")
-    #@patch.dict('blueprints.schedule.scheduleDao', 'getAll', {'SCHEDULE_FILE_PATH':'asdfasdfasdf'})
-    #@patch('blueprints.schedule.os.getenv', return_value="asdf")
-    #@patch.object('blueprints.schedule','scheduleDao', '_determineNextId', return_value=9)
-    #@patch.object('blueprints.schedule','scheduleDao', return_value=9)
-    #@patch.object(sys.modules['blueprints.schedule'],'scheduleDao')
-    #@patch.object(sys.modules['schedule_dao'],'ScheduleDao')
-    #@patch.object('schedule_dao','ScheduleDao')
-    #mockScheduleDao
-    def test_schedules(self):
-        #mockScheduleDao().getAll.return_value = 7
-        # print(os.getcwd())
-        # print(sys.modules.keys())
-        # mod = sys.modules['blueprints']
-        # print(mod)
         os.environ['SCHEDULE_FILE_PATH'] = "../test-data/schedules.json"
         os.environ['REPORT_FILE_PATH'] = "../test-data/reports.json"
         os.environ['LOG_FILE_PATH'] = "../test-data/speed-log.txt"
         os.environ['DB_FILE_PATH'] = "../test-data/database.sqlite3"
 
         sio, app = blueprints.create_app()
-        app_client = app.test_client()
+        self.app_client = app.test_client()
+
+    def tearDown(self):
+        self.app_client = None
+
+    def test_schedules(self):
+        app_client = self.app_client
         response = app_client.get("/schedules")
 
         schedules_response = response.json
@@ -49,13 +30,7 @@ class TestApp(unittest.TestCase):
         self.assertTrue(len(schedules_response['default']) > 0)
 
     def test_readings(self):
-        os.environ['SCHEDULE_FILE_PATH'] = "../test-data/schedules.json"
-        os.environ['REPORT_FILE_PATH'] = "../test-data/reports.json"
-        os.environ['LOG_FILE_PATH'] = "../test-data/speed-log.txt"
-        os.environ['DB_FILE_PATH'] = "../test-data/database.sqlite3"
-
-        sio, app = blueprints.create_app()
-        app_client = app.test_client()
+        app_client = self.app_client
         readings_response = app_client.get("/readings")
 
         reading_results = readings_response.json['result']
@@ -64,13 +39,7 @@ class TestApp(unittest.TestCase):
         self.assertTrue(len(reading_results) < 50000)
 
     def test_customReadings(self):
-        os.environ['SCHEDULE_FILE_PATH'] = "../test-data/schedules.json"
-        os.environ['REPORT_FILE_PATH'] = "../test-data/reports.json"
-        os.environ['LOG_FILE_PATH'] = "../test-data/speed-log.txt"
-        os.environ['DB_FILE_PATH'] = "../test-data/database.sqlite3"
-
-        sio, app = blueprints.create_app()
-        app_client = app.test_client()
+        app_client = self.app_client
 
         reports_response = app_client.get("/report")
         reports = reports_response.json['reports']
