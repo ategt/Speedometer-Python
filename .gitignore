@@ -20,6 +20,10 @@ vue.min.js
 canvas-speedometer-master/
 workout pics/
 data/
+test-data/
+fake-data/
+mock-data/
+dev-data/
 
 speed-log.txt
 temp.txt
