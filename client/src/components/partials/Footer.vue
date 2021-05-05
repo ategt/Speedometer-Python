@@ -8,13 +8,13 @@
     			<router-link to="/about">About</router-link>
 			</span>
 			<span class="footer-item">
-				<router-link to="/public/info">Info</router-link>
+				<router-link v-bind:to="{name:'public-info'}">Info</router-link>
 			</span>
 			<span class="footer-item">
-				<router-link :to="{name:'Graph'}">Graph</router-link>
+				<router-link v-bind:to="{name:'Graph'}">Graph</router-link>
 			</span>
 			<span class="footer-item">
-				<router-link :to="{name:'Schedule'}">Scheduler</router-link>
+				<router-link v-bind:to="{name:'Schedule'}">Scheduler</router-link>
 			</span>
 			<span class="footer-item">
 				<router-link to="/graph?start=0&stop=161125230800">Full Readout</router-link>

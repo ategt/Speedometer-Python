@@ -16,7 +16,7 @@ export default new Router({
       component: () => import('../views/Reports.vue')
     },
     {
-      path: '/public/info',
+      path: '/public-info',
       name: 'public-info',
       component: () => import('../views/Reports.vue')
     },
@@ -38,7 +38,7 @@ export default new Router({
       component: () => import('../views/Reports.vue')
     },
     {
-      path: '/public/schedule',
+      path: '/public-schedule',
       name: "Schedule",
       component: () => import('../views/Schedule.vue')
     },
@@ -64,6 +64,11 @@ export default new Router({
       name: "Bill",
       component: () => import('../views/ReportDetail.vue')
     },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/About.vue')
+    },
     // {
     //   path: '/public/graph',
     //   name: "Graph",
@@ -75,11 +80,6 @@ export default new Router({
     //   component: Graph
     // }
     // // ,
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('../views/About.vue')
-    // },
     // {
     //   path: '/event/:id',
     //   name: 'eventSingle',

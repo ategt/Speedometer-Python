@@ -5,7 +5,7 @@ export const months_abreviated = {0: "Jan",1:"Feb",2:"Mar",3:"Apr",4:"May",5:"Ju
 
 export const top_speed = 2000;
 
-export const ROOT_URL = "http://127.0.0.1:5002";
+export const ROOT_URL = "http://127.0.0.1:5000";
 
 export const SCHEDULE_LIST_EVENTS = {
 	setDefaultSchedule: "set-default-schedule", 

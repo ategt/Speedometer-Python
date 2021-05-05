@@ -3,8 +3,8 @@
 import requests
 import random
 
-schedule_info = requests.get("http://localhost:5000/schedule").json()
-schedule_response = requests.get("http://localhost:5000/schedule")
+schedule_info = requests.get("http://localhost:5000/schedules").json()
+schedule_response = requests.get("http://localhost:5000/schedules")
 
 schedule_response = requests.get("http://localhost:5000/schedules")
 assert len(schedule_response.json()['schedules']) == 4
