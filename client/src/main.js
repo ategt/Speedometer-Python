@@ -1,4 +1,8 @@
 import Vue from 'vue'
+//import * as io from 'socket.io-client'
+import { io } from '../../node_modules/socket.io-client/dist/socket.io'
+//import VueSocketIO from 'vue-socket.io'
+import VueSocketIO from '../../cdn/build'
 //import Vue from '../../node_modules/vue/dist/vue.js';
 //import Graph from './views/Graph.vue';
 import router from './router';
@@ -26,6 +30,8 @@ import App from './App.vue';
 // });
 
 Vue.config.productionTip = false
+
+Vue.use(VueSocketIO, io(), store)
 
 window.addEventListener("load", function (event) {
   new Vue({
