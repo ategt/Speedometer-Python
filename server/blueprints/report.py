@@ -10,9 +10,9 @@ bp = Blueprint("report", __name__)
 
 @bp.route('/report', methods={"POST"})
 def endpointReportPost():
-    reports.create(flask.request.get_json())
+    createdReport = reports.create(flask.request.get_json())
 
-    return flask.make_response()
+    return flask.jsonify(createdReport)
 
 @bp.route('/report', methods={"PATCH"})
 def endpointReportPatch():

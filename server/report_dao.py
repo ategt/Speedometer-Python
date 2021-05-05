@@ -33,8 +33,11 @@ class ReportDao(object):
 
 	def create(self, data):
 		with open(self._path, 'a') as handle:
-			json.dump({"id": self._getNextId(), **data}, handle)
+			report = {"id": self._getNextId(), **data}
+			json.dump(report, handle)
 			handle.write("\n")
+
+		return report
 
 	def update(self, data):
 		with open(self._path, 'a') as handle:

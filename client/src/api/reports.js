@@ -26,7 +26,7 @@ export const createReport = function (report) {
 };
 
 export const retireReport = function (id) {
-	return axios.delete(`http://127.0.0.1:5000/report/${id}`);
+	return axios.delete(`${ROOT_URL}/${id}`);
 };
 
 export const updateTimes = function (id, start_time, stop_time) {
