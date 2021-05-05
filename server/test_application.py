@@ -8,7 +8,7 @@ from time import sleep
 
 import blueprints
 
-class TestApp(unittest.TestCase):
+class TestApplication(unittest.TestCase):
     def setUp(self):
         os.environ['SCHEDULE_FILE_PATH'] = "../test-data/schedules.json"
         os.environ['REPORT_FILE_PATH'] = "../test-data/reports.json"

@@ -21,10 +21,6 @@ class Recorder(object):
         def disconnected():
             self.event.clear()
 
-        # @self.sio.on("recorder action broadcast")
-        # def recorder_action(directive):
-        #     print(directive)
-
     def __enter__(self):
         self.sio.connect(self.uri)
 
