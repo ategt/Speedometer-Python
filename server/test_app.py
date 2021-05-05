@@ -186,6 +186,32 @@ class TestApp(unittest.TestCase):
         for key in updated_schedule.keys():
             self.assertEqual(altered_schedule[key], updated_schedule[key])
 
+        # Change the default schedule
+        _schedule_set_default_response = app_client.put("/schedules", json={'id': created_schedule['id']})
+
+        schedules_json = app_client.get("/schedules").json
+        after_change_default_schedules = schedules_json['schedules']
+        after_change_default_schedule = schedules_json['default']
+
+        self.assertNotEqual(starting_default_schedule, after_change_default_schedule)
+        self.assertEqual({**updated_schedule, "default": False}, {**after_change_default_schedule, "default": False})
+        self.assertNotEqual(updated_schedule["default"], after_change_default_schedule["default"])
+
+        self.assertEqual(len(after_creation_schedules), len(after_change_default_schedules))
+
+        # Change the default schedule back to what it was
+        _schedule_set_default_response = app_client.put("/schedules", json={'id': starting_default_schedule['id']})
+
+        schedules_json = app_client.get("/schedules").json
+        after_reset_default_schedules = schedules_json['schedules']
+        after_reset_default_schedule = schedules_json['default']
+
+        self.assertNotEqual(after_reset_default_schedule, after_change_default_schedule)
+        self.assertEqual(starting_default_schedule, after_reset_default_schedule)
+
+        self.assertEqual(len(after_creation_schedules), len(after_change_default_schedules))
+
+        # Delete schedule
         _delete_response = app_client.delete(f"/schedules/{created_schedule['id']}")
 
         schedules_json = app_client.get("/schedules").json
