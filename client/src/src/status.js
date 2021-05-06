@@ -52,7 +52,7 @@ export const stop_timer = function (vm) {
 
 export const reset_timer = function (vm) {
 	vm.$socket.emit('tabata timer action', {data:"STOP"});
-	clock_started = false;
+	vm.$store.commit("timer/resetClock");
 };
 
 export const stop_recorder = function (vm) {

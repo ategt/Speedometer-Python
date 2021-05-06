@@ -1,7 +1,5 @@
-//import Vue from '../../node_modules/vue/dist/vue.js';
 import Vue from 'vue'
 import Router from 'vue-router'
-//import Graph from '../views/Graph.vue'
 //import { authGuard } from "../auth/authGuard";
 
 Vue.use(Router)
@@ -15,22 +13,10 @@ export default new Router({
       name: 'Home',
       component: () => import('../views/Dashboard.vue'),
     },
-    // {
-    //   path: '/public-info',
-    //   name: 'public-info',
-    //   component: () => import('../views/Reports.vue')
-    // },
     {
       path: '/public/:place',
       name: "Sumplace",
       component: () => import('../components/Summary.vue')
-    },
-    {
-      path: '/summary/:id/:spec(text|graph)?',
-      //path: '/summary/:id',
-      name: 'Summary',
-      component: () => import('../components/Summary.vue')
-      //component: () => import('../views/Graph.vue')
     },
     {
       path: '/public-info',
@@ -48,21 +34,9 @@ export default new Router({
       component: () => import('../views/ReportDetail.vue')
     },
     {
-      path: '/steve',
-      name: "Steve",
-      component: () => import('../views/Test.vue')
-      //component: () => import('../views/ReportDetail.vue')
-      //component: () => import('../components/XSummary.vue')
-    },
-    {
       path: '/ted',
       name: "Ted",
       component: () => import('../components/Calendar.vue')
-    },
-    {
-      path: '/bill/:id',
-      name: "Bill",
-      component: () => import('../views/ReportDetail.vue')
     },
     {
       path: '/about',
@@ -70,8 +44,9 @@ export default new Router({
       component: () => import('../views/About.vue')
     },
     {
-      path: '/public-reciever',
-      name: 'Reciever', // Reciever
+      path: '/reciever',
+      alias: '/public-reciever',
+      name: 'Reciever',
       component: () => import('../views/Reciever.vue'),
     },
     {
@@ -85,17 +60,6 @@ export default new Router({
       name: 'Dashboard',
       component: () => import('../views/Dashboard.vue'),
     },
-    // {
-    //   path: '/public/graph',
-    //   name: "Graph",
-    //   component: Graph
-    // },
-    // {
-    //   path: '/public/d3.html',
-    //   name: 'specific',
-    //   component: Graph
-    // }
-    // // ,
     // {
     //   path: '/event/:id',
     //   name: 'eventSingle',

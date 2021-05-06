@@ -2,9 +2,10 @@
 const state = () => ({
   timeRemaining: '-',
   activity: '-',
+  clockStarted: false,
   errors: [],
   loading: false,
-})
+});
 
 // getters
 const getters = {
@@ -14,10 +15,21 @@ const getters = {
   getActivity: (state, getters, rootState) => {
     return state.activity;
   },
+  hasClockStarted: (state, getters, rootState) => {
+    return state.clockStarted;
+  },
 }
 
 // actions
-const actions = {}
+const actions = {
+  triggerTimerStart ({ state, commit, getters }, vm) {
+    vm.$socket.emit('tabata timer action', {data:"START", schedule: vm.$store.getters["schedules/makeSchedule"]});
+    commit("triggeredClock");
+  },
+  triggerTimerStop ({ state, commit, getters }, vm) {
+    vm.$socket.emit('tabata timer action', {data:"STOP"});
+  },
+};
 
 // mutations
 const mutations = {
@@ -25,6 +37,17 @@ const mutations = {
     const data = payload.data;
     state.timeRemaining = data.timeRemaining;
     state.activity = data.activity;
+
+    // If timer is running, mark variable as running.
+    if (state.clockStarted && data.timeRemaining !== " - ") {
+      state.clockStarted = true;
+    }
+  },
+  resetClock (state) {
+    state.clockStarted = false;
+  },
+  triggeredClock (state) {
+    state.clockStarted = true;
   },
 }
 

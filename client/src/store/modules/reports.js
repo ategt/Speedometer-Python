@@ -42,6 +42,10 @@ const actions = {
   updateRemarks ({ commit }, report ) {
     reportApi.updateRemarks(report.id, report.remarks).catch((error) => commit("addError", error));
   },
+
+  submitReport ({ commit }, report ) {
+    reportApi.createReport(report).catch((error) => commit("addError", error))
+  },
 }
 
 // mutations

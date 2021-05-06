@@ -20,7 +20,8 @@ def run_tests(path):
 @bp.route('/public-status', strict_slashes=False, endpoint='publicStatus', defaults={'path':''})
 @bp.route('/graph/<path:path>', endpoint='graph')
 @bp.route('/public-schedule/', endpoint='schedule', defaults={'path':''})
-@bp.route('/public-reciever/', endpoint='reciever', defaults={'path':''})
+@bp.route('/reciever/', endpoint='reciever', defaults={'path':''})
+@bp.route('/public-reciever/', endpoint='publicReciever', defaults={'path':''})
 @bp.route('/public-info/', endpoint='info', defaults={'path':''})
 @bp.route('/about', endpoint='about', defaults={'path':''})
 def spa(path):

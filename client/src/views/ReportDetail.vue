@@ -11,25 +11,28 @@
       <div v-else>
         No Readings Found
         <span class="reload-button" v-on:click="reload">Reload</span>
+        <span class="reload-button" v-on:click="stopRecorder">Stop Recorder</span>
+        <span class="reload-button" v-on:click="submitReport">Submit Report</span>
       </div>
     </div>
-	<div id="summary" class="summary" v-if="showText">
-	  	<TextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></TextDetail>
-		<div class="error-report" v-else-if="errors.length">
-			There was a problem loading the Report.
-		</div>
-		<div class="loading-report" v-else-if="loading">
-			Loading Report Details...
-		</div>
-		<div class="other-report" v-else>
-			No Report Details Found
-		</div>
-	</div>
+  	<div id="summary" class="summary" v-if="showText">
+  	  	<TextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></TextDetail>
+  		<div class="error-report" v-else-if="errors.length">
+  			There was a problem loading the Report.
+  		</div>
+  		<div class="loading-report" v-else-if="loading">
+  			Loading Report Details...
+  		</div>
+  		<div class="other-report" v-else>
+  			No Report Details Found
+  		</div>
+  	</div>
   </div>
 </template>
 <script>
 import Graph from '../components/Graph.vue';
 import TextDetail from '../components/TextDetail.vue';
+import { generate_report } from '../src/reports';
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -80,6 +83,29 @@ export default {
     },
     reload: function (event) {
       this.loadGraph();
+    },
+    submitReport (event) {
+      const speedHistory = this.$store.state.speedometer.speedHistory;
+
+      const sortedHistory = Array.from(speedHistory).sort(function (a,b) {
+        return a.timestamp - b.timestamp;
+      });
+
+      const timecodes = sortedHistory.map(item => item.timestamp);
+      const speeds = sortedHistory.map(item => item['currentRevsPerMin'])
+
+      const start_time = Math.min(...timecodes);
+      const stop_time  = Math.max(...timecodes);
+      const report = generate_report(speeds, start_time, stop_time);
+
+      const activeSchedule = this.$store.getters["schedule/getActiveSchedule"];
+      report.scheduleId = activeSchedule.id;
+      report.scheduleName = activeSchedule.name;
+      
+      this.$store.dispatch("reports/submitReport", report);
+    },
+    stopRecorder (event) {
+      this.$socket.emit("recorder directive", {directive:"shutdown"});
     },
   },
   created () {
