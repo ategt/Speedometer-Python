@@ -13,7 +13,7 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: () => import('../views/Reports.vue')
+      component: () => import('../views/Dashboard.vue'),
     },
     // {
     //   path: '/public-info',
@@ -79,6 +79,11 @@ export default new Router({
       alias: '/public-status',
       name: 'StatusView',
       component: () => import('../views/Status.vue'),
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('../views/Dashboard.vue'),
     },
     // {
     //   path: '/public/graph',

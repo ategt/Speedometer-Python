@@ -10,8 +10,8 @@
 		</div>
 	</div>
 </template>
-<script type="text/javascript">
+<script>
 export default {
-	name: "Title-Banner",
+	name: "TitleBanner",
 }
 </script>

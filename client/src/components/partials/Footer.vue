@@ -2,7 +2,7 @@
 	<footer>
 		<div class="footer">
 			<span class="footer-item">
-    			<router-link to="/">Home</router-link>
+    			<router-link v-bind:to="{name:'Home'}">Home</router-link>
 			</span>
 			<span class="footer-item">
     			<router-link to="/about">About</router-link>
@@ -31,9 +31,5 @@
 <script>
 export default {
   name: "Footer",
-  data() {
-    return {
-    }
-  }
 }
 </script>
