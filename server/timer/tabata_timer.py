@@ -1,18 +1,14 @@
 from .timer_already_started_error import TimerAlreadyStartedError
 from .base_timer import serialize_args
+from os import path
 import subprocess
-import os
 
 class TabataTimer(object):
     """docstring for TabataTimer"""
     def _start(self):
-        print(__file__)
-        print(os.path.relpath(__file__))
-        print(os.path.dirname(os.path.relpath(__file__)))
+        relative_directory = path.dirname(path.relpath(__file__))
 
-        directory = os.path.dirname(os.path.relpath(__file__))
-
-        self._proc = subprocess.Popen(['python3', os.path.join('.', directory, 'base_timer.py'), self._getArguments()],
+        self._proc = subprocess.Popen(['python3', path.join('.', relative_directory, 'base_timer.py'), self._getArguments()],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
 
