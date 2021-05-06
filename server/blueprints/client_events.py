@@ -20,13 +20,9 @@ def connect():
     socket = SocketClient(request.sid, bp.getSocketIO())
     connected.add(socket)
 
-    print("Connect", request.sid, len(connected))
-
 @bp.on('disconnect')
 def disconnect():
     logger.info(request.sid, " ==> Disconnected")
 
     socket = SocketClient(request.sid, bp.getSocketIO())
     connected.remove(socket)
-
-    print("Disconnect", request.sid, len(connected))
