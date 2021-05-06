@@ -1,7 +1,7 @@
 import unittest
 
 from time import sleep
-import base_timer
+import timer.base_timer as base_timer
 
 class FakeSys:
     def __init__(self, input):

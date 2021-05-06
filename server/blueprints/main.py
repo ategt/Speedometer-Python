@@ -4,7 +4,7 @@ bp = Blueprint("main", __name__)
 
 @bp.route('/')
 def index():
-    return send_from_directory("..\\..\\client","index.html", as_attachment=False)
+    return send_from_directory("..\\..\\client\\public","index.html", as_attachment=False)
 
 @bp.route('/d3')
 def raw_graph():

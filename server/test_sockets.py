@@ -6,7 +6,7 @@ import os
 
 from time import sleep
 
-from serial.simulator import read, LINE_REGEX
+from speedometer.simulator import read, LINE_REGEX
 import blueprints
 
 class TestSockets(unittest.TestCase):

@@ -1,6 +1,8 @@
 import unittest
 
-from tabata_timer import TabataTimer
+import utilities.log_decorator
+
+from .tabata_timer import TabataTimer
 from time import sleep
 
 class TestTabataTimer(unittest.TestCase):
@@ -19,6 +21,10 @@ class TestTabataTimer(unittest.TestCase):
             self.timer.start()
 
         self.timer.stop()
+
+        print(dir(self.timer))
+        print(self.timer.getReturnCode())
+
         self.timer.start()
 
         with self.assertRaises(Exception):

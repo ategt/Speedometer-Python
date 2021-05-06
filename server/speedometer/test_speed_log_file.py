@@ -1,6 +1,6 @@
 import unittest
 
-from speed_log_file import SpeedLogFile
+from .speed_log_file import SpeedLogFile
 from time import sleep
 
 class TestSpeedLogFile(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestSpeedLogFile(unittest.TestCase):
             should be able to return the results of get
             last two hours.
         """
-        speedLogFile = SpeedLogFile("./data/speed-log.txt")
+        speedLogFile = SpeedLogFile("../data/speed-log.txt")
 
         lastTwoHours = speedLogFile.getLastTwoHours()
         mostRecentTimecode = speedLogFile.getLastTimecode()

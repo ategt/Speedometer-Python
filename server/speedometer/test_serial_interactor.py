@@ -1,6 +1,6 @@
 import unittest
 
-from serial_interactor import Speedometer
+from .serial_interactor import Speedometer
 from time import sleep
 
 class TestSpeedometer(unittest.TestCase):
@@ -11,6 +11,10 @@ class TestSpeedometer(unittest.TestCase):
         pass
 
     def test_speedometer(self):
+        """ 
+            The Arduino module explained in the readme file
+            must be connected for this test to pass.
+        """
         speedometer = Speedometer("COM4", 9600)
         speedometer.writeConfig( 0.9, 50)
         speedometer.writeConfig(30, 50)
