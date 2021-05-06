@@ -26,22 +26,28 @@ export default {
 			activity: null,
 		};
 	},
-	mounted () {
-		this.$options.sockets["tabata timer update broadcast"] = function (packet) {
+	methods: {
+		updateTimer (packet) {
     		const payload = packet.data;
     		this.timeRemaining = payload.timeRemaining;
     		this.activity = payload.activity;
-		};
-
-		this.$options.sockets["speedometer update broadcast"] = function (packet) {
+		},
+		updateSpeedometer (packet) {
     		const payload = packet.data;
     		this.speed = parseInt(payload.currentRevsPerMin);
-		};
+		},
+	},
+	mounted () {
+		this.$options.sockets["tabata timer update broadcast"] = this.updateTimer;
+		this.$options.sockets["speedometer update broadcast"] = this.updateSpeedometer;
 	},
 }
 </script>
 <style>
 .status-container {
-	padding: 5em;
-}	
+	padding: 2em 5em 2em 5em;
+}
+.sub-banner {
+    margin-top: 3em;
+}
 </style>

@@ -42,19 +42,19 @@ export const format_time = function (count) {
     return `${min_str}:${sec_str}`;
 };
 
-export const start_timer = function () {
-	socket.emit('tabata timer action', {data:"START", schedule: vm.buildSchedule()});
+export const start_timer = function (vm) {
+	vm.$socket.emit('tabata timer action', {data:"START", schedule: vm.$store.getters["schedules/makeSchedule"]});
 };
 
-export const stop_timer = function () {
-	socket.emit('tabata timer action', {data:"STOP"});
+export const stop_timer = function (vm) {
+	vm.$socket.emit('tabata timer action', {data:"STOP"});
 };
 
-export const reset_timer = function () {
-	socket.emit('tabata timer action', {data:"STOP"});
+export const reset_timer = function (vm) {
+	vm.$socket.emit('tabata timer action', {data:"STOP"});
 	clock_started = false;
 };
 
-export const stop_recorder = function () {
-	socket.emit("recorder directive", {directive:"shutdown"});
+export const stop_recorder = function (vm) {
+	vm.$socket.emit("recorder directive", {directive:"shutdown"});
 };

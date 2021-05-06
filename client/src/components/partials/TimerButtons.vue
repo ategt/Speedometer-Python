@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import { make_fullscreen } from '../../src/status';
+import { make_fullscreen, start_timer, stop_timer, reset_timer } from '../../src/status';
 
 export default {
 	name: "TimerButtons",
@@ -27,13 +27,13 @@ export default {
       make_fullscreen(element);
     },
     startTimer: function (event) {
-      start_timer();
+      start_timer(this);
     },
     stopTimer: function (event) {
-      stop_timer();
+      stop_timer(this);
     },
     resetTimer: function (event) {
-      reset_timer();
+      reset_timer(this);
     },
   },
 }
