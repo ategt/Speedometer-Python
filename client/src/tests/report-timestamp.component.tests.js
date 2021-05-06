@@ -1,4 +1,4 @@
-import { shallowMount } from '../../../node_modules/@vue/test-utils/dist/vue-test-utils.js';
+import { shallowMount } from '@vue/test-utils/dist/vue-test-utils.js';
 
 import chai from './lib/chai.js';
 import './lib/mocha.js';
@@ -24,5 +24,3 @@ describe('Reports Timestamp Test', function () {
     expect(wrapper.text()).contains('14')
   })
 })
-
-mocha.run();
