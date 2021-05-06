@@ -37,23 +37,39 @@ export default class{
 
 
     passToStore(event, payload){
-        if(!event.startsWith('SOCKET_')) return
+        if (!event.startsWith('SOCKET_')) {
+            return
+        }
 
-        for(let namespaced in this.store._mutations) {
+        for (let namespaced in this.store._mutations) {
             let mutation = namespaced.split('/').pop()
-            if(mutation === event.toUpperCase()) this.store.commit(namespaced, payload)
+
+            if (mutation === event.replaceAll(" ","_").toUpperCase()) {
+              this.store.commit(namespaced, payload)
+            }
         }
 
         for(let namespaced in this.store._actions) {
             let action = namespaced.split('/').pop()
 
-            if(!action.startsWith('socket_')) continue
+            if(!action.startsWith('socket_')) {
+                continue
+            }
 
             let camelcased = 'socket_'+event
                     .replace('SOCKET_', '')
-                    .replace(/^([A-Z])|[\W\s_]+(\w)/g, (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase())
+                    .replaceAll(" ","_")
+                    .replace(/^([A-Z])|[\W\s_]+(\w)/g, (match, p1, p2) => {
+                        if ( p2 ) {
+                            p2.toUpperCase()
+                        } else {
+                            p1.toLowerCase()
+                        }
+                    })
 
-            if(action === camelcased) this.store.dispatch(namespaced, payload)
+            if (action === camelcased) {
+                this.store.dispatch(namespaced, payload)
+            } 
         }
     }
 }

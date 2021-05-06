@@ -74,6 +74,11 @@ export default new Router({
       name: 'Reciever', // Reciever
       component: () => import('../views/Reciever.vue'),
     },
+    {
+      path: '/public-status',
+      name: 'Status',
+      component: () => import('../views/Status.vue'),
+    },
     // {
     //   path: '/public/graph',
     //   name: "Graph",
