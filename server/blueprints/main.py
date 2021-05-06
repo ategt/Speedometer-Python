@@ -12,6 +12,7 @@ def raw_graph():
 
 @bp.route('/graph', strict_slashes=False, endpoint='graphsource_clean', defaults={'path':''})
 @bp.route('/status', strict_slashes=False, endpoint='status', defaults={'path':''})
+@bp.route('/public-status', strict_slashes=False, endpoint='publicStatus', defaults={'path':''})
 @bp.route('/graph/<path:path>', endpoint='graph')
 @bp.route('/public-schedule/', endpoint='schedule', defaults={'path':''})
 @bp.route('/public-reciever/', endpoint='reciever', defaults={'path':''})

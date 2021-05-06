@@ -20,6 +20,9 @@
 				<router-link v-bind:to="{name:'Schedule'}">Scheduler</router-link>
 			</span>
 			<span class="footer-item">
+				<router-link v-bind:to="{name:'StatusView'}">Status</router-link>
+			</span>
+			<span class="footer-item">
 				<router-link to="/graph?start=0&stop=161125230800">Full Readout</router-link>
 			</span>
 		</div>

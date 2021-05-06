@@ -75,8 +75,9 @@ export default new Router({
       component: () => import('../views/Reciever.vue'),
     },
     {
-      path: '/public-status',
-      name: 'Status',
+      path: '/status',
+      alias: '/public-status',
+      name: 'StatusView',
       component: () => import('../views/Status.vue'),
     },
     // {
