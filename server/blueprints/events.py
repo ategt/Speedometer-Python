@@ -17,14 +17,14 @@ def clients_getAll():
 def connect():
     bp.emit('information', {'data': 'Connected'})
 
-    print(request.sid, " ==> Connected")
+    logger.info(request.sid, " ==> Connected")
 
     socket = SocketClient(request.sid, bp.getSocketIO())
     connected.add(socket)
 
 @bp.on('disconnect')
 def disconnect():
-    print(request.sid, " ==> Disconnected")
+    logger.info(request.sid, " ==> Disconnected")
 
     socket = SocketClient(request.sid, bp.getSocketIO())
     connected.remove(socket)

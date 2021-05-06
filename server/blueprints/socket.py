@@ -1,5 +1,3 @@
-import json
-
 class SocketClient:
     "Object to represent a socket connection."  
 
@@ -16,19 +14,6 @@ class SocketClient:
 
     def __eq__(self, other):
         return isinstance(other, type(self)) and self.sid == other.sid
-
-    @staticmethod
-    def jsonDeserializer(obj):
-        if isinstance(obj, str):
-            return SocketClient(obj, None)
-        else:
-            return json.JSONDecoder().decode(obj)
-
-    @staticmethod
-    def jsonSerializer(obj):
-        if isinstance(obj, SocketClient):
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)
 
     def toJson(self):
         return self.sid
