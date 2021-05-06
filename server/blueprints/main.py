@@ -10,6 +10,11 @@ def index():
 def raw_graph():
     return send_from_directory("..\\..\\client","d3.html", as_attachment=False)
 
+@bp.route('/tests', strict_slashes=False, endpoint='tests_all', defaults={'path':''})
+@bp.route('/tests/<path:path>', endpoint='tests')
+def run_tests(path):
+    return send_from_directory("..\\..\\client\\public","tests.html", as_attachment=False)
+
 @bp.route('/graph', strict_slashes=False, endpoint='graphsource_clean', defaults={'path':''})
 @bp.route('/status', strict_slashes=False, endpoint='status', defaults={'path':''})
 @bp.route('/public-status', strict_slashes=False, endpoint='publicStatus', defaults={'path':''})

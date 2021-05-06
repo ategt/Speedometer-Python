@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel watch --out-dir client\\dist --public-url \"\/dist\" --cache-dir cache\\.cache client\\src\\main.js"
+    "start": "parcel watch --out-dir client\\dist --public-url \"\/dist\" --cache-dir cache\\.cache client\\src\\main.js",
+    "test:mocha": "mocha .\\client\\src\\tests\\app_test.js",
+    "test:build": "parcel watch --public-url \"\/dist\" --out-dir client\\dist --cache-dir cache\\.cache-test client\\src\\tests\\all_tests.js"
   },
   "keywords": [],
   "author": "",

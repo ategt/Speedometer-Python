@@ -14,7 +14,7 @@
 				<div id="reset-timer-button" class="timer-button" v-on:click="sendTime">
 					SEND TIME
 				</div>
-				<div id="reset-timer-button" class="timer-button" v-on:click="logToBroadcastField">
+				<div id="reset-timer-button" class="timer-button" v-on:click="sendTime">
 					TEST LOGGER
 				</div>
 				<h2>
@@ -23,24 +23,20 @@
 				</h2>
 			</div>
 		</div>
-		<div id="recieved" class="recieved-field"></div>
+		<RecieverField></RecieverField>
 	</div>
 </template>
 <script>
 import { start_timer, stop_timer } from '../src/status';
+import RecieverField from '../components/Reciever.vue';
 export default {
 	name: "Reciever",
+	components: {
+		RecieverField,
+	},
 	methods: {
-		logToBroadcastField: function(msg) {
-			// Log broadcast to recieving field.
-	    	const el = document.getElementById("recieved");
-	    	const divElement = document.createElement("div");
-
-	    	divElement.innerText = JSON.stringify(msg.data);
-	    	el.appendChild(divElement);	        	
-    	},
     	sendTime (event) {
-    		this.$socket.emit("tabata timer update", {"data": {"activity":"Some Text", "timeRemaining":Math.floor(Math.random() * 2500)}})
+    		this.$socket.emit("tabata timer update", {"data": {"activity":"Some Text", "timeRemaining":Math.floor(Math.random() * 2500)}});
     	},
     	startTimer (event) {
     		start_timer(this);
@@ -49,14 +45,9 @@ export default {
     		stop_timer(this);
     	},
 	},
-	mounted () {
-		this.$options.sockets["tabata timer update broadcast"] = this.logToBroadcastField;
-		this.$options.sockets["speedometer update broadcast"]  = this.logToBroadcastField;
-		this.$options.sockets["recorder action broadcast"]     = this.logToBroadcastField;
-	},
 }	
 </script>
-<style type="text/css" scoped="true">
+<style type="text/css">
 .recieved-field {
     height: 29em;
     padding: 5px;

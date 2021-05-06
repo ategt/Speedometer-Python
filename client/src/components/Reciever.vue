@@ -1,28 +1,22 @@
 <template>
-	<div class="recieve-area">
-    <div class="sub-banner receive-sub-banner">
-      <div class="half-pane left-pane">
-        <h2>Received:</h2>
-      </div>
-    </div>
-    <div id="recieved" class="recieved-field"></div>
-  </div>
+  <div id="recieved" class="recieved-field"></div>
 </template>
 <script>
-import { top_speed, days_abreviated, days, months } from '../../src/constants';
 export default {
-  name: "report-timestamp",
-  props: ['report'],
-  data() {
-    return {
-      days: days,
-      months: months,
-    }
+  name: "RecieverField",
+  methods: {
+    logToBroadcastField (msg) {
+      // Log broadcast to recieving field.
+      const divElement = document.createElement("div");
+
+      divElement.innerText = JSON.stringify(msg.data);
+      this.$el.appendChild(divElement);
+    },
   },
-  computed: {
-  	date: function () {
-  		return new Date(parseInt(this.report.startTime)*1000);
-  	}
-  }
+  mounted () {
+    this.$options.sockets["tabata timer update broadcast"] = this.logToBroadcastField;
+    this.$options.sockets["speedometer update broadcast"]  = this.logToBroadcastField;
+    this.$options.sockets["recorder action broadcast"]     = this.logToBroadcastField;
+  },
 }
 </script>
