@@ -43,7 +43,7 @@ export default {
 	},
 }
 </script>
-<style>
+<style type="text/css">
 .status-container {
 	padding: 2em 5em 2em 5em;
 }

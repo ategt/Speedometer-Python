@@ -1,9 +1,9 @@
 <template>
 	<div class="dashboard">
-		<TitleBanner />
-		<Status />
-		<Reciever />
-		<Schedule />
+		<TitleBanner></TitleBanner>
+		<Status></Status>
+		<Reciever></Reciever>
+		<Schedule></Schedule>
 	</div>
 </template>
 <script>
