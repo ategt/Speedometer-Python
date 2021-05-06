@@ -2,7 +2,7 @@ from flask import Blueprint
 import flask
 import os
 
-from report_dao import ReportDao
+from datastore.report_dao import ReportDao
 
 reports = ReportDao(os.getenv("REPORT_FILE_PATH"))
 

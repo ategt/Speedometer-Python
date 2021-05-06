@@ -1,11 +1,9 @@
 import logging
 
-from flask import request
-from flask_socketio import emit, ConnectionRefusedError, disconnect
+from flask_socketio import emit
 
+from timer.tabata_timer import TabataTimer
 from .io_blueprint import IOBlueprint
-
-from tabata_timer import TabataTimer
 
 logger = logging.getLogger(__name__)
 bp = IOBlueprint('tabata_events', __name__)

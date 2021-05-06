@@ -2,7 +2,7 @@ import sqlite3
 import json
 import os
 
-class DirectivesDao(object):
+class DirectiveDao:
     """Record Actions directed at timer"""
     @staticmethod
     def _dict_factory(cursor, row):
@@ -13,7 +13,6 @@ class DirectivesDao(object):
         return d
 
     def __init__(self, path = None):
-        super(TabataDao, self).__init__()
         self.sqliteFile = os.path.join(os.getcwd(), 'data', 'database.sqlite3') if path is None else path
 
     def _setupDb(self):
@@ -21,7 +20,7 @@ class DirectivesDao(object):
         c = self.conn.cursor()
         c.execute('CREATE TABLE IF NOT EXISTS recorder_directives (action TEXT, time TIMESTAMP, pytime INTEGER)')
 
-        self.conn.row_factory = TabataDao._dict_factory
+        self.conn.row_factory = DirectiveDao._dict_factory
 
     def __enter__(self):
         self._setupDb()

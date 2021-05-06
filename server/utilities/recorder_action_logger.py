@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 
-from tabata_dao import TabataDao
+from datastore.directive_dao import DirectiveDao
 
 class ActionLogger(object):
 	"""docstring for ActionLogger"""
@@ -10,5 +10,5 @@ class ActionLogger(object):
 		self.path = path
 
 	def log(self, data):
-		with TabataDao(self.path) as tabataDao:
-			tabataDao.recordDirective(json.dumps(data), datetime.now().timestamp())
+		with DirectiveDao(self.path) as directiveDao:
+			directiveDao.recordDirective(json.dumps(data), datetime.now().timestamp())

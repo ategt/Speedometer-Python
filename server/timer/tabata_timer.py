@@ -1,5 +1,5 @@
-from timer_already_started_error import TimerAlreadyStartedError
-from base_timer import serialize_args
+from .timer_already_started_error import TimerAlreadyStartedError
+from .base_timer import serialize_args
 import subprocess
 
 class TabataTimer(object):

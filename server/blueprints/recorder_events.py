@@ -3,7 +3,7 @@ import os
 
 from .io_blueprint import IOBlueprint
 
-from recorder_action_logger import ActionLogger
+from utilities.recorder_action_logger import ActionLogger
 
 logger = logging.getLogger(__name__)
 bp = IOBlueprint('recorder_events', __name__)

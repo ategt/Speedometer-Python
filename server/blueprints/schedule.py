@@ -2,7 +2,7 @@ from flask import Blueprint
 import flask
 import os
 
-from schedule_dao import ScheduleDao
+from datastore.schedule_dao import ScheduleDao
 
 scheduleDao = ScheduleDao(os.getenv("SCHEDULE_FILE_PATH"))
 

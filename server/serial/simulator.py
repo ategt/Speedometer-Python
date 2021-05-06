@@ -1,4 +1,4 @@
-import utils.log_decorator
+import utilities.log_decorator
 
 from random import randint
 from time import sleep

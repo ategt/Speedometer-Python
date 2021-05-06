@@ -2,9 +2,9 @@ import logging
 import sys
 import os
 
-import workaround
+from .workaround import setup_thread_exception_hook
 
-workaround.setup_thread_exception_hook()
+setup_thread_exception_hook()
 
 if not os.path.exists("log"):
     os.mkdir("log")

@@ -2,7 +2,7 @@ from flask import Blueprint
 import flask
 import os
 
-from speed_log_file import SpeedLogFile
+from serial.speed_log_file import SpeedLogFile
 
 speedLogFile = SpeedLogFile(os.getenv("LOG_FILE_PATH"))
 
