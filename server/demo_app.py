@@ -1,9 +1,8 @@
 import sys
 
-import app as application
+import blueprints
 
 if __name__ == '__main__':
-    socketio = application.socketio
-    app = application.app
-
+    socketio, app = blueprints.create_app()
+    app.debug = True
     socketio.run(app, port=int(sys.argv[1]))

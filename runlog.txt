@@ -1,2 +1,0 @@
-Logging context set to main 
- 0:17:09.34 

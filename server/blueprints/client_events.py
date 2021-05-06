@@ -13,6 +13,11 @@ connected = set()
 def clients_getAll():
     return jsonify(clients=[client.toJson() for client in connected])
 
+@bp.on('send message')
+def recoder_directive(data):
+    bp.emit('client message', data, to=data.get('to'))
+    bp.emit('client message room', data, room=data.get('to'))
+
 @bp.on('connect')
 def connect():
     logger.info(request.sid, " ==> Connected")
