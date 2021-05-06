@@ -36,6 +36,10 @@ def public_endpoint(filename):
 def build_endpoint(filename):
     return send_from_directory("..\\..\\client\\dist", filename, as_attachment=False)
 
+@bp.route('/dist-test/<path:filename>')
+def build_test_endpoint(filename):
+    return send_from_directory("..\\..\\client\\dist\\test", filename, as_attachment=False)
+
 @bp.route('/send/<path:filename>')
 def send_file(filename):
     if 'cdn-' in filename:
