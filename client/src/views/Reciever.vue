@@ -19,7 +19,6 @@
 				</div>
 				<h2>
 					<span class="fullscreen-button-span">
-						<!-- <a id="fullscreen-button" class="no-decoration">FULL&nbsp;SCREEN</a> -->
 					</span>
 				</h2>
 			</div>
@@ -28,6 +27,7 @@
 	</div>
 </template>
 <script>
+import { start_timer, stop_timer } from '../src/status';
 export default {
 	name: "Reciever",
 	methods: {
@@ -43,41 +43,24 @@ export default {
     		this.$socket.emit("tabata timer update", {"data": {"activity":"Some Text", "timeRemaining":Math.floor(Math.random() * 2500)}})
     	},
     	startTimer (event) {
-    		console.log("Starting...");
+    		start_timer(this);
     	},
     	stopTimer (event) {
-    		console.log("Stopping...");
+    		stop_timer(this);
     	},
 	},
 	mounted () {
-		this.$socket.on('speedometer update broadcast', this.logToBroadcastField);
-		this.$socket.on('tabata timer update broadcast', this.logToBroadcastField);
-		this.$socket.on('recorder action broadcast', this.logToBroadcastField);
-
-		this.$socket.on('tabata timer update broadcast', function(msg) {
-			// Log broadcast to recieving field.
-	    	const el = document.getElementById("recieved");
-	    	const divElement = document.createElement("div");
-
-	    	divElement.innerText = JSON.stringify(msg.data);
-	    	el.appendChild(divElement);
-	    });
-
-		this.$socket.io.on("connection", function (socket) {
-    		socket.on("tabata timer update broadcast", function (msg) {
-        		console.log(msg);
-    		});
-		});
-
-		this.$options.sockets["tabata timer update broadcast"] = (data) => {
-    		console.log(data);
-		}
-
-		window.sockx = this.$socket;
-		window.optx  = this.$options;
+		this.$options.sockets["tabata timer update broadcast"] = this.logToBroadcastField;
+		this.$options.sockets["speedometer update broadcast"]  = this.logToBroadcastField;
+		this.$options.sockets["recorder action broadcast"]     = this.logToBroadcastField;
 	},
 }	
 </script>
-<style type="text/css">
-	
+<style type="text/css" scoped="true">
+.recieved-field {
+    height: 29em;
+    padding: 5px;
+    overflow-y: overlay;
+    margin: 1em;
+}
 </style>
