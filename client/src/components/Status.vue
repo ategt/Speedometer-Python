@@ -1,5 +1,5 @@
 <template>
-	<div class="info-banner-panel" id="info-panel">
+	<div class="info-banner-panel" id="info-panel" v-on:fullscreenchange="fullscreened">
 		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
 		    <source src="../assets/media/movie.mp4" type="video/mp4">
 		    <source src="../assets/media/movie.ogg" type="video/ogg">
@@ -26,7 +26,7 @@
 	</div>
 </template>
 <script>
-import { format_time } from '../src/status'
+import { format_time, is_fullscreen } from '../src/status';
 
 export default {
 	name: "Status",
@@ -47,6 +47,17 @@ export default {
 		},
 	},
 	methods: {
+		fullscreened (event) {
+			const element = event.currentTarget;
+
+			if (is_fullscreen()) {
+		        element.classList.add("fullscreen");
+		        element.classList.add("fullscreen-dark");
+		    } else {
+		        element.classList.remove("fullscreen");
+		        element.classList.remove("fullscreen-dark");
+		    }
+		},
 	},
 	mounted () {
 	},
