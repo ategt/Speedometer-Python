@@ -2,7 +2,7 @@ import sqlite3
 import json
 import os
 
-class TabataDao(object):
+class DirectivesDao(object):
     """Record Actions directed at timer"""
     @staticmethod
     def _dict_factory(cursor, row):
