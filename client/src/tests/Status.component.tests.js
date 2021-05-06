@@ -1,4 +1,4 @@
-import { shallowMount, mount } from '../../../node_modules/@vue/test-utils/dist/vue-test-utils.js';
+import { shallowMount, mount } from '@vue/test-utils/dist/vue-test-utils.js';
 import { equal } from 'assert';
 import sinon from 'sinon';
 
@@ -62,5 +62,3 @@ describe('Status Test', function () {
     expect(wrapper.text()).not.contains("null");
   });
 });
-
-mocha.run();

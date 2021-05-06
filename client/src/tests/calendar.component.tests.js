@@ -1,8 +1,7 @@
-import { shallowMount, mount, RouterLinkStub, createLocalVue } from '../../../node_modules/@vue/test-utils/dist/vue-test-utils.js';
+import { shallowMount, mount, RouterLinkStub, createLocalVue } from '@vue/test-utils/dist/vue-test-utils.js';
 import { equal } from 'assert';
 
 import chai from './lib/chai.js';
-import './lib/mocha.js';
 
 mocha.setup('bdd');
 
@@ -334,5 +333,3 @@ describe('Calendar Data/Reports Test', function () {
     });
   });
 });
-
-mocha.run();

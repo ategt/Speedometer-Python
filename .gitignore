@@ -31,5 +31,6 @@ temp2.txt
 chromedriver.exe 
 
 .cache/
+.cache-test/
 dist/
 log/
