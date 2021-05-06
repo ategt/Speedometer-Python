@@ -113,7 +113,8 @@ describe('ScheduleList Shell Test', function () {
     equal(setDefaultButtons.length, 1);
 
     setDefaultButtons.at(0).trigger('click').then(() => {
-      const emittedScheduleId = wrapper.emitted()["set-default-schedule"][0][0];
+      const emittedEvent = wrapper.emitted()["set-default-schedule"][0][0];
+      const emittedScheduleId = parseInt( emittedEvent.currentTarget.dataset['id'] );
       equal( emittedScheduleId == 5, true);
 
       done();
