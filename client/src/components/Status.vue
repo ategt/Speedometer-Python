@@ -1,5 +1,5 @@
 <template>
-	<div class="info-banner-panel" id="info-panel" ref="info-banner-panel">
+	<div class="info-banner-panel" id="info-panel">
 		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
 		    <source src="../assets/media/movie.mp4" type="video/mp4">
 		    <source src="../assets/media/movie.ogg" type="video/ogg">
@@ -30,16 +30,20 @@ import { format_time } from '../src/status'
 
 export default {
 	name: "Status",
-	props: ['timerRemaining', "speed", "activity"],
+	props: {
+		timeRemaining: Number,
+		speed: Number, 
+		activity: String,
+	},
 	computed: {
 		activityString () {
-			return this.activity ? this.activity : "-";
+			return String(this.activity) === this.activity ? this.activity : "-";
 		},
 		timeRemainingString () {
-			return this.timeRemaining ? format_time(this.timeRemaining) : "-";
+			return Number.isFinite(this.timeRemaining) && this.timeRemaining >= 0 ? format_time(this.timeRemaining) : "-";
 		},
 		speedString () {
-		  return this.speed ? `${this.speed} RPMs` : "-";
+		  return Number.isFinite(this.speed) ? `${this.speed} RPMs` : "-";
 		},
 	},
 	methods: {

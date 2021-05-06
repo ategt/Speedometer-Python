@@ -12,52 +12,55 @@ import Status from '../components/Status.vue';
 const expect = chai.expect;
 
 describe('Status Test', function () {
+  const VIDEO_WARNING = `Your browser does not support the video tag.`;
+
   const cleanText = function ( text ) {
     return text.replaceAll("\t",'').replaceAll("\r",'').replaceAll("\n",'').replaceAll("  ",'').replaceAll("  ",'');
   };
 
-  it('play some data', () => {
+  it('play without data', () => {
     const wrapper = shallowMount(Status, {propsData: { timerRemaining: null, activity: null, speed: null}});
 
-    //equal(wrapper.vm.schedules.length, 0);
+    expect(cleanText(wrapper.text())).contains("Speed - Time Remaining - Activity -");
+
     expect(wrapper.text()).contains("-");
     expect(wrapper.text()).not.contains("undefined");
     expect(wrapper.text()).not.contains("null");
-
-    console.log(wrapper.html());
   });
 
-  // it('default changes reflected in delete and set default buttons', (done) => {
-  //   const scheduleItems = [{name:"Start", duration:10}, {name:"Stop", duration: 20}];
-  //   const scheduleFixtures = [{id:5, name:"Test Schedule", items: scheduleItems}, {id:10, name:"Test Schedule", items: scheduleItems}];
-  //   let defaultScheduleId = 10;
+  it('play with data', () => {
+    const wrapper = shallowMount(Status, {propsData: { timeRemaining: 10, activity: "Nonsense", speed: 30}});
 
-  //   const wrapper = shallowMount(ScheduleList, {propsData: { schedules: scheduleFixtures, defaultScheduleId }});
+    expect(wrapper.text()).contains("30 RPMs");
+    expect(wrapper.text()).contains("Nonsense");
+    expect(wrapper.text()).contains("10");
 
-  //   const scheduleRows = wrapper.findAll('tr.schedule-row');
+    expect(wrapper.text()).not.contains("undefined");
+    expect(wrapper.text()).not.contains("null");
+  });
 
-  //   equal(scheduleRows.length, 2);
+  it('play with zero as data', () => {
+    const wrapper = shallowMount(Status, {propsData: { timeRemaining: 0, activity: "Some Text", speed: 0}});
 
-  //   expect(cleanText(scheduleRows.at(0).element.innerText).toLowerCase().replaceAll("set default", "")).not.contains("default");
-  //   expect(cleanText(scheduleRows.at(1).element.innerText).toLowerCase().replaceAll("set default", "")).contains("default");
+    expect(wrapper.text()).contains("0 RPMs");
+    expect(wrapper.text()).contains("Some Text");
+    expect(wrapper.text()).contains(":00");
 
-  //   expect(cleanText(scheduleRows.at(0).element.innerText).toLowerCase()).contains("set default");
-  //   expect(cleanText(scheduleRows.at(1).element.innerText).toLowerCase()).not.contains("set default");
+    expect(wrapper.text()).not.contains("undefined");
+    expect(wrapper.text()).not.contains("null");
+  });
 
-  //   expect(cleanText(scheduleRows.at(0).element.innerText).toLowerCase()).contains("delete");
-  //   expect(cleanText(scheduleRows.at(1).element.innerText).toLowerCase()).not.contains("delete");
+  it('play with blank text as data', () => {
+    const wrapper = shallowMount(Status, {propsData: { timeRemaining: -3, activity: "", speed: 5}});
 
-  //   const setDefaultButtons = wrapper.findAll('span.set-default-button');
+    console.log(cleanText(wrapper.text()).replace(VIDEO_WARNING, ""));
+    expect(cleanText(wrapper.text()).replace(VIDEO_WARNING, "").trim()).equal(`Speed 5 RPMs Time Remaining - Activity`);
 
-  //   equal(setDefaultButtons.length, 1);
+    expect(wrapper.text()).contains("5 RPMs");
 
-  //   setDefaultButtons.at(0).trigger('click').then(() => {
-  //     const emittedScheduleId = wrapper.emitted()["set-default-schedule"][0][0];
-  //     equal( emittedScheduleId == 5, true);
-
-  //     done();
-  //   });
-  // });
+    expect(wrapper.text()).not.contains("undefined");
+    expect(wrapper.text()).not.contains("null");
+  });
 });
 
 mocha.run();
