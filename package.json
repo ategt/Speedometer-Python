@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel watch --out-dir client\\dist --public-url \"\/dist\" --cache-dir cache\\.cache client\\source\\main.js",
+    "start:no-hmr": "parcel watch --out-dir client\\dist --public-url \"\/dist\" --no-hmr --cache-dir cache\\.cache client\\source\\main.js",
+    "start:build": "parcel build --out-dir client\\dist --public-url \"\/dist\" --no-hmr --cache-dir cache\\.cache client\\source\\main.js",
     "test:build": "parcel watch --public-url \"\/dist-test\" --out-dir client\\dist\\test --cache-dir cache\\.cache-test client\\source\\tests\\all_tests.js"
   },
   "keywords": [],
@@ -20,7 +22,6 @@
     "moxios": "^0.4.0",
     "parcel-bundler": "^1.12.5",
     "sinon": "^10.0.0",
-    "tape": "^5.1.1",
     "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {
@@ -30,19 +31,12 @@
     "d3-interpolate": "^2.0.1",
     "d3-scale-chromatic": "^2.0.0",
     "lru-cache": "^6.0.0",
-    "mobx": "^6.1.8",
-    "mobx-vue": "^2.0.11",
-    "oldparcel": "npm:parcel-bundler@^1.12.5",
-    "parcel": "^2.0.0-beta.2",
-    "parcelx": "npm:parcel@^2.0.0-beta.2",
     "socket.io-client": "^3.1.1",
     "vanilla-modal-layer": "^1.3.1",
     "vue": "^2.6.12",
-    "vue-auth": "^1.0.0-alpha.1",
     "vue-router": "^3.5.1",
     "vue-socket.io": "^3.0.10",
-    "vuex": "^3.6.2",
-    "xpar": "npm:parcel@^2.0.0-beta.2"
+    "vuex": "^3.6.2"
   },
   "repository": {
     "type": "git",
