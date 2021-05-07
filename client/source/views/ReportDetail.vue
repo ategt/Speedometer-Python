@@ -112,20 +112,7 @@ export default {
     this.loadGraph();
     this.$store.dispatch('reports/populateReports');
   },
-  mounted () {
-    if (this.$route.params.spec) {
-      switch (this.$route.params.spec) {
-        case "graph":
-          this.showText = false;
-          break; 
-        case "text":
-          this.showGraph = false;
-          break;
-        default:
-          console.log("Here");        
-      }
-    }
-  }
+  mounted () {},
 }
 </script>
 <style type="text/css">
@@ -136,5 +123,12 @@ export default {
     background: lightgrey;
     padding: 5px 15px;
     margin: 5px;
+  }
+  .main {
+    display: flex;
+  }
+  .summary {
+    display: inline-block;
+    width: auto;
   }
 </style>

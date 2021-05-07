@@ -108,3 +108,24 @@ export default {
   },
 }
 </script>
+<style type="text/css">
+.comment-textarea {
+  width: 303px;
+    height: 4em;
+    padding: 1em 1em;
+    margin: 1em 0em;
+    border-radius: 7px;
+}
+.summary {
+  display: inline-block;
+    width: auto;
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: 10em 10em;
+    padding: 7em 1em 2em;
+}
+.summary-grid-row {
+    grid-row: auto;
+}
+</style>

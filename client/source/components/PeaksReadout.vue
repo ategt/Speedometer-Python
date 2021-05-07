@@ -18,3 +18,18 @@ export default {
 	props: ['peaks'],
 }
 </script>
+<style type="text/css">
+.peaks-grid {
+    display: grid;
+    grid-template-columns: 10em 10em;
+}
+.peaks-grid-item {
+	padding: 0.1em 0.5em;
+}
+.peaks-grid-speed {
+	text-align: left;
+}
+.peaks-grid-index {
+	text-align: right;
+}
+</style>
