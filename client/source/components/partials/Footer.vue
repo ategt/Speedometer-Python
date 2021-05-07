@@ -25,8 +25,11 @@
 			<span class="footer-item">
 				<router-link to="/graph?start=0&stop=161125230800">Full Readout</router-link>				
 			</span>
-			<span class="footer-item">
+			<span class="footer-item" v-if="isSignedIn">
 				<router-link v-bind:to="{name:'AdminPanel'}">Admin</router-link>
+			</span>
+			<span class="footer-item" v-else>
+				<router-link v-bind:to="{name:'About'}">Sign In</router-link>
 			</span>
 		</div>
 	</footer>
@@ -34,5 +37,10 @@
 <script>
 export default {
   name: "Footer",
+  computed: {
+  	isSignedIn () {
+	  	return this.$auth.isAuthenticated();
+  	} 
+  }
 }
 </script>

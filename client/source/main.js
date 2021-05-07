@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import SocketIO from 'socket.io-client'
+import VueAuth from 'vue-auth';
+
 import VueSocketIO from './dependencies/vue-socket.io/src/Main'
 import router from './router';
 import store from './store';
 import App from './App.vue';
-// import './../node_modules/bulma/css/bulma.css';
+// import './../node_modules/bulma/css/bulma.css';var VueAuth = require('vue-auth')
+
 
 // // Import the Auth0 configuration
 // import { domain, clientId } from "../auth_config.json";
@@ -28,6 +31,7 @@ import App from './App.vue';
 Vue.config.productionTip = false
 
 Vue.use(VueSocketIO, SocketIO(), store)
+Vue.use(VueAuth)
 
 window.addEventListener("load", function (event) {
   new Vue({
