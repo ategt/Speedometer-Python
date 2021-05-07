@@ -16,16 +16,11 @@ class SpecialCase:
 
 	def buildRunner(self, key):
 		def run(*args, **kwargs):
-			print(f"Running {key} with {len(self._wrappedFunctions[key])} functions.")
-
 			results = list()
 
 			for f in self._wrappedFunctions[key]:
 				result = f(*args, **kwargs)
 				results.append(result)
-
-			if len(results) > 0:
-				print("Combination result produced", results)
 
 			return results
 

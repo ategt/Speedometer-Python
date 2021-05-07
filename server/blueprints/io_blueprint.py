@@ -45,7 +45,6 @@ class IOBlueprint(Blueprint):
                 self._specialCases.add(key, f)
 
                 def wrap(sio):
-                    print("SIO is:", sio)
                     # wrap is the function that replaces or
                     # monkey patches the decorated source function
                     combinedFunction = self._specialCases.buildRunner(key)

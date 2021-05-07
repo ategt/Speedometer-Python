@@ -1,0 +1,19 @@
+@decorator_with_args(arg)
+def foo(*arg, **kwarg):
+	pass
+
+foo = decorator_with_args(foo)	
+
+# foo is a decorator of a static type with no args
+
+def decorator_factory(argument):
+	def decorator(function):
+		def wrapper(*args, **kwargs):
+			funny_stuff()
+			something_with_argument(argument)
+			result = function(*args, **kwargs)
+			more_funny_stuff()
+			return result
+
+		return wrapper
+	return decorator			
