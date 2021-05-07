@@ -37,3 +37,4 @@ def tabata_timer_action(message):
 @bp.on('disconnect')
 def disconnect():
     bp.emit('tabata timer update broadcast', {'data': {"activity":"-Timer Stopped-","timeRemaining":" - "}}, broadcast=True)
+    print("Someone disconnected!!!!!!!!!!!!!!!!!")

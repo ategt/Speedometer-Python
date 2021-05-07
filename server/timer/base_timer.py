@@ -39,7 +39,7 @@ def main():
 
     Script may be run without arguments, in which case, defaults will be used.
   """
-  uri = "ws://127.0.0.1:5000/"
+  uri = "ws://127.0.0.1:5002/"
 
   schedule = [{"activity":"Warmup",    "interval": 2*60},
               {"activity":"Sprint!",   "interval": 30},

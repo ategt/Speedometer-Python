@@ -31,3 +31,4 @@ def disconnect():
 
     socket = SocketClient(request.sid, bp.getSocketIO())
     connected.remove(socket)
+    print("++++++++++++++++++")

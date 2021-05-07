@@ -6,10 +6,6 @@ bp = Blueprint("main", __name__)
 def index():
     return send_from_directory("..\\..\\client\\public","index.html", as_attachment=False)
 
-@bp.route('/d3')
-def raw_graph():
-    return send_from_directory("..\\..\\client","d3.html", as_attachment=False)
-
 @bp.route('/tests', strict_slashes=False, endpoint='tests_all', defaults={'path':''})
 @bp.route('/tests/<path:path>', endpoint='tests')
 def run_tests(path):
@@ -43,9 +39,6 @@ def build_test_endpoint(filename):
 
 @bp.route('/send/<path:filename>')
 def send_file(filename):
-    if 'cdn-' in filename:
-        return send_from_directory("..\\..\\cdn", filename.replace("cdn-",""), as_attachment=False)
-    else:
         return send_from_directory("..\\..\\client", filename, as_attachment=False)
 
 @bp.errorhandler(500)

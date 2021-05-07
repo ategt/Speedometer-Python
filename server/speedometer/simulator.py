@@ -1,5 +1,3 @@
-import utilities.log_decorator
-
 from random import randint
 from time import sleep
 import threading
@@ -18,7 +16,7 @@ def read(path):
             return ""
 
 def main():        
-    data = read("./data/speed-log.txt")
+    data = read("../data/speed-log.txt")
     lines = data.split("\r\n")
 
     sio = socketio.Client()
@@ -32,7 +30,7 @@ def main():
         else:
             sio.emit("recorder action", {"message":"Unknown Request Received", "data":data})
 
-    uri = "ws://127.0.0.1:5000/"
+    uri = "ws://127.0.0.1:5002/"
     backward_readings = reversed([LINE_REGEX.search(line).groupdict() for line in lines if LINE_REGEX.search(line)])
 
     try:

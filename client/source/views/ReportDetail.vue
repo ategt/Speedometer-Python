@@ -1,0 +1,140 @@
+<template>
+  <div id="main" class="main">
+    <div v-if="showGraph">
+      <Graph v-if="readings.length" v-bind:readings="readings"></Graph>
+      <div v-else-if="errors.length">
+        {{ errors }}
+      </div>
+      <div v-else-if="loading">
+        Loading Readings...
+      </div>
+      <div v-else>
+        No Readings Found
+        <span class="reload-button" v-on:click="reload">Reload</span>
+        <span class="reload-button" v-on:click="stopRecorder">Stop Recorder</span>
+        <span class="reload-button" v-on:click="submitReport">Submit Report</span>
+      </div>
+    </div>
+  	<div id="summary" class="summary" v-if="showText">
+  	  	<ReportTextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></ReportTextDetail>
+  		<div class="error-report" v-else-if="errors.length">
+  			There was a problem loading the Report.
+  		</div>
+  		<div class="loading-report" v-else-if="loading">
+  			Loading Report Details...
+  		</div>
+  		<div class="other-report" v-else>
+  			No Report Details Found
+  		</div>
+  	</div>
+  </div>
+</template>
+<script>
+import Graph from '../components/Graph.vue';
+import ReportTextDetail from '../components/ReportTextDetail.vue';
+import { generate_report } from '../shared/reports';
+import { mapState, mapActions } from 'vuex';
+
+export default {
+  name: 'ReportDetail',
+  components: {
+    Graph,
+    ReportTextDetail,
+  },
+  data () {
+    return {
+      showText: true,
+      showGraph: true,
+      activeReport: null,
+    }
+  },
+  computed: {
+    ...mapState({
+      loading: state => state.readings.loading,
+      errors: state => state.readings.errors,
+      loadingReports: state => state.reports.loading,
+      reports: state => state.reports.reports,
+      outstandingLoads: state => state.readings.outstanding,
+      readingKeys: state => Object.keys(state.readings.readings),
+    }),
+    readings: function () {
+      return this.activeReport && this.activeReport.id && this.$store.state.readings.readings[this.activeReport.id] ? this.$store.state.readings.readings[this.activeReport.id] : [];
+    },
+  },
+  watch: {
+    '$route': 'loadGraph',
+    'loadingReports': 'loadGraph',
+    'reports': 'loadGraph',
+    'outstandingLoads': 'loadGraph',
+    'readingKeys': 'loadGraph',
+  },
+  methods: {
+    loadGraph: function () {
+      const reportIdStr = this.$route.params.id;
+      if ( reportIdStr ) {
+        const reportId = parseInt(reportIdStr);
+        const report = this.$store.getters["reports/getReport"](reportId);
+
+        if (report) {
+          this.activeReport = report;
+          this.$store.dispatch('readings/getReadings', report);
+        }
+      }
+    },
+    reload: function (event) {
+      this.loadGraph();
+    },
+    submitReport (event) {
+      const speedHistory = this.$store.state.speedometer.speedHistory;
+
+      const sortedHistory = Array.from(speedHistory).sort(function (a,b) {
+        return a.timestamp - b.timestamp;
+      });
+
+      const timecodes = sortedHistory.map(item => item.timestamp);
+      const speeds = sortedHistory.map(item => item['currentRevsPerMin'])
+
+      const start_time = Math.min(...timecodes);
+      const stop_time  = Math.max(...timecodes);
+      const report = generate_report(speeds, start_time, stop_time);
+
+      const activeSchedule = this.$store.getters["schedule/getActiveSchedule"];
+      report.scheduleId = activeSchedule.id;
+      report.scheduleName = activeSchedule.name;
+      
+      this.$store.dispatch("reports/submitReport", report);
+    },
+    stopRecorder (event) {
+      this.$socket.emit("recorder directive", {directive:"shutdown"});
+    },
+  },
+  created () {
+    this.loadGraph();
+    this.$store.dispatch('reports/populateReports');
+  },
+  mounted () {
+    if (this.$route.params.spec) {
+      switch (this.$route.params.spec) {
+        case "graph":
+          this.showText = false;
+          break; 
+        case "text":
+          this.showGraph = false;
+          break;
+        default:
+          console.log("Here");        
+      }
+    }
+  }
+}
+</script>
+<style type="text/css">
+  .reload-button {
+    width: 173em;
+    border: 2px solid black;
+    border-radius: 6px;
+    background: lightgrey;
+    padding: 5px 15px;
+    margin: 5px;
+  }
+</style>
