@@ -10,8 +10,7 @@ const state = () => ({
 })
 
 // getters
-const getters = {
-}
+const getters = {};
 
 // actions
 const actions = {

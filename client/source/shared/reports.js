@@ -109,3 +109,23 @@ export const generate_report = (speeds, start_time, stop_time) => {
 			avgSprintLength: avg_sprint_length,  // in readings
 			topSpeed: highest_speed}; // in RPMs
 };
+
+export const prepare_report = (readings, schedule = undefined) => {
+	  const parsed_readings = readings.map(reading => Object.assign({}, reading, {timestamp: parseFloat(reading.timestamp)});
+
+	  const sortedHistory = Array.from(parsed_readings).sort(function (a,b) {
+        return a.timestamp - b.timestamp;
+      });
+
+      const timecodes = sortedHistory.map(item => item.timestamp);
+      const speeds = sortedHistory.map(item => item['currentRevsPerMin']);
+
+      const start_time = Math.min(...timecodes);
+      const stop_time  = Math.max(...timecodes);
+      const report = generate_report(speeds, start_time, stop_time);
+
+      report.scheduleId = schedule.id;
+      report.scheduleName = schedule.name;
+
+      return report;
+}

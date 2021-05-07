@@ -16,6 +16,9 @@ export default {
       return this.$store.getters["admin_info/getConnections"];
     },
   },
+  mounted () {
+    this.$store.dispatch("admin_info/populateClients");
+  },
 }
 </script>
 <style type="text/css">

@@ -19,10 +19,13 @@ const getters = {
 
 // actions
 const actions = {
-  getAllClients ({ commit, state }) {
-    if ( state.connections.length < 1) {
-      clientsApi.getAllClients().then((clients) => commit("replaceClients", clients));
+  populateClients ({ commit, state, dispatch }) {
+    if ( state.connections.size <= 1) {
+      dispatch("getAllClients");
     }
+  },
+  getAllClients ({ commit, state }) {
+    clientsApi.getAllClients().then((clients) => commit("replaceClients", clients));
   },
   sendMessage ({ state, commit }, data) {
     this._watcherVM.$socket.emit('send message', data);
@@ -44,11 +47,13 @@ const mutations = {
     state.events.push(payload);
 
     if ( payload.type ) {
+      const temp_connections = new Set(state.connections.values());
       if ( payload.type == "connection" ) {
-        state.connections.add(payload.sid);
+        temp_connections.add(payload.sid);
       } else if ( payload.type == "disconnection" ) {
-        state.connections.delete(payload.sid);
+        temp_connections.delete(payload.sid);
       }
+      state.connections = new Set(temp_connections.values());
     }
   },
 }

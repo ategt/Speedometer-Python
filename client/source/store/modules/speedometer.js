@@ -1,9 +1,7 @@
-import Vue from "Vue";
-
 // initial state
 const state = () => ({
   speed: 0,
-  speedHistory: new Set(),
+  speedHistory: new Array(),
   errors: [],
   loading: false,
 })
@@ -18,7 +16,7 @@ const getters = {
 // actions
 const actions = {
   stopRecorder (context) {
-    Vue.$socket.emit("recorder directive", {directive:"shutdown"});
+    this._watcherVM.$socket.emit("recorder directive", {directive:"shutdown"});
   },
 }
 
@@ -26,7 +24,7 @@ const actions = {
 const mutations = {
   SOCKET_SPEEDOMETER_UPDATE_BROADCAST (state, payload) {
     state.speed = payload.data['currentRevsPerMin'];
-    state.speedHistory.add(payload.data);
+    state.speedHistory.push(payload.data);
   },
 }
 

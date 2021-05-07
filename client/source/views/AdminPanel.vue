@@ -7,6 +7,14 @@
         <div class="admin-buttons">
           <span class="reload-button" v-on:click="stopRecorder">Stop Recorder</span>
           <span class="reload-button" v-on:click="submitReport">Submit Report</span>
+          <span class="report-counter">
+            <span class="report-count-label">
+              Speed Readings:
+            </span>
+            <span class="report-count-text">
+              {{ readingCount }}
+            </span>
+          </span>
         </div>
     </div>
 </template>
@@ -16,39 +24,34 @@ import AdminMessagesField from '../components/AdminMessagesField.vue';
 import ConnectedClients from '../components/ConnectedClients.vue';
 import AdminEventsField from '../components/AdminEventsField.vue';
 
+import { generate_report, prepare_report } from '../shared/reports';
+
 export default {
-    name: "AdminPanel",
-    components: {
-        RecieverField,
-        ConnectedClients,
-        AdminMessagesField,
-        AdminEventsField,
+  name: "AdminPanel",
+  components: {
+      RecieverField,
+      ConnectedClients,
+      AdminMessagesField,
+      AdminEventsField,
+  },
+  methods: {
+    submitReport (event) {
+      const speedHistory = this.$store.state.speedometer.speedHistory;
+      const activeSchedule = this.$store.getters["schedule/getActiveSchedule"];
+
+      const report = prepare_report(speedHistory, activeSchedule);
+
+      this.$store.dispatch("reports/submitReport", report);
     },
-    methods: {
-      submitReport (event) {
-        const speedHistory = this.$store.state.speedometer.speedHistory;
-
-        const sortedHistory = Array.from(speedHistory).sort(function (a,b) {
-          return a.timestamp - b.timestamp;
-        });
-
-        const timecodes = sortedHistory.map(item => item.timestamp);
-        const speeds = sortedHistory.map(item => item['currentRevsPerMin'])
-
-        const start_time = Math.min(...timecodes);
-        const stop_time  = Math.max(...timecodes);
-        const report = generate_report(speeds, start_time, stop_time);
-
-        const activeSchedule = this.$store.getters["schedule/getActiveSchedule"];
-        report.scheduleId = activeSchedule.id;
-        report.scheduleName = activeSchedule.name;
-        
-        this.$store.dispatch("reports/submitReport", report);
-      },
-      stopRecorder (event) {
-        this.$socket.emit("recorder directive", {directive:"shutdown"});
-      },
+    stopRecorder (event) {
+      this.$socket.emit("recorder directive", {directive:"shutdown"});
     },
+  },
+  computed: {
+    readingCount () {
+      return this.$store.state.speedometer.speedHistory.length;
+    },
+  },
 }   
 </script>
 <style type="text/css">
@@ -59,6 +62,7 @@ export default {
     background: lightgrey;
     padding: 5px 15px;
     margin: 5px;
+    cursor: pointer;
   }
   .wrappx {
     border: 2px solid black;
