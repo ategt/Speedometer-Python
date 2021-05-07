@@ -22,7 +22,9 @@ export const getReport = function (reportId) {
 };
 
 export const createReport = function (report) {
-	axios.post(REPORT_API_ENDPOINT, report);
+	return new Promise(function (resolve, reject) {
+		axios.post(REPORT_API_ENDPOINT, report).then((response) => resolve(response.data)).catch(reject);
+	});
 };
 
 export const retireReport = function (id) {

@@ -44,7 +44,7 @@ const actions = {
   },
 
   submitReport ({ commit }, report ) {
-    reportApi.createReport(report).catch((error) => commit("addError", error))
+    reportApi.createReport(report).then((report) => commit("addReport", report)).catch((error) => commit("addError", error));
   },
 }
 
@@ -68,6 +68,10 @@ const mutations = {
 
   removeReport (state, id) {
     state.reports = state.reports.filter(report => report.id !== id);
+  },
+
+  addReport (state, report) {
+    state.reports.push(report);
   },
 }
 
