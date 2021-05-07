@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import timer from './modules/timer';
-import speedometer from './modules/speedometer';
-import reports from './modules/reports';
 import clients from './modules/clients';
+import reports from './modules/reports';
 import readings from './modules/readings';
 import schedules from './modules/schedules';
+import admin_info from './modules/admin_info';
+import speedometer from './modules/speedometer';
 //import createLogger from '../../../src/plugins/logger'
 
 Vue.use(Vuex)
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     reports,
     readings,
     schedules,
+    admin_info,
     speedometer,
   },
   strict: debug,

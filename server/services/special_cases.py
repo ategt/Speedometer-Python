@@ -24,6 +24,9 @@ class SpecialCase:
 				result = f(*args, **kwargs)
 				results.append(result)
 
+			if len(results) > 0:
+				print("Combination result produced", results)
+
 			return results
 
 		return run

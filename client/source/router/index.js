@@ -55,11 +55,12 @@ export default new Router({
       name: 'Dashboard',
       component: () => import('../views/Dashboard.vue'),
     },
-    // {
-    //   path: '/event/:id',
-    //   name: 'eventSingle',
-    //   component: () => import('../views/EventSingle.vue'),
-    //   beforeEnter: authGuard
-    // }
+    {
+      path: '/admin',
+      alias: '/admin-panel',
+      name: 'AdminPanel',
+      component: () => import('../views/AdminPanel.vue'),
+      //beforeEnter: authGuard
+    }
   ]
 })
