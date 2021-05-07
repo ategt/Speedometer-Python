@@ -15,10 +15,21 @@ localVue.use(VueRouter);
 import router from '../router';
 
 const expect = chai.expect;
+let wrapper;
 
 describe('Footer Shell Test', function () {
+  beforeEach(() => {
+    wrapper = null;
+  });
+
+  afterEach(() => {
+    if ( wrapper ) {
+      wrapper.destroy();
+    }
+  });
+
   it('shallow mount', () => {
-    const wrapper = shallowMount(Footer, {stubs: {RouterLink: RouterLinkStub}})
+    wrapper = shallowMount(Footer, {stubs: {RouterLink: RouterLinkStub}})
 
     expect(wrapper.text()).contains('Home')
     expect(wrapper.text()).contains('Info')
@@ -26,7 +37,7 @@ describe('Footer Shell Test', function () {
   });
 
   it('mount with actual routes', () => {
-    const wrapper = mount(Footer, {localVue, router})
+    wrapper = mount(Footer, {localVue, router})
 
     expect(wrapper.text()).contains('Home')
     expect(wrapper.text()).contains('Info')

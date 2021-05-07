@@ -53,7 +53,6 @@ describe('Status Test', function () {
   it('play with blank text as data', () => {
     const wrapper = shallowMount(Status, {propsData: { timeRemaining: -3, activity: "", speed: 5}});
 
-    console.log(cleanText(wrapper.text()).replace(VIDEO_WARNING, ""));
     expect(cleanText(wrapper.text()).replace(VIDEO_WARNING, "").trim()).equal(`Speed 5 RPMs Time Remaining - Activity`);
 
     expect(wrapper.text()).contains("5 RPMs");
