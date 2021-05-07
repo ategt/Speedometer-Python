@@ -38,13 +38,13 @@ const mutations = {
     state.connections = payload;
   },
   SOCKET_INFORMATION (state, payload) {
-    state.events.push(payload);
+    state.events.push(Object.assign({}, payload, {recieved: (+new Date())}));
   },
   SOCKET_ADMIN_MESSAGE (state, payload) {
-    state.messages.push(payload);
+    state.messages.push(Object.assign({}, payload, {recieved: (+new Date())}));
   },
   SOCKET_ADMIN_EVENT (state, payload) {
-    state.events.push(payload);
+    state.events.push(Object.assign({}, payload, {recieved: (+new Date())}));
 
     if ( payload.type ) {
       const temp_connections = new Set(state.connections.values());

@@ -25,10 +25,10 @@ const mutations = {
     state.clients = payload;
   },
   SOCKET_CLIENT_MESSAGE (state, payload) {
-    state.messages.push(payload);
+    state.messages.push(Object.assign({}, payload, {recieved: (+new Date())}));
   },
   SOCKET_CLIENT_MESSAGE_ROOM (state, payload) {
-    state.messages.push(payload);
+    state.messages.push(Object.assign({}, payload, {recieved: (+new Date())}));
   },
 }
 

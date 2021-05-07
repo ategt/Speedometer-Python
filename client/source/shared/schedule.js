@@ -25,18 +25,22 @@ export const prettyTime = function (seconds) {
 
 export const loadScheduleFromStorage = function () {
 	try{
-		return JSON.parse(sessionStorage['schedule']);
+		return JSON.parse(localStorage['schedule']);
 	} catch (ex) {
 		return defaultSchedule;
 	}
 };
 
 export const isScheduleInStorage = function () {
-	return ('schedule' in sessionStorage);
+	return ('schedule' in localStorage);
 };
 
 export const saveScheduleLocally = function (schedule) {
-	sessionStorage['schedule'] = JSON.stringify(schedule);
+	localStorage['schedule'] = JSON.stringify(schedule);
+};
+
+export const clearLocalSchedule = function () {
+	delete localStorage['schedule'];
 };
 
 export const newSchedule = function () {

@@ -1,5 +1,6 @@
 import { createReport, getReports, getReport } from "../api/reports";
 import { getReadings } from "../api/readings";
+import { top_speed } from '../shared/constants';
 
 export const buildReport = function (startTime, stopTime) {
 	return new Promise(function (resolve, reject) {
@@ -110,12 +111,18 @@ export const generate_report = (speeds, start_time, stop_time) => {
 			topSpeed: highest_speed}; // in RPMs
 };
 
-export const prepare_report = (readings, schedule = undefined) => {
-	  const parsed_readings = readings.map(reading => Object.assign({}, reading, {timestamp: parseFloat(reading.timestamp)});
+export const sort_readings = ( readings ) => {
+	const parsed_readings = readings.map(reading => Object.assign({}, reading, {timestamp: parseFloat(reading.timestamp)}));
 
-	  const sortedHistory = Array.from(parsed_readings).sort(function (a,b) {
+	const sortedHistory = Array.from(parsed_readings).sort(function (a,b) {
         return a.timestamp - b.timestamp;
-      });
+    });	
+
+    return sortedHistory;
+}
+
+export const prepare_report = (readings, schedule = undefined) => {
+	  const sortedHistory = sort_readings(readings);
 
       const timecodes = sortedHistory.map(item => item.timestamp);
       const speeds = sortedHistory.map(item => item['currentRevsPerMin']);

@@ -3,7 +3,7 @@
     <div class="connections-text">
       Connected IDs:
     </div>
-    <div class="client" v-for="client in clients">
+    <div class="client" v-for="client in clients" v-on:click="$emit('sid-clicked', client)">
         {{ client }}
     </div>
   </div>
@@ -22,6 +22,17 @@ export default {
 }
 </script>
 <style type="text/css">
+.client {
+  cursor: pointer;
+  padding: 3px;
+  text-align: center;
+}
+.client:hover {
+  border-radius: 5px;
+  border: 1px solid black;
+  /*background: grey;*/
+  padding: 2px;
+}
   #admin-clients {
     width: 27em;
     border: 5px solid black;

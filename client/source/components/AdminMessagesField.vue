@@ -13,7 +13,10 @@ export default {
   name: "AdminMessagesField",
   computed: {
     messages () {
-      return this.$store.state.admin_info.messages.map(item => item.message);
+      return Array.from([...this.$store.state.admin_info.messages.map(item => item.message), 
+                          ...this.$store.state.clients.messages.map(item => item.message)]).sort(function (a,b) {
+                            return a.recieved - b.recieved;
+                          });
     },
   },
 }

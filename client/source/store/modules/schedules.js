@@ -9,7 +9,7 @@ const state = () => ({
   default: 0,
   activeSchedule: loadScheduleFromStorage(),
   sortingFunction: sortByName,
-})
+});
 
 // getters
 const getters = {
