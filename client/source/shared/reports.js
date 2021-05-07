@@ -1,68 +1,7 @@
-import { createReport, getReports, getReport } from "../api/reports";
-import { getReadings } from "../api/readings";
 import { top_speed } from '../shared/constants';
-
-export const buildReport = function (startTime, stopTime) {
-	return new Promise(function (resolve, reject) {
-		getReports().then(function (reports) {
-			getReadings(startTime, stopTime).then(function (readings) {
-				const timecodes = readings.map(item => item[1]);
-				const speeds = readings.map(item => item[0]);
-
-				const start_time = Math.min(...timecodes);
-				const stop_time  = Math.max(...timecodes);
-
-				const report = generate_report(speeds, start_time, stop_time);
-				
-				if (reports.filter(r => r.startTime == start_time).length === 0) {
-					createReport(report).then(resolve).catch(reject);
-				} else {
-					console.log("Report Submission Refused - Start Time Overlaps With Existing Report.");
-				}
-			}).catch(function (error) {reject(error)});
-		}).catch(function (error) {reject(error)});
-	});
-};
 
 export const sortByStartingTime =  function (reportA, reportB) {
 	return reportA.startTime - reportB.startTime;
-};
-
-export const rebuiltTimes = function (reportId) {
-	return new Promise(function (resolve, reject) {
-		getReport(reportId).then(function (report) {
-			const baseTimecode = report.date;
-
-			const start = Math.round(baseTimecode/1000) - (24*60*60);
-			const stop = Math.round(baseTimecode/1000) + (2*60*60);
-
-			getReadings(start, stop).then(function (readingsResponse) {
-				const readings = readingsResponse.data.result;
-
-				const speeds = readings.map(item => item[0]);
-				const timecodes = readings.map(item => item[1]);
-				const start_time = Math.min(...timecodes);
-				const stop_time  = Math.max(...timecodes);
-
-				updateTimes(id, start_time, stop_time).then(resolve);
-			}).catch(reject);
-		}).catch(reject);
-	});
-};
-
-export const runUpdateReports = function () {
-	return new Promise(function (resolve, reject) {
-		getReports().then(function (reports) {
-		    for (let report of reports) {
-		    	if (!Object.keys(report).includes("startTime") || !Object.keys(report).includes("stopTime")) {
-		    		console.log("Updating", report.id);
-		    		rebuiltTimes(report.id);
-		    		console.log("Done.");
-		    	}
-		    }
-		    resolve();
-		}).catch(reject);
-	});
 };
 
 export function count_sprints(speeds) {
