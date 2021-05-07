@@ -4,16 +4,23 @@ import * as clientsApi from '../../api/clients';
 const state = () => ({
   messages: new Array(),
   events: new Array(),
-  clients: new Set(),
+  connections: new Set(),
 });
 
 // getters
-const getters = {}
+const getters = {
+  getConnections ( state, getters, rootState) {
+      return state.connections;
+  },
+  allClients ( state, getters, rootState) {
+      return state.connections;
+  },
+};
 
 // actions
 const actions = {
   getAllClients ({ commit, state }) {
-    if ( state.clients.length < 1) {
+    if ( state.connections.length < 1) {
       clientsApi.getAllClients().then((clients) => commit("replaceClients", clients));
     }
   },
@@ -25,7 +32,10 @@ const actions = {
 // mutations
 const mutations = {
   replaceClients (state, payload) {
-    state.clients = payload;
+    state.connections = payload;
+  },
+  SOCKET_INFORMATION (state, payload) {
+    state.events.push(payload);
   },
   SOCKET_ADMIN_MESSAGE (state, payload) {
     state.messages.push(payload);
@@ -35,9 +45,9 @@ const mutations = {
 
     if ( payload.type ) {
       if ( payload.type == "connection" ) {
-        state.clients.add(payload.sid);
+        state.connections.add(payload.sid);
       } else if ( payload.type == "disconnection" ) {
-        state.clients.delete(payload.sid);
+        state.connections.delete(payload.sid);
       }
     }
   },

@@ -14,7 +14,17 @@ def create_app(test_config: dict = None) -> (SocketIO, Flask):
     socketio = SocketIO(app, cors_allowed_origins="*")
 
     # Load blueprints
-    blueprints = [".main", ".schedule", ".report", ".timecode", ".reading", ".events", ".tabata_events", ".recorder_events", ".speedometer_events", ".client_events"]
+    blueprints = [".main", 
+                  ".schedule", 
+                  ".report", 
+                  ".timecode", 
+                  ".reading", 
+                  ".events", 
+                  ".tabata_events", 
+                  ".recorder_events", 
+                  ".speedometer_events", 
+                  ".client_events", 
+                  ".admin_events"]
 
     for blueprint_name in blueprints:
         module = import_module(blueprint_name, package="blueprints")

@@ -13,7 +13,7 @@ export default {
   name: "ConnectedClients",
   computed: {
     clients () {
-      return this.$store.state.admin_info.clients;
+      return this.$store.getters["admin_info/getConnections"];
     },
   },
 }

@@ -3,28 +3,18 @@
     <div class="connections-text">
       Events
     </div>
+    <div class="event-item" v-for="event in events">
+      {{ event }}
+    </div>
   </div>
 </template>
 <script>
 export default {
   name: "AdminEventsField",
-  methods: {
-    logToBroadcastField (msg) {
-      // Log broadcast to recieving field.
-      const divElement = document.createElement("div");
-
-      divElement.innerText = JSON.stringify(msg.data);
-      this.$el.appendChild(divElement);
+  computed: {
+    events () {
+      return this.$store.state.admin_info.events.map(event => JSON.stringify(event));
     },
-  },
-  data () {
-    return {
-      events: this.$store.state.admin_info.events,
-    };
-  },
-  mounted () {
-    this.events.forEach(this.logToBroadcastField);
-    this.$options.sockets["admin event"] = this.logToBroadcastField;
   },
 }
 </script>
