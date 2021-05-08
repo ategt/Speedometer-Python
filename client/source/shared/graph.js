@@ -115,8 +115,6 @@ export class SpeedGraph {
     }
 
     _redrawGraph () {
-    	const context = this;
-
     	// update the domain of the graph
  		// X scale will fit all values from data[] within pixes 0-w
 		this.x.domain(this._getXDomain()).range([this.margin.left, this.width - this.margin.right]);
