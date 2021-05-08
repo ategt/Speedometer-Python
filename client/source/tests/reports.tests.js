@@ -8,7 +8,7 @@ mocha.setup('bdd');
 import { generate_report, prepare_report, sort_readings } from '../shared/reports';
 import { convertTimestampToClient, convertTimestampToServer } from '../shared/server_adaption';
 
-import { REALTIME_SPEED_DATA, RECORED_SPEED_DATA, DEFAULT_SCHEDULE } from './FIXTURES';
+import { REALTIME_SPEED_DATA, RECORED_SPEED_DATA, DEFAULT_SCHEDULE, REALTIME_SLOW_SPEED_DATA } from './FIXTURES';
 
 const expect = chai.expect;
 
@@ -95,6 +95,18 @@ describe('Report Shared Script Test', function () {
 
       equal(report.scheduleId, DEFAULT_SCHEDULE.id);
       equal(report.scheduleName, DEFAULT_SCHEDULE.name);
+
+      equal(Number.isFinite(report.startTime), true);
+      equal(Number.isFinite(report.stopTime),  true);
+
+      const startDate = new Date(convertTimestampToClient(report.startTime));
+      const stopDate = new Date(convertTimestampToClient(report.stopTime));
+
+      equal( startDate.getFullYear() < 2050, true);
+      equal( startDate.getFullYear() > 2010, true);
+
+      equal( stopDate.getFullYear() < 2050, true);
+      equal( stopDate.getFullYear() > 2010, true);
     });
 
     it('using realtime data', () => {
@@ -108,10 +120,45 @@ describe('Report Shared Script Test', function () {
       equal(report.scheduleId, DEFAULT_SCHEDULE.id);
       equal(report.scheduleName, DEFAULT_SCHEDULE.name);
 
-      equal(Number.isFinite(averageSpeedDuringSprint), true);
-      equal(Number.isFinite(avgSprintLength),          true);
-      equal(Number.isFinite(startTime),                true);
-      equal(Number.isFinite(stopTime),                 true);
+      //equal(Number.isFinite(report.averageSpeedDuringSprint), true);
+      //equal(Number.isFinite(report.avgSprintLength),          true);
+      equal(Number.isFinite(report.startTime), true);
+      equal(Number.isFinite(report.stopTime),  true);
+
+      const startDate = new Date(convertTimestampToClient(report.startTime));
+      const stopDate = new Date(convertTimestampToClient(report.stopTime));
+
+      equal( startDate.getFullYear() < 2050, true);
+      equal( startDate.getFullYear() > 2010, true);
+
+      equal( stopDate.getFullYear() < 2050, true);
+      equal( stopDate.getFullYear() > 2010, true);
+    });
+
+    it('using slow realtime data', () => {
+      const report = prepare_report(REALTIME_SLOW_SPEED_DATA, DEFAULT_SCHEDULE);
+
+      const timecodes = REALTIME_SLOW_SPEED_DATA.map(item => convertTimestampToServer(item.recieved));
+
+      const start_time = Math.min(...timecodes);
+      const stop_time  = Math.max(...timecodes);
+
+      equal(report.scheduleId, DEFAULT_SCHEDULE.id);
+      equal(report.scheduleName, DEFAULT_SCHEDULE.name);
+
+      //equal(Number.isFinite(report.averageSpeedDuringSprint), true);
+      //equal(Number.isFinite(report.avgSprintLength),          true);
+      equal(Number.isFinite(report.startTime), true);
+      equal(Number.isFinite(report.stopTime),  true);
+
+      const startDate = new Date(convertTimestampToClient(report.startTime));
+      const stopDate = new Date(convertTimestampToClient(report.stopTime));
+
+      equal( startDate.getFullYear() < 2050, true);
+      equal( startDate.getFullYear() > 2010, true);
+      
+      equal( stopDate.getFullYear() < 2050, true);
+      equal( stopDate.getFullYear() > 2010, true);
     });
   });
 });

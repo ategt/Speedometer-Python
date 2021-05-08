@@ -1,3 +1,4 @@
+import { convertTimestampToClient, convertTimestampToServer } from '../shared/server_adaption';
 import { top_speed } from '../shared/constants';
 
 export const sortByStartingTime =  function (reportA, reportB) {
@@ -50,8 +51,17 @@ export const generate_report = (speeds, start_time, stop_time) => {
 			topSpeed: highest_speed}; // in RPMs
 };
 
+const extract_timestamp = ( reading ) => {
+
+	if ( reading.timestamp ) {
+		return parseFloat(reading.timestamp);
+	} else if ( reading.recieved ) {
+		return convertTimestampToServer( reading.recieved );
+	}
+}
+
 export const sort_readings = ( readings ) => {
-	const parsed_readings = readings.map(reading => Object.assign({}, reading, {timestamp: parseFloat(reading.timestamp)}));
+	const parsed_readings = readings.map(reading => Object.assign({}, reading, {timestamp: extract_timestamp(reading)}));
 
 	const sortedHistory = Array.from(parsed_readings).sort(function (a,b) {
         return a.timestamp - b.timestamp;
