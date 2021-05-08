@@ -1,79 +1,119 @@
 import * as d3 from "d3";
 
-export const graphSpeeds = function (speeds, top_speed) {
-	/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
-	/* look into 3883195 and 3808218 */
+import { top_speed } from './constants';
 
-	// define dimensions of graph
-	const margin = ({top: 20, right: 30, bottom: 30, left: 40});
-	const height = 400;
-	const width = 1000;
+export class SpeedGraph {
+    constructor(cssIdSelector, speeds) {
+    	this.graphId = cssIdSelector;
+    	this.topSpeed = top_speed;
+    	this.speeds = speeds;
 
-	// X scale will fit all values from data[] within pixes 0-w
-	const x = d3.scaleLinear().domain([0, speeds.length]).range([margin.left, width - margin.right]);
-	const y = d3.scaleLinear().domain([0, d3.max(speeds.filter(d => d < top_speed))]).range([height - margin.bottom, margin.top]);
+		// define dimensions of graph
+		this.margin = ({top: 20, right: 30, bottom: 30, left: 40});
+		this.height = 400;
+		this.width = 1000;
 
-	// create a line function that can convert data[] into x and y points
-	const line = d3.line()
-			.defined(d => d < top_speed)
-			// assign the X function to plot our line as we wish
-			.x(function(d,i){
-				// return the X coordinate where we want to plot this datapoint
-				return x(i+1);
-			})
-			.y(function (d) {
-				// return the Y coordinate where we want to plot this datapoint
-				return y(d);
-			});
+		this._initGraph();
+    }
 
-	const xAxis = function (g) {
-		return g
-    	.attr("transform", `translate(0,${height - margin.bottom})`)
-    	.call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
-    };
+    setTopSpeed (topSpeed) {
+    	this.topSpeed = topSpeed;
+    	this._redrawGraph();
+    }
 
-	const yAxis = function (g) {
-		return g
-	    .attr("transform", `translate(${margin.left},0)`)
-	    .call(d3.axisLeft(y))
-	    .call(g => g.select(".domain").remove())
-	    .call(g => g.select(".tick:last-of-type text").clone()
-	        .attr("x", 3)
-	        .attr("text-anchor", "start")
-	        .attr("font-weight", "bold")
-	        .text("RPMs"));
-	};
+    _initGraph () {
+    	/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
+		/* look into 3883195 and 3808218 */
 
-	// Add an SVG element with the desired dimensions and margin.
-	const graph = d3.select("#graph").append("svg")
-		.attr("class", "chart")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom);
-			
-	// Add the x-axis
-	graph.append("g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0, 0)")
-		.call(xAxis);
+		const context = this;
 
-	// Add the y-axis to the left
-	graph.append("g")
-		.attr("class", "y axis")
-		.attr("transform", "translate(0, 0)")
-		.call(yAxis)
-		.append("text")
-			.attr("transform", "rotate(-90)")
-			.attr("y", 6)
-			.attr("dy", "0.71em")
-			.style("text-anchor", "end")
-			.text("Number Of Messages");
+		// X scale will fit all values from data[] within pixes 0-w
+		this.x = d3.scaleLinear().domain([0, this.speeds.length]).range([this.margin.left, this.width - this.margin.right]);
+		this.y = d3.scaleLinear().domain([0, d3.max(this.speeds.filter(d => d < context.topSpeed))]).range([this.height - this.margin.bottom, this.margin.top]);
 
-	// Add the line by appending an svg:path element with the data line we created above
-	// do this AFTER the axes above so that the line is above the tick-lines
-	graph.append("svg:path")
-			.attr("fill", "none")
-			.attr("stroke", "steelblue")
-			.attr("stroke-width", "1.5")
-			.attr("stroke-opacity", "1")
-			.attr("d", line(speeds));
-};
+		// create a line function that can convert data[] into x and y points
+		this.line = d3.line()
+				.defined(d => d < this.topSpeed)
+				// assign the X function to plot our line as we wish
+				.x(function(d,i){
+					// return the X coordinate where we want to plot this datapoint
+					return context.x(i+1);
+				})
+				.y(function (d) {
+					// return the Y coordinate where we want to plot this datapoint
+					return context.y(d);
+				});
+
+
+		this.xAxis = function (g) {
+			return g
+	    	.attr("transform", `translate(0,${context.height - context.margin.bottom})`)
+	    	.call(d3.axisBottom(context.x).ticks(context.width / 80).tickSizeOuter(0));
+	    };
+
+		this.yAxis = function (g) {
+			return g
+		    .attr("transform", `translate(${context.margin.left},0)`)
+		    .call(d3.axisLeft(context.y))
+		    .call(g => g.select(".domain").remove())
+		    .call(g => g.select(".tick:last-of-type text").clone()
+		        .attr("x", 3)
+		        .attr("text-anchor", "start")
+		        .attr("font-weight", "bold")
+		        .text("RPMs"));
+		};
+
+		// Add an SVG element with the desired dimensions and margin.
+		this.graph = d3.select(this.graphId).append("svg")
+			.attr("class", "chart")
+			.attr("width", this.width + this.margin.left + this.margin.right)
+			.attr("height", this.height + this.margin.top + this.margin.bottom);
+				
+		// Add the x-axis
+		this.graph.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0, 0)")
+			.call(this.xAxis);
+
+		// Add the y-axis to the left
+		this.graph.append("g")
+			.attr("class", "y axis")
+			.attr("transform", "translate(0, 0)")
+			.call(this.yAxis)
+			.append("text")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("dy", "0.71em")
+				.style("text-anchor", "end")
+				.text("Number Of Messages");
+
+		// Add the line by appending an svg:path element with the data line we created above
+		// do this AFTER the axes above so that the line is above the tick-lines
+		this.graph.append("svg:path")
+				.attr("fill", "none")
+				.attr("stroke", "steelblue")
+				.attr("stroke-width", "1.5")
+				.attr("stroke-opacity", "1")
+				.attr("d", this.line(this.speeds));
+    }
+
+    update ( speeds ) {
+    	this.speeds = speeds;
+    	this._redrawGraph();
+    }
+
+    _redrawGraph () {
+    	const context = this;
+
+    	// update the domain of the graph
+        this.x.domain([0, context.speeds.length/60]).range([context.margin.left, context.width - context.margin.right]);
+		this.y.domain([d3.min(context.speeds, function(d) { return d; }), d3.max(context.speeds, function(d) { return d; })]);
+
+		// update axis labels
+		this.graph.selectAll("g.y.axis").call(this.yAxis);
+		this.graph.selectAll("g.x.axis").call(this.xAxis);
+
+		// re-draw data
+		this.graph.selectAll("path").attr("d", line(this.speeds));
+    }
+}

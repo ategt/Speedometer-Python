@@ -1,7 +1,7 @@
 <template>
-	<div class="messenger">
+	<div class="messenger" v-on:keydown.enter.stop.prevent="sendMessage">
 		<input type="text" class="destination-text-input" name="recipient" v-model="recipient" placeholder="Destination SID"></input>
-		<textarea v-model="message" v-on:keydown.enter="sendMessage" placeholder="Enter message here"></textarea>
+		<textarea v-model="message" placeholder="Enter message here"></textarea>
 		<div class="send-button" v-on:click="sendMessage" v-bind:disabled="message.length && recipient.length">Send Message</div>
 	</div>
 </template>
@@ -22,42 +22,20 @@ export default {
 	},
 	methods: {
 		sendMessage (event) {
-          this.message = this.message.trim();      
       		this.$store.dispatch("admin_info/sendMessage", {to: this.recipient, message: this.message});
+          this.message = "";   
 		},
 	},
 }
 </script>
-<style type="text/css">
-    .messenger {
+<style type="text/css" scoped>
+  .messenger {
 		width: 35%;
-	    display: flex;
-	    flex-direction: column;
-	    padding: 2px 7px;
-	    margin: 5px;
-   }
-  .reload-button {
-    width: 173em;
-    border: 2px solid black;
-    border-radius: 6px;
-    background: lightgrey;
-    padding: 5px 15px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  .wrappx {
-    border: 2px solid black;
-    border-radius: 6px;
-    background: lightgrey;
-    padding: 5px 15px;
-    margin: 30px 57px;
-  }
-  .admin-buttons {
-    padding: 0.5em;
-  }
-  .messager-panel {
     display: flex;
-  }
+    flex-direction: column;
+    padding: 2px 7px;
+    margin: 5px;
+   }
   .messenger>input {
     margin: 2px;
     font-size: larger;
@@ -71,8 +49,8 @@ export default {
     font-size: large;
   }
   .messenger>.send-button, .send-button {
-	margin: 2px;
-	width: auto;
+	  margin: 2px;
+	  width: auto;
     border: 2px solid black;
     border-radius: 5px;
     text-align: center;

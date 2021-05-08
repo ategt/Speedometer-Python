@@ -2,21 +2,23 @@
     <div id="graph" class="aGraph"></div>
 </template>
 <script>
-import { top_speed } from '../shared/constants';
-import { graphSpeeds } from '../shared/graph';
+import { SpeedGraph } from '../shared/graph';
 
 export default {
   name: 'Graph',
   props: ['speeds'],
-  components: {
+  data () {
+    return {
+      speedGraph: null,
+    };
   },
-  methods: {
-    buildGraph: function () {
-      graphSpeeds(this.speeds, top_speed);
+  watch: {
+    speeds: function () {
+      this.speedGraph.update( this.speeds );
     },
   },
   mounted () {
-    this.buildGraph();
+    this.speedGraph = new SpeedGraph( "#graph", this.speeds );
   },
 }
 </script>
