@@ -13,6 +13,9 @@ export class SpeedGraph {
 		this.height = 400;
 		this.width = 1000;
 
+		this.minimumExpectedReadings = 100;
+		this.minimumSpeed = 800;
+
 		this._initGraph();
 		this._redrawGraph();
     }
@@ -22,14 +25,23 @@ export class SpeedGraph {
     	this._redrawGraph();
     }
 
+    _getXDomain () {
+    	return [0, d3.max([this.speeds.length, this.minimumExpectedReadings])];
+    }
+
+    _getYDomain() {
+    	const context = this;
+		return [0, d3.max([this.minimumSpeed, ...this.speeds.filter(d => d < context.topSpeed)])];
+    }
+
     _initGraph () {
     	/* implementation heavily influenced by http://bl.ocks.org/1166403 */ 
 		/* look into 3883195 and 3808218 */
 
 		const context = this;
 
-		this.x = d3.scaleLinear().domain([0, this.speeds.length]).range([this.margin.left, this.width - this.margin.right]);
-		this.y = d3.scaleLinear().domain([0, d3.max(this.speeds.filter(d => d < context.topSpeed))]).range([this.height - this.margin.bottom, this.margin.top]);
+		this.x = d3.scaleLinear().domain(this._getXDomain()).range([this.margin.left, this.width - this.margin.right]);
+		this.y = d3.scaleLinear().domain(this._getYDomain()).range([this.height - this.margin.bottom, this.margin.top]);
 
 		// create a line function that can convert data[] into x and y points
 		this.line = d3.line()
@@ -107,8 +119,8 @@ export class SpeedGraph {
 
     	// update the domain of the graph
  		// X scale will fit all values from data[] within pixes 0-w
-		this.x.domain([0, this.speeds.length]).range([this.margin.left, this.width - this.margin.right]);
-		this.y.domain([0, d3.max(this.speeds.filter(d => d < context.topSpeed))]).range([this.height - this.margin.bottom, this.margin.top]);
+		this.x.domain(this._getXDomain()).range([this.margin.left, this.width - this.margin.right]);
+		this.y.domain(this._getYDomain()).range([this.height - this.margin.bottom, this.margin.top]);
 
 		// update axis labels
 		this.graph.selectAll("g.y.axis").call(this.yAxis);
