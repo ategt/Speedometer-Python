@@ -1,22 +1,21 @@
 <template>
   <div id="main" class="main">
     <div v-if="showGraph">
-      <Graph v-if="readings.length" v-bind:readings="readings"></Graph>
+      <Graph v-if="speeds.length" v-bind:speeds="speeds"></Graph>
       <div v-else-if="errors.length">
         {{ errors }}
       </div>
       <div v-else-if="loading">
         Loading Readings...
       </div>
+      <Graph v-else-if="history.length" v-bind:speeds="historySpeeds"></Graph>
       <div v-else>
         No Readings Found
         <span class="reload-button" v-on:click="reload">Reload</span>
-        <span class="reload-button" v-on:click="stopRecorder">Stop Recorder</span>
-        <span class="reload-button" v-on:click="submitReport">Submit Report</span>
       </div>
     </div>
   	<div id="summary" class="summary" v-if="showText">
-  	  	<ReportTextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></ReportTextDetail>
+  	  <ReportTextDetail v-if="activeReport" v-bind:report="activeReport" v-bind:readings="readings"></ReportTextDetail>
   		<div class="error-report" v-else-if="errors.length">
   			There was a problem loading the Report.
   		</div>
@@ -56,9 +55,22 @@ export default {
       reports: state => state.reports.reports,
       outstandingLoads: state => state.readings.outstanding,
       readingKeys: state => Object.keys(state.readings.readings),
+      history: state => state.speedometer.speedHistory,
     }),
-    readings: function () {
-      return this.activeReport && this.activeReport.id && this.$store.state.readings.readings[this.activeReport.id] ? this.$store.state.readings.readings[this.activeReport.id] : [];
+    readings () {
+      if ( this.activeReport && 
+            this.activeReport.id && 
+            this.$store.state.readings.readings[this.activeReport.id] ) {
+        return this.$store.state.readings.readings[this.activeReport.id];
+      } else {
+        return [];
+      }
+    },
+    speeds () {
+      return this.readings.map(item => item[0]);
+    },
+    historySpeeds () {
+      return this.history.map(datum => parseInt(datum.currentRevsPerMin));
     },
   },
   watch: {
@@ -83,29 +95,6 @@ export default {
     },
     reload: function (event) {
       this.loadGraph();
-    },
-    submitReport (event) {
-      const speedHistory = this.$store.state.speedometer.speedHistory;
-
-      const sortedHistory = Array.from(speedHistory).sort(function (a,b) {
-        return a.timestamp - b.timestamp;
-      });
-
-      const timecodes = sortedHistory.map(item => item.timestamp);
-      const speeds = sortedHistory.map(item => item['currentRevsPerMin'])
-
-      const start_time = Math.min(...timecodes);
-      const stop_time  = Math.max(...timecodes);
-      const report = generate_report(speeds, start_time, stop_time);
-
-      const activeSchedule = this.$store.getters["schedule/getActiveSchedule"];
-      report.scheduleId = activeSchedule.id;
-      report.scheduleName = activeSchedule.name;
-      
-      this.$store.dispatch("reports/submitReport", report);
-    },
-    stopRecorder (event) {
-      this.$socket.emit("recorder directive", {directive:"shutdown"});
     },
   },
   created () {

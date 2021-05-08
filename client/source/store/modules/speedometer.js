@@ -24,7 +24,7 @@ const actions = {
 const mutations = {
   SOCKET_SPEEDOMETER_UPDATE_BROADCAST (state, payload) {
     state.speed = payload.data['currentRevsPerMin'];
-    state.speedHistory.push(payload.data);
+    state.speedHistory.push(Object.assign({}, payload.data, {recieved: (+new Date())}));
   },
 }
 

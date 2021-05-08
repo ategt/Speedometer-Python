@@ -54,6 +54,8 @@ const mutations = {
         temp_connections.delete(payload.sid);
       }
       state.connections = new Set(temp_connections.values());
+    } else if ( payload.data && payload.data === "Connected" ) {
+      this._watcherVM.$socket.dispatch("getAllClients");
     }
   },
 }

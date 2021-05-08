@@ -23,7 +23,6 @@ def run_tests(path):
 @bp.route('/admin', endpoint='admin', defaults={'path':''})
 @bp.route('/admin-panel', endpoint='adminPanel', defaults={'path':''})
 def spa(path):
-    print("\n\n", request.endpoint, "\n\n")
     return send_from_directory("..\\..\\client\\public","index.html", as_attachment=False), 200
 
 @bp.route('/public/<path:filename>')

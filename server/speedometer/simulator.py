@@ -30,7 +30,7 @@ def main():
         else:
             sio.emit("recorder action", {"message":"Unknown Request Received", "data":data})
 
-    uri = "ws://127.0.0.1:5002/"
+    uri = "ws://127.0.0.1:5000/"
     backward_readings = reversed([LINE_REGEX.search(line).groupdict() for line in lines if LINE_REGEX.search(line)])
 
     try:

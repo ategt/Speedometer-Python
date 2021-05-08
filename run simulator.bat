@@ -11,7 +11,9 @@ IF '%1'=='' (
 ECHO Logging context set to %CONTEXT% >> runlog.txt
 ECHO %TIME% >> runlog.txt
 
-python3 ./server/demo.py
+CD server
+
+python3 ./speedometer/simulator.py
 
 IF '%CONTEXT%'=='main' (
 	IF %ERRORLEVEL% NEQ 0 (

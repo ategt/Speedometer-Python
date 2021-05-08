@@ -7,13 +7,12 @@ import { graphSpeeds } from '../shared/graph';
 
 export default {
   name: 'Graph',
-  props: ['readings'],
+  props: ['speeds'],
   components: {
   },
   methods: {
     buildGraph: function () {
-      const speeds = this.readings.map(item => item[0]);
-      graphSpeeds(speeds, top_speed);
+      graphSpeeds(this.speeds, top_speed);
     },
   },
   mounted () {

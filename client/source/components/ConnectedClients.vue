@@ -3,8 +3,10 @@
     <div class="connections-text">
       Connected IDs:
     </div>
-    <div class="client" v-for="client in clients" v-on:click="$emit('sid-clicked', client)">
-        {{ client }}
+    <div class="clients-container">
+      <div class="client" v-for="client in clients" v-on:click="$emit('sid-clicked', client)">
+          {{ client }}
+      </div>
     </div>
   </div>
 </template>
@@ -30,15 +32,18 @@ export default {
 .client:hover {
   border-radius: 5px;
   border: 1px solid black;
-  /*background: grey;*/
   padding: 2px;
 }
-  #admin-clients {
-    width: 27em;
-    border: 5px solid black;
-    border-radius: 6px;
-    background: lightgrey;
-    padding: 5px 15px;
-    margin: 5px;
-  }
+#admin-clients {
+  width: 27em;
+  border: 5px solid black;
+  border-radius: 6px;
+  background: lightgrey;
+  padding: 5px 15px;
+  margin: 5px;
+}
+.clients-container {
+  overflow: auto;
+  height: 
+}
 </style>

@@ -9,5 +9,6 @@ import './ScheduleIndex.component.tests.js';
 // import './ScheduleList.component.tests.js';
 import './Status.component.tests.js';
 import './reports.tests.js';
+import './AdminButtons.component.tests.js';
 
 mocha.run();

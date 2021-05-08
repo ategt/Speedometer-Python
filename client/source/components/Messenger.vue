@@ -1,8 +1,8 @@
 <template>
 	<div class="messenger">
 		<input type="text" class="destination-text-input" name="recipient" v-model="recipient" placeholder="Destination SID"></input>
-		<textarea v-model="message" placeholder="Enter message here"></textarea>
-		<div class="send-button" v-on:click="sendMessage">Send Message</div>
+		<textarea v-model="message" v-on:keydown.enter="sendMessage" placeholder="Enter message here"></textarea>
+		<div class="send-button" v-on:click="sendMessage" v-bind:disabled="message.length && recipient.length">Send Message</div>
 	</div>
 </template>
 <script>
@@ -22,6 +22,7 @@ export default {
 	},
 	methods: {
 		sendMessage (event) {
+          this.message = this.message.trim();      
       		this.$store.dispatch("admin_info/sendMessage", {to: this.recipient, message: this.message});
 		},
 	},
