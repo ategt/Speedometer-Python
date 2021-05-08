@@ -22,6 +22,7 @@
   		<div class="loading-report" v-else-if="loading">
   			Loading Report Details...
   		</div>
+      <ReportTextDetail v-else-if="syntheticReport" v-bind:report="syntheticReport" v-bind:readings="readings"></ReportTextDetail>
   		<div class="other-report" v-else>
   			No Report Details Found
   		</div>
