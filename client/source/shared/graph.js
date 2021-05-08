@@ -14,6 +14,7 @@ export class SpeedGraph {
 		this.width = 1000;
 
 		this._initGraph();
+		this._redrawGraph();
     }
 
     setTopSpeed (topSpeed) {
@@ -27,7 +28,6 @@ export class SpeedGraph {
 
 		const context = this;
 
-		// X scale will fit all values from data[] within pixes 0-w
 		this.x = d3.scaleLinear().domain([0, this.speeds.length]).range([this.margin.left, this.width - this.margin.right]);
 		this.y = d3.scaleLinear().domain([0, d3.max(this.speeds.filter(d => d < context.topSpeed))]).range([this.height - this.margin.bottom, this.margin.top]);
 
@@ -93,8 +93,8 @@ export class SpeedGraph {
 				.attr("fill", "none")
 				.attr("stroke", "steelblue")
 				.attr("stroke-width", "1.5")
-				.attr("stroke-opacity", "1")
-				.attr("d", this.line(this.speeds));
+				.attr("stroke-opacity", "1");
+				//.attr("d", this.line(this.speeds));
     }
 
     update ( speeds ) {
@@ -106,14 +106,15 @@ export class SpeedGraph {
     	const context = this;
 
     	// update the domain of the graph
-        this.x.domain([0, context.speeds.length/60]).range([context.margin.left, context.width - context.margin.right]);
-		this.y.domain([d3.min(context.speeds, function(d) { return d; }), d3.max(context.speeds, function(d) { return d; })]);
+ 		// X scale will fit all values from data[] within pixes 0-w
+		this.x.domain([0, this.speeds.length]).range([this.margin.left, this.width - this.margin.right]);
+		this.y.domain([0, d3.max(this.speeds.filter(d => d < context.topSpeed))]).range([this.height - this.margin.bottom, this.margin.top]);
 
 		// update axis labels
 		this.graph.selectAll("g.y.axis").call(this.yAxis);
 		this.graph.selectAll("g.x.axis").call(this.xAxis);
 
 		// re-draw data
-		this.graph.selectAll("path").attr("d", line(this.speeds));
+		this.graph.selectAll("path").attr("d", this.line(this.speeds));
     }
 }

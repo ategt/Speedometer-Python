@@ -8,7 +8,7 @@
       <div v-else-if="loading">
         Loading Readings...
       </div>
-      <Graph v-else-if="history.length" v-bind:speeds="historySpeeds"></Graph>
+      <Graph v-else-if="history.length && historySpeeds.length > 20" v-bind:speeds="historySpeeds"></Graph>
       <div v-else>
         No Readings Found
         <span class="reload-button" v-on:click="reload">Reload</span>
@@ -91,6 +91,8 @@ export default {
           this.activeReport = report;
           this.$store.dispatch('readings/getReadings', report);
         }
+      } else {
+        this.activeReport = null;
       }
     },
     reload: function (event) {
