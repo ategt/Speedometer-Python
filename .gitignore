@@ -1,6 +1,6 @@
 __pycache__/
 node_modules/
-node_modules_old/
+**node_modules*
 
 socket.io.js
 socket.io.js.map
@@ -33,4 +33,4 @@ chromedriver.exe
 .cache/
 .cache-test/
 dist/
-log/
+log/ 
