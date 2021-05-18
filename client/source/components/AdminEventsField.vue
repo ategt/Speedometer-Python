@@ -18,7 +18,7 @@ export default {
   },
 }
 </script>
-<style type="text/css">
+<style scoped>
   #admin-recieved {
     width: 27em;
     border: 2px solid black;

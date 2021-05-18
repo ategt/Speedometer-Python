@@ -10,8 +10,8 @@
 	</div>
 </template>
 <script>
-import TimerButtons from '../components/partials/TimerButtons';
-import Status from '../components/Status';
+import TimerButtons from '../components/partials/TimerButtons.vue';
+import Status from '../components/Status.vue';
 import { is_fullscreen, close_fullscreen } from '../shared/status';
 
 export default {

@@ -4,10 +4,11 @@
 		<ScheduleList v-bind:schedules="schedules" v-bind:defaultScheduleId="defaultScheduleId" v-on="scheduleListListeners"></ScheduleList>
 	</div>
 </template>
+
 <script>
-import ScheduleButtons from "./ScheduleButtons";
-import ScheduleList from "./ScheduleList";
 import { SCHEDULE_BUTTONS_EVENTS, SCHEDULE_LIST_EVENTS, SCHEDULE_INDEX_EVENTS } from "../shared/constants";
+import ScheduleButtons from './ScheduleButtons.vue'
+import ScheduleList from './ScheduleList.vue'
 
 export default {
 	name: "ScheduleIndex",

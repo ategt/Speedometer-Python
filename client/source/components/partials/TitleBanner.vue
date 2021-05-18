@@ -5,7 +5,7 @@
 		</div>
 		<div class="graph-link-panel">
 			<h1>
-				<router-link to="/d3" id="graph-link" class="no-decoration">GRAPH</a>
+				<router-link to="/d3" id="graph-link" class="no-decoration">GRAPH</router-link>
 			</h1>
 		</div>
 	</div>

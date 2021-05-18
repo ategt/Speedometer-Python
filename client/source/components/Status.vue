@@ -1,10 +1,5 @@
 <template>
 	<div class="info-banner-panel" id="info-panel" v-on:fullscreenchange="fullscreened">
-		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
-		    <source src="../assets/media/movie.mp4" type="video/mp4">
-		    <source src="../assets/media/movie.ogg" type="video/ogg">
-			Your browser does not support the video tag.
-		</video>
 		<div class="label speed">
 			Speed
 		</div>
@@ -26,6 +21,13 @@
 	</div>
 </template>
 <script>
+
+//		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
+//		    <source src="../assets/media/movie.mp4" type="video/mp4">
+//		    <source src="../assets/media/movie.ogg" type="video/ogg">
+//			Your browser does not support the video tag.
+//		</video>
+
 import { format_time, is_fullscreen } from '../shared/status';
 
 export default {
