@@ -26,7 +26,7 @@
 				<router-link to="/graph?start=0&stop=161125230800">Full Readout</router-link>				
 			</span>
 			<span class="footer-item">
-				<router-link v-bind:to="{name:'AdminPanel'}">Admin</router-link>
+				<router-link v-bind:to="{name:'AdminPanel'}">Debug</router-link>
 			</span>
 		</div>
 	</footer>
