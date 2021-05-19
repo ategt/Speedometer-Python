@@ -36,7 +36,7 @@ export default {
   },
 }
 </script>
-<style type="text/css">
+<style type="text/css" scoped>
 div.fullscreen-button {
   display: block;
   font-size: 1.5em;
@@ -44,12 +44,15 @@ div.fullscreen-button {
   margin-block-end: 1.1em;
   font-weight: bold;
   cursor: pointer;
-  padding: 0.56em 0.1em;
+  padding: 0.56em 0.6em;
   margin: 9px;
 }
 div.fullscreen-button:hover {
   border: 1px solid black;
   border-radius: 4px;
   margin: 8px;
+}
+.right-pane {
+  padding-right: 1rem;
 }
 </style>
