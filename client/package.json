@@ -9,7 +9,8 @@
     "start:no-hmr": "parcel watch --out-dir client\\dist --public-url \"/dist\" --no-hmr --cache-dir cache\\.cache client\\source\\main.js",
     "start:build": "parcel build --out-dir client\\dist --public-url \"/dist\" --cache-dir cache\\.cache client\\source\\main.js",
     "test:build": "parcel watch --public-url \"/dist-test\" --out-dir client\\dist\\test --cache-dir cache\\.cache-test client\\source\\tests\\all_tests.js",
-    "webpack:build": "webpack --config build/webpack.config.dev.js"
+    "webpack:build": "webpack --config build/webpack.config.dev.js",
+    "webpack:dev": "webpack-dev-server --config build/webpack.config.dev.js"
   },
   "keywords": [],
   "author": "",

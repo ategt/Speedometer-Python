@@ -1,11 +1,5 @@
 'use strict'
 const { VueLoaderPlugin } = require('vue-loader');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const path = require('path');
-
-function resolve ( dir ) {
-  return path.join(__dirname, '..', dir);
-}
 
 module.exports = {
   mode: 'development',
@@ -32,11 +26,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new VueLoaderPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: path.join("source", "assets"), to: "assets", toType: 'dir' },
-      ],
-    })
+    new VueLoaderPlugin()
   ]
 };
