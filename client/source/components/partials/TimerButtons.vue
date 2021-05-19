@@ -9,11 +9,9 @@
     <div id="reset-timer-button" class="timer-button" v-on:click="resetTimer">
       RESET TIMER
     </div>
-    <h2>
-      <span class="fullscreen-button-span">
-        <a id="fullscreen-button" v-on:click="fullScreen" class="no-decoration">FULL&nbsp;SCREEN</a>
-      </span>
-    </h2>
+    <div class="fullscreen-button">
+      <a id="fullscreen-button" v-on:click="fullScreen" class="no-decoration">FULL&nbsp;SCREEN</a>
+    </div>
   </div>
 </template>
 <script>
@@ -38,3 +36,20 @@ export default {
   },
 }
 </script>
+<style type="text/css">
+div.fullscreen-button {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.56em 0.1em;
+  margin: 9px;
+}
+div.fullscreen-button:hover {
+  border: 1px solid black;
+  border-radius: 4px;
+  margin: 8px;
+}
+</style>
