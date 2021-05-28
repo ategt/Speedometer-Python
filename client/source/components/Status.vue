@@ -1,5 +1,11 @@
 <template>
 	<div class="info-banner-panel" id="info-panel" v-on:fullscreenchange="fullscreened">
+		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
+		    <source v-bind:src="movie_mp4" type="video/mp4">
+		    <source v-bind:src="movie_ogg" type="video/ogg">
+			Your browser does not support the video tag.
+		</video>
+
 		<div class="label speed">
 			Speed
 		</div>
@@ -21,14 +27,11 @@
 	</div>
 </template>
 <script>
-
-//		<video id="video_background" width="320" height="240" autoplay="true" muted="true" loop="true" poster="">
-//		    <source src="../assets/media/movie.mp4" type="video/mp4">
-//		    <source src="../assets/media/movie.ogg" type="video/ogg">
-//			Your browser does not support the video tag.
-//		</video>
-
 import { format_time, is_fullscreen } from '../shared/status';
+import movie_mp4 from '../assets/media/movie.mp4';
+import movie_ogg from '../assets/media/movie.ogg';
+
+console.log(movie_mp4);
 
 export default {
 	name: "Status",
@@ -36,6 +39,12 @@ export default {
 		timeRemaining: Number,
 		speed: Number, 
 		activity: String,
+	},
+	data () {
+		return {
+			movie_ogg,
+			movie_mp4,
+		};
 	},
 	computed: {
 		activityString () {

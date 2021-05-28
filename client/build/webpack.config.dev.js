@@ -6,6 +6,7 @@ module.exports = {
   entry: [
     './source/main.js'
   ],
+  devtool: "eval-cheap-module-source-map",
   module: {
     rules: [
       {
@@ -22,7 +23,14 @@ module.exports = {
           'vue-style-loader',
           'css-loader'
         ]
-      }
+      },
+      {
+        test: /\.(png|jpe?g|gif|flv|mp4|ogg)$/i,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'media',
+        },
+      },
     ]
   },
   plugins: [
