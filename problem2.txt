@@ -1,1 +1,0 @@
-cls & npx parcel watch --public-url "/test-js" --out-dir client\dist client\src\tests\reports.component.tests.js 
