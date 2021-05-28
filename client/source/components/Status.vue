@@ -31,8 +31,6 @@ import { format_time, is_fullscreen } from '../shared/status';
 import movie_mp4 from '../assets/media/movie.mp4';
 import movie_ogg from '../assets/media/movie.ogg';
 
-console.log(movie_mp4);
-
 export default {
 	name: "Status",
 	props: {
